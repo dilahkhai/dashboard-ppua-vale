@@ -36,7 +36,7 @@ class mcucontroller extends Controller
 
         $areas = Area::all();
 
-        return view('tambahmcu')->with(["areas"=> $areas]);
+        return view('tambahmcu')->with(["areas" => $areas]);
     }
 
     /**
@@ -48,11 +48,11 @@ class mcucontroller extends Controller
     public function store(Request $request)
     {
         $mcu = new mcu;
-        $mcu ->employee_id = $request->input('employee');
-        $mcu ->lastmcu = $request->input('lastmcu');
-        $mcu ->duedate = $request->input('duedate');
-        $mcu ->status = " ";
-        $mcu ->save();
+        $mcu->employee_id = $request->input('employee');
+        $mcu->lastmcu = $request->input('lastmcu');
+        $mcu->duedate = $request->input('duedate');
+        $mcu->status = " ";
+        $mcu->save();
 
         return redirect('/mcu')->with('success', 'success');
     }
@@ -72,9 +72,9 @@ class mcucontroller extends Controller
     public function status(Request $request, $id)
     {
         $mcu = mcu::find($id);
-        $mcu ->status = "DONE";
+        $mcu->status = "DONE";
 
-        $mcu ->save();
+        $mcu->save();
 
         Alert::success('Data Updated!');
 
@@ -104,9 +104,10 @@ class mcucontroller extends Controller
     {
 
         $mcu = mcu::find($id);
-        $mcu ->lastmcu = $request->input('lastmcu');
-        $mcu ->duedate = $request->input('duedate');
-        $mcu ->save();
+        $mcu->lastmcu = $request->input('lastmcu');
+        $mcu->duedate = $request->input('duedate');
+        $mcu->nexmcu = $request->input('nextmcu');
+        $mcu->save();
 
         return redirect('/mcu')->with('success', 'success');
     }
