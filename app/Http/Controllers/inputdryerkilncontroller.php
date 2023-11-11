@@ -21,36 +21,37 @@ use Illuminate\Support\Str;
 
 class inputdryerkilncontroller extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $user = User::with([
-                "today_safety_report",
-                "today_working_time_per_week",
-                "todaystatusperday"
-            ])
-            ->whereHas("area", function($query){
+            "today_safety_report",
+            "today_working_time_per_week",
+            "todaystatusperday"
+        ])
+            ->whereHas("area", function ($query) {
                 $query->where("area", "Dryer-Kiln");
             })->get();
-        $department = Department::with(["today_productivity" => function($query){
-                    $query->whereHas("area", function($query){
-                        $query->where("area", "Dryer-Kiln");
-                    });
-                }])->get();
+        $department = Department::with(["today_productivity" => function ($query) {
+            $query->whereHas("area", function ($query) {
+                $query->where("area", "Dryer-Kiln");
+            });
+        }])->get();
 
         $organization = OrganizationStructure::where("area_id", 2)
-                            ->whereDate("created_at", Carbon::now())
-                            ->first();
+            ->whereDate("created_at", Carbon::now())
+            ->first();
 
 
         $Kaizen = Kaizen::where("area_id", 2)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
 
         $StatusMcu = StatusMcu::where("area_id", 2)
-        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
         $task = Task::with("owner")->where("area_id", 2)->get();
         $list_user = User::where("area_id", 2)->pluck("name", "id");
-                // return $task;
+        // return $task;
         return view('inputdryerkiln')->with([
             "user"   =>  $user,
             "departments"    => $department,
@@ -62,16 +63,17 @@ class inputdryerkilncontroller extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $employee_list = $request->get("employee");
         $count_list = $request->get("count");
 
         foreach ($employee_list as $index => $employee_id) {
             $safety_report = SafetyReport::where("employee_id", $employee_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->first();
+                ->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($safety_report)){
+            if (is_null($safety_report)) {
                 $safety_report = new SafetyReport;
             }
 
@@ -83,16 +85,17 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeProductivity(Request $request){
+    public function storeProductivity(Request $request)
+    {
         $department_list = $request->get("department");
         $value_list = $request->get("departmentValue");
 
         foreach ($department_list as  $index => $department_id) {
             $productivity = productivity::where("department_id", $department_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->where("area_id", 2)
-                                ->first();
-            if(is_null($productivity)){
+                ->whereDate("created_at", Carbon::now())
+                ->where("area_id", 2)
+                ->first();
+            if (is_null($productivity)) {
                 $productivity = new productivity;
             }
             $productivity->area_id = 2;
@@ -101,21 +104,21 @@ class inputdryerkilncontroller extends Controller
             $productivity->selisih = 100 - $value_list[$index];
             $productivity->created_at = Carbon::now();
             $productivity->save();
-
         }
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeWorkingWeek(Request $request){
+    public function storeWorkingWeek(Request $request)
+    {
         $employee_list = $request->get("employee");
         $count_list = $request->get("employee_value");
 
         foreach ($employee_list as $index => $employee_id) {
             $WorkingTimePerWeek = WorkingTimePerWeek::where("employee_id", $employee_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->first();
+                ->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($WorkingTimePerWeek)){
+            if (is_null($WorkingTimePerWeek)) {
                 $WorkingTimePerWeek = new WorkingTimePerWeek;
             }
 
@@ -128,7 +131,8 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeStatusPerDay(Request $request){
+    public function storeStatusPerDay(Request $request)
+    {
         $employee_list = $request->get("employee");
         $offices = $request->get("offices");
         $hos = $request->get("hos");
@@ -138,14 +142,13 @@ class inputdryerkilncontroller extends Controller
         $emergency_leaves = $request->get("emergency_leaves");
         $medical_leaves = $request->get("medical_leaves");
         $maternity_leaves = $request->get("maternity_leaves");
-        $wta = $request->get("wta");
 
         foreach ($employee_list as $index => $employee_id) {
             $statusperday = statusperday::where("employee_id", $employee_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->first();
+                ->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($statusperday)){
+            if (is_null($statusperday)) {
                 $statusperday = new statusperday;
             }
 
@@ -158,18 +161,18 @@ class inputdryerkilncontroller extends Controller
             $statusperday->emergency_leave = $emergency_leaves[$index];
             $statusperday->medical_leave = $medical_leaves[$index];
             $statusperday->maternity_leave = $maternity_leaves[$index];
-            $statusperday->wta = $wta[$index];
-            $statusperday->created_at = Carbon::now();
+            $statusperday->created_at = $request->datestatus;
             $statusperday->save();
         }
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeOrganization(Request $request){
+    public function storeOrganization(Request $request)
+    {
         $organization = OrganizationStructure::where("area_id", 2)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
-        if(is_null($organization)){
+        if (is_null($organization)) {
             $organization = new OrganizationStructure;
         }
 
@@ -181,7 +184,8 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function import(Request $request){
+    public function import(Request $request)
+    {
         $file = $request->file('file');
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($file->getRealPath());
@@ -193,21 +197,21 @@ class inputdryerkilncontroller extends Controller
         $auto_project_sheet = null;
         $manhours_sheet = null;
 
-        for ($i=0; $i < $sheet_count ; $i++) {
+        for ($i = 0; $i < $sheet_count; $i++) {
             $current_sheet = $spreadsheet->getSheet($i);
             $sheet_name = $spreadsheet->getSheetNames()[$i];
 
-            if(str_contains($sheet_name, "Week")){
-                $weekNumber = str_replace("Week","",$sheet_name);
-                if($latest_week == null || $latest_week < $weekNumber){
-                    if(is_numeric($weekNumber)){
+            if (str_contains($sheet_name, "Week")) {
+                $weekNumber = str_replace("Week", "", $sheet_name);
+                if ($latest_week == null || $latest_week < $weekNumber) {
+                    if (is_numeric($weekNumber)) {
                         $latest_week = $weekNumber;
                         $latest_week_sheet = $current_sheet;
                     }
                 }
-            }else if(str_contains($sheet_name, "AutoProject")){
+            } else if (str_contains($sheet_name, "AutoProject")) {
                 $auto_project_sheet = $current_sheet;
-            }else if(str_contains($sheet_name, "Manhours monthly")){
+            } else if (str_contains($sheet_name, "Manhours monthly")) {
                 $manhours_sheet = $current_sheet;
             }
 
@@ -263,24 +267,24 @@ class inputdryerkilncontroller extends Controller
         // }
 
         // input week
-        if(!is_null($latest_week_sheet)){
+        if (!is_null($latest_week_sheet)) {
             $rows = $latest_week_sheet->toArray();
-            $list_name = array_slice($rows[5],3);
-            $list_value = array_slice($rows[7],3);
+            $list_name = array_slice($rows[5], 3);
+            $list_value = array_slice($rows[7], 3);
         }
 
         foreach ($list_name as $index => $username) {
-            $WorkingTimePerWeek = WorkingTimePerWeek::whereHas("employee", function($query) use($username){
-                                        $query->where("username", $username);
-                                    })->whereDate("created_at", Carbon::now())
-                                    ->first();
+            $WorkingTimePerWeek = WorkingTimePerWeek::whereHas("employee", function ($query) use ($username) {
+                $query->where("username", $username);
+            })->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($WorkingTimePerWeek)){
+            if (is_null($WorkingTimePerWeek)) {
                 $WorkingTimePerWeek = new WorkingTimePerWeek;
             }
 
             $employee  = User::where("username", $username)->first();
-            if(!is_null($employee)){
+            if (!is_null($employee)) {
                 $WorkingTimePerWeek->employee_id = $employee->id;
                 $WorkingTimePerWeek->update = $list_value[$index];
                 $WorkingTimePerWeek->selisih = 100 - $list_value[$index];
@@ -290,10 +294,10 @@ class inputdryerkilncontroller extends Controller
         }
 
         //  input manhours
-        if(!is_null($manhours_sheet)){
+        if (!is_null($manhours_sheet)) {
             $rows = $manhours_sheet->toArray();
-            $list_name = array_slice($rows[5],3);
-            $list_value = array_slice($rows[7],3);
+            $list_name = array_slice($rows[5], 3);
+            $list_value = array_slice($rows[7], 3);
 
             $listUsername = [];
             foreach ($list_name as $index => $name) {
@@ -302,17 +306,17 @@ class inputdryerkilncontroller extends Controller
             }
 
             foreach ($listUsername as $index => $username) {
-                $manhour = ManHour::whereHas("employee", function($query) use($username){
-                                            $query->where("username", $username);
-                                        })->whereDate("created_at", Carbon::now())
-                                        ->first();
+                $manhour = ManHour::whereHas("employee", function ($query) use ($username) {
+                    $query->where("username", $username);
+                })->whereDate("created_at", Carbon::now())
+                    ->first();
 
-                if(is_null($manhour)){
+                if (is_null($manhour)) {
                     $manhour = new ManHour;
                 }
 
                 $employee  = User::where("username", $username)->first();
-                if(!is_null($employee)){
+                if (!is_null($employee)) {
                     $manhour->employee_id = $employee->id;
                     $manhour->update = $list_value[$index];
                     $manhour->created_at = Carbon::now();
@@ -326,11 +330,12 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeKaizen(Request $request){
+    public function storeKaizen(Request $request)
+    {
         $Kaizen = Kaizen::where("area_id", 2)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
-        if(is_null($Kaizen)){
+        if (is_null($Kaizen)) {
             $Kaizen = new Kaizen;
         }
 
@@ -342,11 +347,12 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeMcu(Request $request){
+    public function storeMcu(Request $request)
+    {
         $StatusMcu = StatusMcu::where("area_id", 2)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
-        if(is_null($StatusMcu)){
+        if (is_null($StatusMcu)) {
             $StatusMcu = new StatusMcu;
         }
 
@@ -358,9 +364,10 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeTask(Request $request){
+    public function storeTask(Request $request)
+    {
         $task = new Task;
-        $task->name = $request->get("name") ;
+        $task->name = $request->get("name");
         $task->area_id = 2;
         $task->user_id = $request->get("owner");
         $task->priority = $request->get("priority");
@@ -372,12 +379,14 @@ class inputdryerkilncontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function deleteTask($id){
+    public function deleteTask($id)
+    {
         Task::where("id", $id)->delete();
         return redirect()->back()->with('success', 'success');
     }
 
-    public function updateTask(Request $request){
+    public function updateTask(Request $request)
+    {
         foreach ($request->get("id") as $index => $task_id) {
             Task::where("id", $task_id)->update([
                 "name"  => $request->get("name")[$index],

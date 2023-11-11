@@ -134,7 +134,6 @@ class inputfurconvcontroller extends Controller
         $emergency_leaves = $request->get("emergency_leaves");
         $medical_leaves = $request->get("medical_leaves");
         $maternity_leaves = $request->get("maternity_leaves");
-        $wta = $request->get("wta");
 
         foreach ($employee_list as $index => $employee_id) {
             $statusperday = statusperday::where("employee_id", $employee_id)
@@ -154,8 +153,7 @@ class inputfurconvcontroller extends Controller
             $statusperday->emergency_leave = $emergency_leaves[$index];
             $statusperday->medical_leave = $medical_leaves[$index];
             $statusperday->maternity_leave = $maternity_leaves[$index];
-            $statusperday->wta = $wta[$index];
-            $statusperday->created_at = Carbon::now();
+            $statusperday->created_at = $request->datestatus;
             $statusperday->save();
         }
         return redirect()->back()->with('success', 'success');

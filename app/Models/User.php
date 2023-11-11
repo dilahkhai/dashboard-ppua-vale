@@ -47,38 +47,47 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function area(){
+    public function area()
+    {
         return $this->belongsTo(Area::class, "area_id");
     }
 
-    public function safety_reports(){
+    public function safety_reports()
+    {
         return $this->hasMany(SafetyReport::class, "employee_id");
     }
 
-    public function today_safety_report(){
+    public function today_safety_report()
+    {
         return $this->hasOne(SafetyReport::class, "employee_id")->whereDate("created_at", Carbon::now());
     }
 
-    public function working_time_per_week(){
+    public function working_time_per_week()
+    {
         return $this->hasMany(WorkingTimePerWeek::class, "employee_id");
     }
 
-    public function manhours(){
+    public function manhours()
+    {
         return $this->hasMany(ManHour::class, "employee_id");
     }
 
-    public function today_manhours(){
+    public function today_manhours()
+    {
         return $this->hasMany(ManHour::class, "employee_id")->whereDate("created_at", Carbon::now());
     }
 
-    public function today_working_time_per_week(){
+    public function today_working_time_per_week()
+    {
         return $this->hasOne(WorkingTimePerWeek::class, "employee_id")->whereDate("created_at", Carbon::now());
     }
 
-    public function statusperday(){
+    public function statusperday()
+    {
         return $this->hasMany(statusperday::class, "employee_id");
     }
-    public function todaystatusperday(){
+    public function todaystatusperday()
+    {
         return $this->hasOne(statusperday::class, "employee_id")->whereDate("created_at", Carbon::now());
     }
 }
