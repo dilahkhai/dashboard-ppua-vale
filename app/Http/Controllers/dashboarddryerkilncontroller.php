@@ -12,6 +12,7 @@ use App\Models\Kaizen;
 
 use App\Models\Task;
 use App\Models\Link;
+use App\Models\mcu;
 use App\Models\StatusMcu;
 
 class dashboarddryerkilncontroller extends Controller
@@ -175,12 +176,16 @@ class dashboarddryerkilncontroller extends Controller
             })->first();
 
 
-        $StatusMcu = StatusMcu::where("area_id", 2)
-            ->when(request('from'), function ($query) {
-                $query->whereDate('created_at', '>=', request('from'));
-            }, function ($query) {
-                $query->whereDate('created_at', '>=', now()->startOfDay());
-            })->first();
+        $mcu = mcu::query()
+            ->whereHas('employee', function ($query) {
+                $query->where("area_id", 2);
+            })
+            ->get();
+
+        $mcuDone = $mcu->filter(fn ($data) => $data->status == "DONE")->count();
+        $mcuCount = $mcu->count();
+
+        $StatusMcu = ($mcuDone / $mcuCount) * 100;
 
 
         return view('dashboarddryerkiln')->with([

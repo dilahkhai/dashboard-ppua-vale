@@ -85,7 +85,7 @@
                 <div class="inner">
                     <p>MCU Status</p>
 
-                    <h3>{{$statusMcu->value ?? '0'}}%</h3>
+                    <h3>{{$statusMcu}}%</h3>
                 </div>
               </div>
             </div>
