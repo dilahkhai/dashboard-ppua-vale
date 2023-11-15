@@ -9,12 +9,14 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\OrganizationStructure;
 use App\Models\Kaizen;
+use App\Models\mcu;
 use App\Models\StatusMcu;
 use App\Models\Task;
 
 class dashboardutlcontroller extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $employee = User::query()
             ->with(["safety_reports" => function ($query) {
                 $query
@@ -97,22 +99,25 @@ class dashboardutlcontroller extends Controller
                 array_push($listWorkingTimePerWeek, [0, 100]);
             }
 
-            if (count($value->manhours) > 0) {
-                array_push($listManHours, $value->manhours[0]->update);
-            } else {
-                array_push($listManHours, 0);
-            }
-
             if (count($value->statusperday) > 0) {
-                array_push($listOffice, $value->statusperday->sum('office'));
-                array_push($listHo, $value->statusperday->sum('ho'));
-                array_push($listTraining, $value->statusperday->sum('training'));
-                array_push($listSickLeave, $value->statusperday->sum('sick_leave'));
-                array_push($listAnnualLeave, $value->statusperday->sum('annual_leave'));
-                array_push($listEmergencyLeave, $value->statusperday->sum('emergency_leave'));
-                array_push($listMedicalLeave, $value->statusperday->sum('medical_leave'));
-                array_push($listMaternityLeave, $value->statusperday->sum('maternity_leave'));
-                array_push($listWta, $value->statusperday->sum('wta'));
+                $tempOffice = $value->statusperday->sum('office');
+                $tempHo = $value->statusperday->sum('ho');
+                $tempTraining = $value->statusperday->sum('training');
+                $tempSickLeave = $value->statusperday->sum('sick_leave');
+                $tempAnnualLeave = $value->statusperday->sum('annual_leave');
+                $tempEmergencyLeave = $value->statusperday->sum('emergency_leave');
+                $tempMedicalLeave = $value->statusperday->sum('medical_leave');
+                $tempMaternityLeave = $value->statusperday->sum('maternity_leave');
+
+                array_push($listOffice, $tempOffice);
+                array_push($listHo, $tempHo);
+                array_push($listTraining, $tempTraining);
+                array_push($listSickLeave, $tempSickLeave);
+                array_push($listAnnualLeave, $tempAnnualLeave);
+                array_push($listEmergencyLeave, $tempEmergencyLeave);
+                array_push($listMedicalLeave, $tempMedicalLeave);
+                array_push($listMaternityLeave, $tempMaternityLeave);
+                $tempManHours = $tempOffice + $tempHo + $tempSickLeave + $tempAnnualLeave + $tempTraining + $tempEmergencyLeave + $tempMedicalLeave + $tempMaternityLeave;
             } else {
                 array_push($listOffice, 0);
                 array_push($listHo, 0);
@@ -122,8 +127,10 @@ class dashboardutlcontroller extends Controller
                 array_push($listEmergencyLeave, 0);
                 array_push($listMedicalLeave, 0);
                 array_push($listMaternityLeave, 0);
-                array_push($listWta, 0);
+                $tempManHours = 0;
             }
+
+            array_push($listManHours, $tempManHours);
         }
 
         // Productivity
@@ -171,13 +178,16 @@ class dashboardutlcontroller extends Controller
                 $query->whereDate('created_at', '>=', now()->startOfDay());
             })->first();
 
+        $mcu = mcu::query()
+            ->whereHas('employee', function ($query) {
+                $query->where("area_id", 4);
+            })
+            ->get();
 
-        $StatusMcu = StatusMcu::where("area_id", 4)
-            ->when(request('from'), function ($query) {
-                $query->whereDate('created_at', '>=', request('from'));
-            }, function ($query) {
-                $query->whereDate('created_at', '>=', now()->startOfDay());
-            })->first();
+        $mcuDone = $mcu->filter(fn ($data) => $data->status == "DONE")->count();
+        $mcuCount = $mcu->count() == 0 ? 1 : $mcu->count();
+
+        $StatusMcu = ($mcuDone / $mcuCount) * 100;
 
         return view('dashboardutl')->with([
             "kaizen"    => $Kaizen,
@@ -204,9 +214,10 @@ class dashboardutlcontroller extends Controller
         ]);
     }
 
-    public function get(){
+    public function get()
+    {
         $tasks = Task::with("owner")
-                    ->where("area_id", 4)->get();
+            ->where("area_id", 4)->get();
 
         return response()->json([
             "data" => $tasks->all()

@@ -374,9 +374,6 @@
         responsive:true,
         maintainAspectRatio: false,
         plugins: {
-            legend: {
-                position: 'right',
-            },
             title: {
                 display: true,
                 text: 'Man Hours'
