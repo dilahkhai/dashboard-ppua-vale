@@ -214,7 +214,17 @@
     const config = {
         type: 'pie',
         data: data,
-        options: {},
+        options: {
+          plugins: {
+            datalabels: {
+              color: "white",
+              font: {
+                size: 32,
+                weight: 'bold'
+              }
+            }
+          }
+        },
         plugins: [ChartDataLabels]
     };
 
