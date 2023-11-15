@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,28 +33,32 @@
   <link rel="stylesheet" href="{{asset('SelainLogin/plugins/summernote/summernote-bs4.min.css')}}">
 
 
-    <style>
-        .gantt-orange{
-            background-color: rgb(244,176,132);
-        }
-        .gantt-amber{
-            background-color: rgb(255,230,153);
-        }
-        .gantt-green{
-            background-color: rgb(197,224,179);
-        }
-        .gantt-blue{
-            background-color: rgb(142,169,219);
-        }
-    </style>
+  <style>
+    .gantt-orange {
+      background-color: rgb(244, 176, 132);
+    }
+
+    .gantt-amber {
+      background-color: rgb(255, 230, 153);
+    }
+
+    .gantt-green {
+      background-color: rgb(197, 224, 179);
+    }
+
+    .gantt-blue {
+      background-color: rgb(142, 169, 219);
+    }
+  </style>
   @yield('css')
 
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
 
-  <!-- Preloader -->
-  {{-- <div class="preloader flex-column justify-content-center align-items-center">
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Preloader -->
+    {{-- <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="{{asset('SelainLogin/dist/img/load.png')}}" alt="AdminLTELogo" height="60" width="60">
   </div> --}}
 
@@ -95,28 +100,45 @@
       </li> --}}
       <li class="nav-item dropdown show">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
-            <i class="fas fa-user"></i>
+          <i class="fas fa-bell"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-            <span class="dropdown-item dropdown-header">Current User</span>
-             <div class="dropdown-divider"></div>
+          <span class="dropdown-item dropdown-header">Notifications</span>
+          <div class="dropdown-divider"></div>
 
-            <a href="#" class="dropdown-item">
-                <i class="fas fa-user"></i> {{Auth::user()->name}}
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="{{url('logout-user')}}" class="dropdown-item dropdown-footer">Logout</a>
+          @foreach ($notifications as $notification)
+          <div class="dropdown-item">
+            <h5>{{ $notification->title }}</h5>
+            <p>{{ $notification->content }}</p>
+          </div>
+          <div class="dropdown-divider"></div>
+          @endforeach
+        </div>
+      </li>
+      <li class="nav-item dropdown show">
+        <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+          <i class="fas fa-user"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+          <span class="dropdown-item dropdown-header">Current User</span>
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-user"></i> {{Auth::user()->name}}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="{{url('logout-user')}}" class="dropdown-item dropdown-footer">Logout</a>
         </div>
       </li>
 
 
       <!-- Notifications Dropdown Menu -->
       {{-- <form method = 'post' action = '{{route('logout')}}'>
-        {{csrf_field()}}
-      <button class="nav-link" type = "submit" role="button">
+      {{csrf_field()}}
+      <button class="nav-link" type="submit" role="button">
         LOGOUT
       </button>
-        </form> --}}
+      </form> --}}
 
       {{-- <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -167,7 +189,7 @@
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
         <div class="info">
-          <a href="#" class="d-block" ><b>PPU AUTOMATION</b></a>
+          <a href="#" class="d-block"><b>PPU AUTOMATION</b></a>
         </div>
       </div>
 
@@ -184,112 +206,112 @@
                with font-awesome or any other icon font library -->
 
 
-        <li class="nav-item">
+          <li class="nav-item">
             <a href="{{url('tasks')}}" class="nav-link {{  Request::is('tasks') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-tasks"></i>
+              <i class="nav-icon fas fa-tasks"></i>
               <p>Main Project</p>
             </a>
           </li>
 
-      <li class="nav-item">
+          <li class="nav-item">
             <a href="/oncall" class="nav-link {{  Request::is('oncall') ? 'active' : '' }}">
               <i class="nav-icon fas fa-phone-alt"></i>
               <p>
-          OnCall Automation
+                OnCall Automation
 
-        </p>
-      </a>
-    </li>
+              </p>
+            </a>
+          </li>
 
-        <li class="nav-item">
-          <a href="/knowledge" class="nav-link {{  Request::is('knowledge') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-book-open"></i>
-             <p>
+          <li class="nav-item">
+            <a href="/knowledge" class="nav-link {{  Request::is('knowledge') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-book-open"></i>
+              <p>
                 Sharing Knowledge
 
               </p>
-              </a>
-              </li>
+            </a>
+          </li>
 
-              <li class="nav-item">
-                <a href="/mcu" class="nav-link {{  Request::is('mcu') ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-hospital-alt"></i>
-                  <p>
-              Status MCU
+          <li class="nav-item">
+            <a href="/mcu" class="nav-link {{  Request::is('mcu') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-hospital-alt"></i>
+              <p>
+                Status MCU
 
-            </p>
-          </a>
-        </li>
+              </p>
+            </a>
+          </li>
 
 
-        <li class="nav-item ">
+          <li class="nav-item ">
             <a href="/wfhrooster" class="nav-link {{  Request::is('wfhrooster') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-home"></i>
-                <p>WFH Rooster</p>
+              <i class="nav-icon fas fa-home"></i>
+              <p>WFH Rooster</p>
             </a>
-        </li>
-        {{-- <li class="nav-item">
+          </li>
+          {{-- <li class="nav-item">
             <a href="/mod" class="nav-link {{  Request::is('mod') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-book"></i>
-                <p>Schedule Engineer</p>
-            </a>
-        </li> --}}
-        @if(Auth::user()->role == 'admin')
-        <li class="nav-item">
-            <a href="/image-landing" class="nav-link {{  Request::is('image-landing') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-image"></i>
-                <p>Image Landing Page</p>
-            </a>
-        </li>
-        @endif
-
-
-
-        @if(Auth::user()->role == 'admin')
-        <li class="nav-item {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel') ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel')  ? 'active' : '' }}">
-            <i class="nav-icon fas fa-copy"></i>
-            <p>
-              Input Data
-              <i class="right fas fa-angle-left"></i>
-            </p>
+          <i class="nav-icon fas fa-book"></i>
+          <p>Schedule Engineer</p>
           </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="/inputfurconv" class="nav-link {{  Request::is('inputfurconv') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Furnace-Converter</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/inputdryerkiln" class="nav-link {{  Request::is('inputdryerkiln') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Dryer-Kiln</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/inputinfra" class="nav-link {{  Request::is('inputinfra') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Infrastructure</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/inpututl" class="nav-link {{  Request::is('inpututl') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Utilities</p>
-              </a>
-            </li>
-            @if(Auth::user()->role=='admin')
+          </li> --}}
+          @if(Auth::user()->role == 'admin')
+          <li class="nav-item">
+            <a href="/image-landing" class="nav-link {{  Request::is('image-landing') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-image"></i>
+              <p>Image Landing Page</p>
+            </a>
+          </li>
+          @endif
+
+
+
+          @if(Auth::user()->role == 'admin')
+          <li class="nav-item {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel')  ? 'active' : '' }}">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Input Data
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
               <li class="nav-item">
-                  <a href="/import-excel" class="nav-link {{  Request::is('import-excel') ? 'active' : '' }}">
+                <a href="/inputfurconv" class="nav-link {{  Request::is('inputfurconv') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Furnace-Converter</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/inputdryerkiln" class="nav-link {{  Request::is('inputdryerkiln') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Dryer-Kiln</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/inputinfra" class="nav-link {{  Request::is('inputinfra') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Infrastructure</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/inpututl" class="nav-link {{  Request::is('inpututl') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Utilities</p>
+                </a>
+              </li>
+              @if(Auth::user()->role=='admin')
+              <li class="nav-item">
+                <a href="/import-excel" class="nav-link {{  Request::is('import-excel') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Import Excel</p>
-                  </a>
+                </a>
               </li>
-            @endif
-          </ul>
-        </li>
-        @endif
+              @endif
+            </ul>
+          </li>
+          @endif
 
 
         </ul>
@@ -310,41 +332,42 @@
     <!-- Control sidebar content goes here -->
   </aside>
   <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
+  </div>
+  <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="{{asset('SelainLogin/plugins/jquery/jquery.min.js')}}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{asset('SelainLogin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('SelainLogin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<!-- ChartJS -->
-<script src="{{asset('SelainLogin/plugins/chart.js/Chart.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('SelainLogin/plugins/sparklines/sparkline.js')}}"></script>
-<!-- JQVMap -->
-<script src="{{asset('SelainLogin/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-<script src="{{asset('SelainLogin/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{asset('SelainLogin/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('SelainLogin/plugins/moment/moment.min.js')}}"></script>
-<script src="{{asset('SelainLogin/plugins/daterangepicker/daterangepicker.js')}}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{asset('SelainLogin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-<!-- Summernote -->
-<script src="{{asset('SelainLogin/plugins/summernote/summernote-bs4.min.js')}}"></script>
-<!-- overlayScrollbars -->
-<script src="{{asset('SelainLogin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
-<!-- AdminLTE App -->
-<script src="{{asset('SelainLogin/dist/js/adminlte.js')}}"></script>
+  <!-- jQuery -->
+  <script src="{{asset('SelainLogin/plugins/jquery/jquery.min.js')}}"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="{{asset('SelainLogin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge('uibutton', $.ui.button)
+  </script>
+  <!-- Bootstrap 4 -->
+  <script src="{{asset('SelainLogin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <!-- ChartJS -->
+  <script src="{{asset('SelainLogin/plugins/chart.js/Chart.min.js')}}"></script>
+  <!-- Sparkline -->
+  <script src="{{asset('SelainLogin/plugins/sparklines/sparkline.js')}}"></script>
+  <!-- JQVMap -->
+  <script src="{{asset('SelainLogin/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+  <script src="{{asset('SelainLogin/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+  <!-- jQuery Knob Chart -->
+  <script src="{{asset('SelainLogin/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+  <!-- daterangepicker -->
+  <script src="{{asset('SelainLogin/plugins/moment/moment.min.js')}}"></script>
+  <script src="{{asset('SelainLogin/plugins/daterangepicker/daterangepicker.js')}}"></script>
+  <!-- Tempusdominus Bootstrap 4 -->
+  <script src="{{asset('SelainLogin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+  <!-- Summernote -->
+  <script src="{{asset('SelainLogin/plugins/summernote/summernote-bs4.min.js')}}"></script>
+  <!-- overlayScrollbars -->
+  <script src="{{asset('SelainLogin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+  <!-- AdminLTE App -->
+  <script src="{{asset('SelainLogin/dist/js/adminlte.js')}}"></script>
 
-@stack('scripts')
+  @stack('scripts')
 
 </body>
+
 </html>

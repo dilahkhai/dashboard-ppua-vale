@@ -65,7 +65,7 @@
                       <td>{{ $item->area?->area }}</td>
                       <td>{{$item->employee->name}}</td>
                       <td>{{$item->lastmcu}}</td>
-                      <td>{{$item->duedate}}</td>
+                      <td class="{{ $item->is_due ? 'text-warning' : '' }}">{{$item->duedate}}</td>
                       <td>{{$item->nextmcu ?? "-" }}</td>
                       @if ($item->status == "DONE")
                       <td class="text-primary"> {{$item->status}}</td>

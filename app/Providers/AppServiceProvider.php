@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Notification;
+use Illuminate\Support\Facades;
+use Illuminate\View\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +26,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Facades\View::composer('*', function (View $view) {
+            $notifications = Notification::query()
+                ->where('receiver_id', auth()->user()->getAuthIdentifier())
+                ->get();
+
+            $view->with('notifications', $notifications);
+        });
     }
 }

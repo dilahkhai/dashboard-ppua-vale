@@ -15,6 +15,8 @@ class mcu extends Model
     protected $primaryKey = "id_mcu";
     public $timestamps = true;
 
+    protected $guarded = [];
+
     public function employee(){
         return $this->belongsTo(User::class, "employee_id");
     }
