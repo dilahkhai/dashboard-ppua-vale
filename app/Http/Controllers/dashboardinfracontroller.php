@@ -67,6 +67,12 @@ class dashboardinfracontroller extends Controller
                         $query->whereDate('created_at', '<=', now()->endOfDay());
                     });
             }])
+            ->withCount(['tasks as finished_tasks' => function ($query) {
+                $query->where('status', 'Complete');
+            }])
+            ->withCount(['tasks as unfinished_tasks' => function ($query) {
+                $query->whereNot('status', 'Complete');
+            }])
             ->whereHas("area", function ($query) {
                 $query->where("area", "Infrastructure");
             })->get();
@@ -93,8 +99,8 @@ class dashboardinfracontroller extends Controller
                 array_push($listSafetyValue, 0);
             }
 
-            if (count($value->working_time_per_week) > 0) {
-                array_push($listWorkingTimePerWeek, [$value->working_time_per_week[0]->update, $value->working_time_per_week[0]->selisih]);
+            if ($value->finished_tasks > 0) {
+                array_push($listWorkingTimePerWeek, [$value->finished_tasks, $value->unfinished_tasks]);
             } else {
                 array_push($listWorkingTimePerWeek, [0, 100]);
             }

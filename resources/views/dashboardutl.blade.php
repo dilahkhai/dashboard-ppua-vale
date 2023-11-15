@@ -189,7 +189,7 @@
         ];
 
         gantt.templates.task_text=function(start, end, task){
-            return task.name;
+          return task.name + " - " + task.status;
         };
 
         gantt.templates.task_class = function(start, end, task){
