@@ -12,6 +12,7 @@ use App\Models\WorkingTimePerWeek;
 use App\Models\statusperday;
 use App\Models\ManHour;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -50,6 +51,11 @@ class User extends Authenticatable
     public function area()
     {
         return $this->belongsTo(Area::class, "area_id");
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 
     public function safety_reports()
