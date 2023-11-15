@@ -13,15 +13,17 @@
         <div class="col-sm-6">
           <h1>User PPU</h1>
         </div>
-        {{-- @if(session()->has('success'))
-            <div class="alert alert-success" role="alert">
-              Data Saved succesfully!
-            </div>
-            @endif --}}
+      </div>
+      <div class="row">
+        @if(session()->has('success'))
+        <div class="alert alert-success w-100" role="alert">
+          {{ session('success') }}
+        </div>
+        @endif
 
         @if(session()->has('fail'))
         <div class="alert alert-danger" role="alert">
-          Failed!
+          {{ session('fail') }}
         </div>
         @endif
       </div>

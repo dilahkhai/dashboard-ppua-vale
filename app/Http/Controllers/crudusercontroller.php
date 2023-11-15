@@ -95,7 +95,7 @@ class crudusercontroller extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'username' => 'required|unique:users,username|max:255',
+            'username' => 'required|max:255|unique:users,username,' . $id,
         ]);
 
         $cruduser = User::find($id);
@@ -121,7 +121,7 @@ class crudusercontroller extends Controller
 
             Alert::success("Password reset!");
 
-            return back()->with('success', 'Success reset password!');
+            return back()->with('success', 'Success reset password to "pcn@2022"!');
         } catch (Exception $e) {
             dd($e->getMessage());
         }
