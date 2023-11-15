@@ -7,7 +7,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use App\Models\mcu;
 use App\Models\User;
-
 class mcucontroller extends Controller
 {
     /**
@@ -48,6 +47,7 @@ class mcucontroller extends Controller
     public function store(Request $request)
     {
         $mcu = new mcu;
+        $mcu->area_id = $request->input('area_id');
         $mcu->employee_id = $request->input('employee');
         $mcu->lastmcu = $request->input('lastmcu');
         $mcu->duedate = $request->input('duedate');
@@ -69,10 +69,21 @@ class mcucontroller extends Controller
         //
     }
 
-    public function status(Request $request, $id)
+    public function done(Request $request, $id)
     {
         $mcu = mcu::find($id);
         $mcu->status = "DONE";
+
+        $mcu->save();
+
+        Alert::success('Data Updated!');
+
+        return redirect('/mcu')->with('done', 'done');
+    }
+    public function undone(Request $request, $id)
+    {
+        $mcu = mcu::find($id);
+        $mcu->status = "";
 
         $mcu->save();
 

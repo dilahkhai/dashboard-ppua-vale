@@ -48,7 +48,7 @@
                 <table id="example2" class="table table-bordered table-hover">
                   <thead>
                     <tr>
-
+                      <th>Area</th>
                       <th>Name</th>
                       <th>Last MCU</th>
                       <th>Due Date</th>
@@ -62,7 +62,7 @@
                     @isset($data)
                     @foreach ($data as $item)
                     <tr>
-
+                      <td>{{ $item->area?->area }}</td>
                       <td>{{$item->employee->name}}</td>
                       <td>{{$item->lastmcu}}</td>
                       <td>{{$item->duedate}}</td>
@@ -77,7 +77,10 @@
                         <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         @if ( auth()->user()->role == 'admin')
                         @if ($item->status != "DONE")
-                        <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-warning" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
+                        <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-primary" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
+                        @endif
+                        @if ($item->status == "DONE")
+                        <a href="/undonemcu/{{$item->id_mcu}}" class="btn btn-warning" onclick="return confirm('Do you want to update the status to UNDONE?')"><i class="fa-solid fa-pen-to-square"></i> Undone! </a>
                         @endif
                         @endif
                       </td>

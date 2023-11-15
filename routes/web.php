@@ -102,7 +102,8 @@ Route::middleware([
     Route::get('/tambahmcu', [App\Http\Controllers\mcucontroller::class, 'create']);
     Route::post('/updatemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'update']);
     Route::get('/editmcu/{id}', [App\Http\Controllers\mcucontroller::class, 'edit']);
-    Route::get('/donemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'status']);
+    Route::get('/donemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'done']);
+    Route::get('/undonemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'undone']);
     Route::post('/simpanmcu', [App\Http\Controllers\mcucontroller::class, 'store']);
     Route::delete('/deletemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'destroy']);
 
