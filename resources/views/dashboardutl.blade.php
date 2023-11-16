@@ -85,7 +85,7 @@
                 <div class="inner">
                     <p>MCU Status</p>
 
-                    <h3>{{$statusMcu->value ?? '0'}}%</h3>
+                    <h3>{{$statusMcu}}%</h3>
                 </div>
               </div>
             </div>
@@ -181,6 +181,7 @@
         gantt.config.grid_width = 700;
         gantt.config.columns = [
             {name:"name", label:"Task name",  align: "center", color:"red" },
+            {name:"task_owner_area", label:"Area", align: "center" },
             {name:"task_owner", label:"Owner", align: "center" },
             {name:"priority", label:"Priority", align: "center" },
             {name:"start_date", label:"Start time", align: "center" },
@@ -188,8 +189,8 @@
             {name:"status", label:"Status", align: "center" }
         ];
 
-        gantt.templates.task_text=function(start, end, task){
-          return task.name + " - " + task.status;
+        gantt.templates.task_text = function(start, end, task) {
+          return `<span style="color: black; font-weight: bold">${task.name} - ${task.status}</span>`;
         };
 
         gantt.templates.task_class = function(start, end, task){
@@ -217,10 +218,11 @@
         ];
 
         gantt.init("gantt_here");
-        gantt.load("/api/data-dryerkiln");
+        gantt.load("/api/data-util");
     </script>
 
 <script src="{{asset('SelainLogin/chart.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0-rc"></script>
 
 <script>
   // Employee Status
@@ -456,8 +458,20 @@
       }]
     };
     const configHours = {
-      type: 'doughnut',
+      type: 'pie',
       data: dataHours,
+      options: {
+            plugins: {
+              datalabels: {
+                color: "white",
+                font: {
+                  size: 32,
+                  weight: 'bold'
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
     };
 
 

@@ -46,6 +46,7 @@
       align: "center",
       color: "red"
     },
+    {name:"task_owner_area", label:"Area", align: "center" },
     {
       name: "task_owner",
       label: "Owner",
@@ -74,7 +75,7 @@
   ];
 
   gantt.templates.task_text = function(start, end, task) {
-    return task.name + " - " + task.status;
+    return `<span style="color: black; font-weight: bold">${task.name} - ${task.status}</span>`;
   };
 
   gantt.templates.task_class = function(start, end, task) {

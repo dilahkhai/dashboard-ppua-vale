@@ -10,7 +10,8 @@ class Task extends Model
     use HasFactory;
     protected $appends = [
         "open",
-        "task_owner"
+        "task_owner",
+        "task_owner_area"
     ];
 
     protected $casts = [
@@ -27,5 +28,10 @@ class Task extends Model
 
     public function getTaskOwnerAttribute(){
         return $this->owner->name;
+    }
+
+    public function getTaskOwnerAreaAttribute()
+    {
+        return $this->owner->area->area;
     }
 }

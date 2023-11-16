@@ -104,7 +104,7 @@ class dashboarddryerkilncontroller extends Controller
             if ($value->finished_tasks > 0) {
                 array_push($listWorkingTimePerWeek, [$value->finished_tasks, $value->unfinished_tasks]);
             } else {
-                array_push($listWorkingTimePerWeek, [0, 100]);
+                array_push($listWorkingTimePerWeek, [0, 1]);
             }
 
             if (count($value->statusperday) > 0) {
@@ -225,7 +225,7 @@ class dashboarddryerkilncontroller extends Controller
 
     public function get()
     {
-        $tasks = Task::with("owner")
+        $tasks = Task::with("owner.area")
             ->where("area_id", 2)->get();
 
         return response()->json([

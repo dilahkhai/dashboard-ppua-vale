@@ -222,7 +222,7 @@ class dashboardutlcontroller extends Controller
 
     public function get()
     {
-        $tasks = Task::with("owner")
+        $tasks = Task::with("owner.area")
             ->where("area_id", 4)->get();
 
         return response()->json([

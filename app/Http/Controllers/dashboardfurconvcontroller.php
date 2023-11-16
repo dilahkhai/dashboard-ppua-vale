@@ -222,7 +222,7 @@ class dashboardfurconvcontroller extends Controller
 
     public function get()
     {
-        $tasks = Task::with("owner")
+        $tasks = Task::with("owner.area")
             ->where("area_id", 1)->get();
 
         return response()->json([

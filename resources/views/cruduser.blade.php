@@ -74,7 +74,7 @@
                         <a href="/edituser/{{$item->id}}" class="btn btn-success btn-md mr-3"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         <form action="/resetpassword/{{ $item->id }}" method="post">
                           @csrf
-                          <button type="submit" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Reset Password </button>
+                          <button type="submit" class="btn btn-success btn-md" onclick="return confirm('Apakah anda yakin akan mereset password user ini?')"><i class="fa-solid fa-pen-to-square"></i> Reset Password </button>
                         </form>
                       </td>
                       <td>
