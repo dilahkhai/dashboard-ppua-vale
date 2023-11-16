@@ -73,7 +73,7 @@ class inpututlcontroller extends Controller
 
             $safety_report->employee_id = $employee_id;
             $safety_report->count = $count_list[$index];
-            $safety_report->created_at = Carbon::now();
+            $safety_report->created_at = $request->datestatus;
             $safety_report->save();
         }
         return redirect()->back()->with('success', 'success');
@@ -95,7 +95,7 @@ class inpututlcontroller extends Controller
             $productivity->department_id = $department_id;
             $productivity->update = $value_list[$index];
             $productivity->selisih = 100 - $value_list[$index];
-            $productivity->created_at = Carbon::now();
+            $productivity->created_at = $request->datestatus;
             $productivity->save();
 
         }
@@ -118,7 +118,7 @@ class inpututlcontroller extends Controller
             $WorkingTimePerWeek->employee_id = $employee_id;
             $WorkingTimePerWeek->update = $count_list[$index];
             $WorkingTimePerWeek->selisih = 100 - $count_list[$index];
-            $WorkingTimePerWeek->created_at = Carbon::now();
+            $WorkingTimePerWeek->created_at = $request->datestatus;
             $WorkingTimePerWeek->save();
         }
         return redirect()->back()->with('success', 'success');
@@ -155,7 +155,7 @@ class inpututlcontroller extends Controller
             $statusperday->medical_leave = $medical_leaves[$index];
             $statusperday->maternity_leave = $maternity_leaves[$index];
             $statusperday->wta = $wta[$index];
-            $statusperday->created_at = Carbon::now();
+            $statusperday->created_at = $request->datestatus;
             $statusperday->save();
         }
         return redirect()->back()->with('success', 'success');
@@ -171,7 +171,7 @@ class inpututlcontroller extends Controller
 
         $organization->value = $request->get("value");
         $organization->area_id = 4;
-        $organization->created_at = Carbon::now();
+        $organization->created_at = $request->datestatus;
         $organization->save();
 
         return redirect()->back()->with('success', 'success');
@@ -187,7 +187,7 @@ class inpututlcontroller extends Controller
 
         $Kaizen->value = $request->get("value");
         $Kaizen->area_id = 4;
-        $Kaizen->created_at = Carbon::now();
+        $Kaizen->created_at = $request->datestatus;
         $Kaizen->save();
 
         return redirect()->back()->with('success', 'success');
@@ -203,7 +203,7 @@ class inpututlcontroller extends Controller
 
         $StatusMcu->value = $request->get("value");
         $StatusMcu->area_id = 4;
-        $StatusMcu->created_at = Carbon::now();
+        $StatusMcu->created_at = $request->datestatus;
         $StatusMcu->save();
 
         return redirect()->back()->with('success', 'success');
@@ -218,7 +218,7 @@ class inpututlcontroller extends Controller
         $task->duration = $request->get("duration");
         $task->start_date = $request->get("start_date");
         $task->status = $request->get("status");
-        $task->created_at = Carbon::now();
+        $task->created_at = $request->datestatus;
         $task->save();
         return redirect()->back()->with('success', 'success');
     }

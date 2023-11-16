@@ -138,10 +138,14 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{url('/inputfurconv')}}" method="POST">
+              <form action="{{url('/inputdryerkiln')}}" method="POST">
                 @csrf
                 <div class="card-body text-right">
                   <div class="text-left">
+                    <div class="form-group">
+                      <label for="dateInput">Date</label>
+                      <input type="date" name="datestatus" class="form-control" id="dateInput">
+                    </div>
                     {{-- Header --}}
                     <div class="row">
                       <div class="col-4">
@@ -186,7 +190,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="{{url('/inputinfraOrganization')}}" method="POST">
+            <form action="{{url('/inputdryerkilnOrganization')}}" method="POST">
               @csrf
               <div class="card-body text-right">
                 <div class="text-left">
@@ -200,6 +204,14 @@
                     </div>
                   </div>
                   {{-- Body --}}
+                  <div class="row">
+                    <div class="col-4">
+                      <p>Date</p>
+                    </div>
+                    <div class="col-8">
+                      <input type="date" name="datestatus" class="form-control" id="dateInput">
+                    </div>
+                  </div>
                   <div class="row">
                     <div class="col-4">
                       <p>Organization Structure</p>
@@ -228,7 +240,7 @@
             <h3 class="card-title">Kaizen</h3>
           </div>
 
-          <form action="{{url('/inputinfraKaizen')}}" method="POST">
+          <form action="{{url('/inputdryerkilnKaizen')}}" method="POST">
             @csrf
             <div class="card-body text-right">
               <div class="text-left">
@@ -242,6 +254,14 @@
                   </div>
                 </div>
                 {{-- Body --}}
+                <div class="row">
+                  <div class="col-4">
+                    <p>Date</p>
+                  </div>
+                  <div class="col-8">
+                    <input type="date" name="datestatus" class="form-control" id="dateInput">
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-4">
                     <p>Kaizen</p>
@@ -269,10 +289,14 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form action="{{url('/inputinfraProductivity')}}" method="POST">
+        <form action="{{url('/inputdryerkilnProductivity')}}" method="POST">
           @csrf
           <div class="card-body text-right">
             <div class="text-left">
+              <div class="form-group">
+                <label for="dateInput">Date</label>
+                <input type="date" name="datestatus" class="form-control" id="dateInput">
+              </div>
               {{-- Header --}}
               <div class="row">
                 <div class="col-4">
@@ -305,7 +329,6 @@
       <!-- /.card -->
     </div>
     {{-- End of Working TIme Allocation --}}
-
   </div>
 
   <form action="{{url('inputfurconvWorkingWeek')}}" method="POST">

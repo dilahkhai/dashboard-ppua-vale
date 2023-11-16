@@ -79,7 +79,7 @@ class inputdryerkilncontroller extends Controller
 
             $safety_report->employee_id = $employee_id;
             $safety_report->count = $count_list[$index];
-            $safety_report->created_at = Carbon::now();
+            $safety_report->created_at = $request->datestatus;
             $safety_report->save();
         }
         return redirect()->back()->with('success', 'success');
@@ -102,7 +102,7 @@ class inputdryerkilncontroller extends Controller
             $productivity->department_id = $department_id;
             $productivity->update = $value_list[$index];
             $productivity->selisih = 100 - $value_list[$index];
-            $productivity->created_at = Carbon::now();
+            $productivity->created_at = $request->datestatus;
             $productivity->save();
         }
         return redirect()->back()->with('success', 'success');
@@ -125,7 +125,7 @@ class inputdryerkilncontroller extends Controller
             $WorkingTimePerWeek->employee_id = $employee_id;
             $WorkingTimePerWeek->update = $count_list[$index];
             $WorkingTimePerWeek->selisih = 100 - $count_list[$index];
-            $WorkingTimePerWeek->created_at = Carbon::now();
+            $WorkingTimePerWeek->created_at = $request->datestatus;
             $WorkingTimePerWeek->save();
         }
         return redirect()->back()->with('success', 'success');
@@ -178,7 +178,7 @@ class inputdryerkilncontroller extends Controller
 
         $organization->value = $request->get("value");
         $organization->area_id = 2;
-        $organization->created_at = Carbon::now();
+        $organization->created_at = $request->datestatus;
         $organization->save();
 
         return redirect()->back()->with('success', 'success');
@@ -261,7 +261,7 @@ class inputdryerkilncontroller extends Controller
         //         $productivity->department_id = $value["id"];
         //         $productivity->update = $data;
         //         $productivity->selisih = 100 - $data;
-        //         $productivity->created_at = Carbon::now();
+        //         $productivity->created_at = $request->datestatus;
         //         $productivity->save();
         //     }
         // }
@@ -288,7 +288,7 @@ class inputdryerkilncontroller extends Controller
                 $WorkingTimePerWeek->employee_id = $employee->id;
                 $WorkingTimePerWeek->update = $list_value[$index];
                 $WorkingTimePerWeek->selisih = 100 - $list_value[$index];
-                $WorkingTimePerWeek->created_at = Carbon::now();
+                $WorkingTimePerWeek->created_at = $request->datestatus;
                 $WorkingTimePerWeek->save();
             }
         }
@@ -319,7 +319,7 @@ class inputdryerkilncontroller extends Controller
                 if (!is_null($employee)) {
                     $manhour->employee_id = $employee->id;
                     $manhour->update = $list_value[$index];
-                    $manhour->created_at = Carbon::now();
+                    $manhour->created_at = $request->datestatus;
                     $manhour->save();
                 }
             }
@@ -341,7 +341,7 @@ class inputdryerkilncontroller extends Controller
 
         $Kaizen->value = $request->get("value");
         $Kaizen->area_id = 2;
-        $Kaizen->created_at = Carbon::now();
+        $Kaizen->created_at = $request->datestatus;
         $Kaizen->save();
 
         return redirect()->back()->with('success', 'success');
@@ -358,7 +358,7 @@ class inputdryerkilncontroller extends Controller
 
         $StatusMcu->value = $request->get("value");
         $StatusMcu->area_id = 2;
-        $StatusMcu->created_at = Carbon::now();
+        $StatusMcu->created_at = $request->datestatus;
         $StatusMcu->save();
 
         return redirect()->back()->with('success', 'success');
@@ -374,7 +374,7 @@ class inputdryerkilncontroller extends Controller
         $task->duration = $request->get("duration");
         $task->start_date = $request->get("start_date");
         $task->status = $request->get("status");
-        $task->created_at = Carbon::now();
+        $task->created_at = $request->datestatus;
         $task->save();
         return redirect()->back()->with('success', 'success');
     }

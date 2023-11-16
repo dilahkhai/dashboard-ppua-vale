@@ -17,32 +17,34 @@ use App\Models\WorkingTimePerWeek;
 
 class inputfurconvcontroller extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $user = User::with([
-                "today_safety_report",
-                "today_working_time_per_week",
-                "todaystatusperday"
-            ])
-            ->whereHas("area", function($query){
+            "today_safety_report",
+            "today_working_time_per_week",
+            "todaystatusperday"
+        ])
+            ->whereHas("area", function ($query) {
                 $query->where("area", "Furnace-Converter");
             })->get();
-        $department = Department::with(["today_productivity" => function($query){
-                    $query->whereHas("area", function($query){
-                        $query->where("area", "Furnace-Converter");
-                    });
-                }])->get();
+
+        $department = Department::with(["today_productivity" => function ($query) {
+            $query->whereHas("area", function ($query) {
+                $query->where("area", "Furnace-Converter");
+            });
+        }])->get();
 
         $organization = OrganizationStructure::where("area_id", 1)
-                            ->whereDate("created_at", Carbon::now())
-                            ->first();
+            ->whereDate("created_at", Carbon::now())
+            ->first();
 
 
         $Kaizen = Kaizen::where("area_id", 1)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
 
         $StatusMcu = StatusMcu::where("area_id", 1)
-        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
         $task = Task::with("owner")->where("area_id", 1)->get();
         $list_user = User::where("area_id", 1)->pluck("name", "id");
@@ -58,73 +60,77 @@ class inputfurconvcontroller extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $employee_list = $request->get("employee");
         $count_list = $request->get("count");
 
         foreach ($employee_list as $index => $employee_id) {
             $safety_report = SafetyReport::where("employee_id", $employee_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->first();
+                ->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($safety_report)){
+            if (is_null($safety_report)) {
                 $safety_report = new SafetyReport;
             }
 
             $safety_report->employee_id = $employee_id;
             $safety_report->count = $count_list[$index];
-            $safety_report->created_at = Carbon::now();
+            $safety_report->created_at = $request->datestatus;
             $safety_report->save();
         }
+
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeProductivity(Request $request){
+    public function storeProductivity(Request $request)
+    {
         $department_list = $request->get("department");
         $value_list = $request->get("departmentValue");
 
         foreach ($department_list as  $index => $department_id) {
             $productivity = productivity::where("department_id", $department_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->where("area_id", 1)
-                                ->first();
-            if(is_null($productivity)){
+                ->whereDate("created_at", Carbon::now())
+                ->where("area_id", 1)
+                ->first();
+            if (is_null($productivity)) {
                 $productivity = new productivity;
             }
             $productivity->area_id = 1;
             $productivity->department_id = $department_id;
             $productivity->update = $value_list[$index];
             $productivity->selisih = 100 - $value_list[$index];
-            $productivity->created_at = Carbon::now();
+            $productivity->created_at = $request->datestatus;
             $productivity->save();
-
         }
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeWorkingWeek(Request $request){
+    public function storeWorkingWeek(Request $request)
+    {
         $employee_list = $request->get("employee");
         $count_list = $request->get("employee_value");
 
         foreach ($employee_list as $index => $employee_id) {
             $WorkingTimePerWeek = WorkingTimePerWeek::where("employee_id", $employee_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->first();
+                ->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($WorkingTimePerWeek)){
+            if (is_null($WorkingTimePerWeek)) {
                 $WorkingTimePerWeek = new WorkingTimePerWeek;
             }
 
             $WorkingTimePerWeek->employee_id = $employee_id;
             $WorkingTimePerWeek->update = $count_list[$index];
             $WorkingTimePerWeek->selisih = 100 - $count_list[$index];
-            $WorkingTimePerWeek->created_at = Carbon::now();
+            $WorkingTimePerWeek->created_at = $request->datestatus;
             $WorkingTimePerWeek->save();
         }
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeStatusPerDay(Request $request){
+    public function storeStatusPerDay(Request $request)
+    {
         $employee_list = $request->get("employee");
         $offices = $request->get("offices");
         $hos = $request->get("hos");
@@ -137,10 +143,10 @@ class inputfurconvcontroller extends Controller
 
         foreach ($employee_list as $index => $employee_id) {
             $statusperday = statusperday::where("employee_id", $employee_id)
-                                ->whereDate("created_at", Carbon::now())
-                                ->first();
+                ->whereDate("created_at", Carbon::now())
+                ->first();
 
-            if(is_null($statusperday)){
+            if (is_null($statusperday)) {
                 $statusperday = new statusperday;
             }
 
@@ -159,43 +165,46 @@ class inputfurconvcontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeOrganization(Request $request){
+    public function storeOrganization(Request $request)
+    {
         $organization = OrganizationStructure::where("area_id", 1)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
-        if(is_null($organization)){
+        if (is_null($organization)) {
             $organization = new OrganizationStructure;
         }
 
         $organization->value = $request->get("value");
         $organization->area_id = 1;
-        $organization->created_at = Carbon::now();
+        $organization->created_at = $request->datestatus;
         $organization->save();
 
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeKaizen(Request $request){
+    public function storeKaizen(Request $request)
+    {
         $Kaizen = Kaizen::where("area_id", 1)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
-        if(is_null($Kaizen)){
+        if (is_null($Kaizen)) {
             $Kaizen = new Kaizen;
         }
 
         $Kaizen->value = $request->get("value");
         $Kaizen->area_id = 1;
-        $Kaizen->created_at = Carbon::now();
+        $Kaizen->created_at = $request->datestatus;
         $Kaizen->save();
 
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeMcu(Request $request){
+    public function storeMcu(Request $request)
+    {
         $StatusMcu = StatusMcu::where("area_id", 1)
-                        ->whereDate("created_at", Carbon::now())->first();
+            ->whereDate("created_at", Carbon::now())->first();
 
-        if(is_null($StatusMcu)){
+        if (is_null($StatusMcu)) {
             $StatusMcu = new StatusMcu;
         }
 
@@ -207,9 +216,10 @@ class inputfurconvcontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function storeTask(Request $request){
+    public function storeTask(Request $request)
+    {
         $task = new Task;
-        $task->name = $request->get("name") ;
+        $task->name = $request->get("name");
         $task->area_id = 1;
         $task->user_id = $request->get("owner");
         $task->priority = $request->get("priority");
@@ -221,7 +231,8 @@ class inputfurconvcontroller extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function updateTask(Request $request){
+    public function updateTask(Request $request)
+    {
         foreach ($request->get("id") as $index => $task_id) {
             Task::where("id", $task_id)->update([
                 "name"  => $request->get("name")[$index],

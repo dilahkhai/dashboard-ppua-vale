@@ -139,10 +139,14 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{url('/inputfurconv')}}" method="POST">
+              <form action="{{url('/inputdryerkiln')}}" method="POST">
                 @csrf
                 <div class="card-body text-right">
                   <div class="text-left">
+                    <div class="form-group">
+                      <label for="dateInput">Date</label>
+                      <input type="date" name="datestatus" class="form-control" id="dateInput">
+                    </div>
                     {{-- Header --}}
                     <div class="row">
                       <div class="col-4">
@@ -203,6 +207,14 @@
                   {{-- Body --}}
                   <div class="row">
                     <div class="col-4">
+                      <p>Date</p>
+                    </div>
+                    <div class="col-8">
+                      <input type="date" name="datestatus" class="form-control" id="dateInput">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4">
                       <p>Organization Structure</p>
                     </div>
                     <div class="col-8">
@@ -245,6 +257,14 @@
                 {{-- Body --}}
                 <div class="row">
                   <div class="col-4">
+                    <p>Date</p>
+                  </div>
+                  <div class="col-8">
+                    <input type="date" name="datestatus" class="form-control" id="dateInput">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">
                     <p>Kaizen</p>
                   </div>
                   <div class="col-8">
@@ -260,53 +280,59 @@
       </div>
   </div>
 
-  {{-- Working TIme Allocation --}}
-  <div class="col-md-6">
-    <!-- general form elements -->
-    <div class="card card-warning">
-      <div class="card-header">
-        <h3 class="card-title">Productivity</h3>
+  <div class="col-12">
+    {{-- Working TIme Allocation --}}
+    <div class="col-md-6">
+      <!-- general form elements -->
+      <div class="card card-warning">
+        <div class="card-header">
+          <h3 class="card-title">Productivity</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form action="{{url('/inputdryerkilnProductivity')}}" method="POST">
+          @csrf
+          <div class="card-body text-right">
+            <div class="text-left">
+              <div class="form-group">
+                <label for="dateInput">Date</label>
+                <input type="date" name="datestatus" class="form-control" id="dateInput">
+              </div>
+              {{-- Header --}}
+              <div class="row">
+                <div class="col-4">
+                  <p><b>Department</b></p>
+                </div>
+                <div class="col-8">
+                  <p><b>Update</b></p>
+                </div>
+              </div>
+              {{-- Body --}}
+              @foreach ($departments as $department)
+              <div class="row">
+                <div class="col-4">
+                  <p>{{$department->name}}</p>
+                </div>
+                <input type="hidden" name="department[]" value="{{$department->id}}">
+                <div class="col-8">
+                  <input type="number" name="departmentValue[]" class="form-control" max=100 value="{{$department->today_productivity->update ?? ''}}">
+                </div>
+              </div>
+              @endforeach
+            </div>
+            <br>
+            <button type="submit" class="btn btn-success text-right">Save</button>
+            <!-- /.card-body -->
+
+        </form>
+        <!-- /.card-body -->
       </div>
-      <!-- /.card-header -->
-      <!-- form start -->
-      <form action="{{url('/inputdryerkilnProductivity')}}" method="POST">
-        @csrf
-        <div class="card-body text-right">
-          <div class="text-left">
-            {{-- Header --}}
-            <div class="row">
-              <div class="col-4">
-                <p><b>Section</b></p>
-              </div>
-              <div class="col-8">
-                <p><b>Update</b></p>
-              </div>
-            </div>
-            {{-- Body --}}
-            @foreach ($departments as $department)
-            <div class="row">
-              <div class="col-4">
-                <p>{{$department->name}}</p>
-              </div>
-              <input type="hidden" name="department[]" value="{{$department->id}}">
-              <div class="col-8">
-                <input type="number" name="departmentValue[]" class="form-control" max=100 value="{{$department->today_productivity->update ?? ''}}">
-              </div>
-            </div>
-            @endforeach
-          </div>
-          <br>
-          <button type="submit" class="btn btn-success text-right">Save</button>
-          <!-- /.card-body -->
-
-      </form>
-      <!-- /.card-body -->
+      <!-- /.card -->
     </div>
-    <!-- /.card -->
+    {{-- End of Working TIme Allocation --}}
   </div>
-  {{-- End of Working TIme Allocation --}}
 
-  <form action="{{url('inputfurconvWorkingWeek')}}" method="POST">
+  <form action="{{url('inputdryerkilnWorkingWeek')}}" method="POST">
     @csrf
     {{-- Working time per week --}}
 

@@ -146,6 +146,10 @@
                 @csrf
                 <div class="card-body text-right">
                   <div class="text-left">
+                    <div class="form-group">
+                      <label for="dateInput">Date</label>
+                      <input type="date" name="datestatus" class="form-control" id="dateInput">
+                    </div>
                     {{-- Header --}}
                     <div class="row">
                       <div class="col-4">
@@ -206,6 +210,14 @@
                   {{-- Body --}}
                   <div class="row">
                     <div class="col-4">
+                      <p>Date</p>
+                    </div>
+                    <div class="col-8">
+                      <input type="date" name="datestatus" class="form-control" id="dateInput">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4">
                       <p>Organization Structure</p>
                     </div>
                     <div class="col-8">
@@ -248,6 +260,14 @@
                 {{-- Body --}}
                 <div class="row">
                   <div class="col-4">
+                    <p>Date</p>
+                  </div>
+                  <div class="col-8">
+                    <input type="date" name="datestatus" class="form-control" id="dateInput">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">
                     <p>Kaizen</p>
                   </div>
                   <div class="col-8">
@@ -277,6 +297,10 @@
           @csrf
           <div class="card-body text-right">
             <div class="text-left">
+              <div class="form-group">
+                <label for="dateInput">Date</label>
+                <input type="date" name="datestatus" class="form-control" id="dateInput">
+              </div>
               {{-- Header --}}
               <div class="row">
                 <div class="col-4">
