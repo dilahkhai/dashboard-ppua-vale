@@ -7,6 +7,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use App\Models\mcu;
 use App\Models\User;
+use Carbon\Carbon;
+
 class mcucontroller extends Controller
 {
     /**
@@ -73,7 +75,7 @@ class mcucontroller extends Controller
     {
         $mcu = mcu::find($id);
         $mcu->status = "DONE";
-
+        $mcu->is_due = 0;
         $mcu->save();
 
         Alert::success('Data Updated!');
@@ -84,6 +86,12 @@ class mcucontroller extends Controller
     {
         $mcu = mcu::find($id);
         $mcu->status = "";
+
+        $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
+
+        if (now()->isAfter($monthBeforeDueDate)) {
+            $mcu->is_due = 1;
+        }
 
         $mcu->save();
 
@@ -117,7 +125,18 @@ class mcucontroller extends Controller
         $mcu = mcu::find($id);
         $mcu->lastmcu = $request->input('lastmcu');
         $mcu->duedate = $request->input('duedate');
-        $mcu->nexmcu = $request->input('nextmcu');
+        $mcu->nextmcu = $request->input('nextmcu');
+
+        $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
+
+        if (now()->isAfter($monthBeforeDueDate)) {
+            $mcu->is_due = 1;
+        }
+
+        if ($mcu->nextmcu != null || $mcu->nextmcu != '') {
+            $mcu->is_due = 0;
+        }
+
         $mcu->save();
 
         return redirect('/mcu')->with('success', 'success');
