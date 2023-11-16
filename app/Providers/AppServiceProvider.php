@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Facades\View::composer('*', function (View $view) {
             $notifications = Notification::query()
-                ->where('receiver_id', auth()->user()->getAuthIdentifier())
+                ->where('receiver_id', auth()->user()?->id)
                 ->get();
 
             $view->with('notifications', $notifications);
