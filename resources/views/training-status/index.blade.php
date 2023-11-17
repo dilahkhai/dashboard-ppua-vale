@@ -11,7 +11,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Growth</h1>
+          <h1>Training Status</h1>
         </div>
         @if(session()->has('success'))
         <div class="alert alert-success" role="alert">

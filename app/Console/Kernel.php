@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('mcu:check-status')->daily();
+        $schedule->command('training-status:check')->daily();
     }
 
     /**
