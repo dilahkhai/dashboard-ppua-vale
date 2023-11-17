@@ -8,7 +8,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Add MCU</h1>
+          <h1>Training Status</h1>
         </div>
 
       </div>
@@ -24,49 +24,56 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add New MCU</h3>
+              <h3 class="card-title">Edit Training Status</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" action="/simpanmcu" method="POST" enctype="multipart/form-data">
+            <form role="form" action="{{ route('training-status.update', $trainingStatus->id) }}" method="POST" enctype="multipart/form-data">
               @csrf
+              @method('patch')
 
               <div class="card-body">
+                <div class="form-group">
+                  <label for="name">Training Name</label>
+                  <input type="text" name="name" id="name" class="form-control" value="{{ $trainingStatus->name }}">
+                </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Area</label>
                   <select class="form-control" name="area_id" onchange="fetchDataAndPopulate(this.value)">
                     <option>Select Area</option>
                     @foreach ($areas as $id => $data)
-                    <option value="{{$data->id}}">{{$data->area}}</option>
+                    <option value="{{$data->id}}" @selected($trainingStatus->employee->area->id == $data->id)>{{$data->area}}</option>
                     @endforeach
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Employee</label>
-                  <select class="form-control" name="employee" id="employee">
+                  <select class="form-control" name="user_id" id="employee">
+                    @foreach ($employees as $employee)
+                      <option value="{{ $employee->id }}" @selected($trainingStatus->employee->id == $employee->id)>{{ $employee->name }}</option>
+                    @endforeach
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Last MCU</label>
-                  <input type="date" class="form-control" name="lastmcu" id="exampleInputEmail1" placeholder="Last MCU">
+                  <label for="exampleInputEmail1">Certif Date</label>
+                  <input type="date" class="form-control" name="certif_date" placeholder="Certif Date" value="{{ $trainingStatus->certif_date->format('Y-m-d') }}">
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Due Date</label>
-                  <input type="date" class="form-control" name="duedate" id="exampleInputPassword1" placeholder="Due Date">
+                  <label>Status</label>
+                  <select class="form-control" name="status" id="status">
+                    <option>Select Status</option>
+                    <option value="1" @selected($trainingStatus->status == 1)>Active</option>
+                    <option value="2" @selected($trainingStatus->status == 2)>Warning</option>
+                    <option value="3" @selected($trainingStatus->status == 3)>Expired</option>
+                  </select>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Next MCU</label>
-                  <input type="date" class="form-control" name="nextmcu" id="exampleInputPassword1" placeholder="Due Date">
+                  <label for="exampleInputEmail1">Training Schedule</label>
+                  <input type="date" class="form-control" name="training_schedule" placeholder="Certif Date" value="{{ $trainingStatus->training_schedule }}">
                 </div>
-
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary"> Submit </button>
                 </div>
-
-                <!-- /.card-body -->
-
-
-                <!-- /.card-body -->
               </div>
               <!-- /.card -->
           </div>

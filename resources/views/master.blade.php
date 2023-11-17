@@ -193,18 +193,9 @@
         </div>
       </div>
 
-
-
-
-
-
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
 
           <li class="nav-item">
             <a href="{{url('tasks')}}" class="nav-link {{  Request::is('tasks') ? 'active' : '' }}">
@@ -218,7 +209,6 @@
               <i class="nav-icon fas fa-phone-alt"></i>
               <p>
                 OnCall Automation
-
               </p>
             </a>
           </li>
@@ -238,11 +228,18 @@
               <i class="nav-icon fas fa-hospital-alt"></i>
               <p>
                 Status MCU
-
               </p>
             </a>
           </li>
 
+          <li class="nav-item">
+            <a href="/training-status" class="nav-link {{  Request::is('training-status') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-hospital-alt"></i>
+              <p>
+                Training Status
+              </p>
+            </a>
+          </li>
 
           <li class="nav-item ">
             <a href="/wfhrooster" class="nav-link {{  Request::is('wfhrooster') ? 'active' : '' }}">

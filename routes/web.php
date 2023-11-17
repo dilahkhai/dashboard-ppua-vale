@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TrainingStatusController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -113,6 +114,7 @@ Route::middleware([
     Route::post('/inputMainTask', [App\Http\Controllers\TaskController::class, 'storeTask']);
     Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask']);
 
+    Route::resource('training-status', TrainingStatusController::class);
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 });
