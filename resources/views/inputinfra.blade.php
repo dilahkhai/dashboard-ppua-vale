@@ -138,7 +138,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{url('/inputdryerkiln')}}" method="POST">
+              <form action="{{url('/inputfurconv')}}" method="POST">
                 @csrf
                 <div class="card-body text-right">
                   <div class="text-left">

@@ -54,15 +54,6 @@
                   <label for="exampleInputEmail1">Certif Date</label>
                   <input type="date" class="form-control" name="certif_date" placeholder="Certif Date">
                 </div>
-                <div class="form-group">
-                  <label>Status</label>
-                  <select class="form-control" name="status" id="status">
-                    <option>Select Status</option>
-                    <option value="1">Active</option>
-                    <option value="2">Warning</option>
-                    <option value="3">Expired</option>
-                  </select>
-                </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary"> Submit </button>
                 </div>

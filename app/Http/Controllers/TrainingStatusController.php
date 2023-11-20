@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Area;
 use App\Models\employee;
+use App\Models\Notification;
 use App\Models\TrainingStatus;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TrainingStatusController extends Controller
@@ -39,8 +41,39 @@ class TrainingStatusController extends Controller
 
     public function store(Request $request)
     {
-        TrainingStatus::query()
-            ->create($request->except('_token', 'area_id'));
+        $training = TrainingStatus::query()
+            ->create($request->except('_token', 'area_id') + ['status' => 0]);
+
+        $superadmin = User::query()
+            ->where('role', 'admin')
+            ->get();
+
+        $due = $training->certif_date;
+
+        $certifAge = Carbon::parse($due)->addDays(299);
+        $certifExpired = Carbon::parse($due)->addYear();
+
+        if (now()->isAfter($certifAge)) {
+            $training->update(['status' => 2]);
+
+            Notification::query()
+                ->create(['receiver_id' => $training->employee->id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
+
+            foreach ($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
+            }
+        } else if (now()->isAfter($certifExpired)) {
+            $training->update(['status' => 2]);
+
+            Notification::query()
+                ->create(['receiver_id' => $training->employee->id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is expired!']);
+
+            foreach ($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
+            }
+        }
 
         return redirect()->route('training-status.index')->with('success', 'Success create training status!');
     }

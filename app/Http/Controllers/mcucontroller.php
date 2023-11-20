@@ -6,6 +6,7 @@ use App\Models\Area;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use App\Models\mcu;
+use App\Models\Notification;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -48,12 +49,31 @@ class mcucontroller extends Controller
      */
     public function store(Request $request)
     {
+        $superadmin = User::query()
+            ->where('role', 'admin')
+            ->get();
+
         $mcu = new mcu;
         $mcu->area_id = $request->input('area_id');
         $mcu->employee_id = $request->input('employee');
         $mcu->lastmcu = $request->input('lastmcu');
         $mcu->duedate = $request->input('duedate');
         $mcu->status = " ";
+
+        $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
+
+        if (now()->isAfter($monthBeforeDueDate)) {
+            $mcu->is_due = 1;
+
+            Notification::query()
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+
+            foreach($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+            }
+        }
+
         $mcu->save();
 
         return redirect('/mcu')->with('success', 'success');
@@ -84,6 +104,10 @@ class mcucontroller extends Controller
     }
     public function undone(Request $request, $id)
     {
+        $superadmin = User::query()
+            ->where('role', 'admin')
+            ->get();
+
         $mcu = mcu::find($id);
         $mcu->status = "";
 
@@ -91,6 +115,14 @@ class mcucontroller extends Controller
 
         if (now()->isAfter($monthBeforeDueDate)) {
             $mcu->is_due = 1;
+
+            Notification::query()
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+
+            foreach($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+            }
         }
 
         $mcu->save();
@@ -121,6 +153,9 @@ class mcucontroller extends Controller
      */
     public function update(Request $request, $id)
     {
+        $superadmin = User::query()
+            ->where('role', 'admin')
+            ->get();
 
         $mcu = mcu::find($id);
         $mcu->lastmcu = $request->input('lastmcu');
@@ -131,6 +166,14 @@ class mcucontroller extends Controller
 
         if (now()->isAfter($monthBeforeDueDate)) {
             $mcu->is_due = 1;
+
+            Notification::query()
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+
+            foreach($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+            }
         }
 
         if ($mcu->nextmcu != null || $mcu->nextmcu != '') {

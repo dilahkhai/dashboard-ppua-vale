@@ -153,7 +153,7 @@
         <div class="row col-12">
           @foreach ($employees as $employee)
           {{-- Hours Chart --}}
-          <div class="pr-1 col-2">
+          <div class="pr-1 col-4">
             <div class="card pb-5">
               <div class="card-body">
                 <div class="chart-container text-center" style="height:200px;width:200px;">

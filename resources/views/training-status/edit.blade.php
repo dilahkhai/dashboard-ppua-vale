@@ -59,15 +59,6 @@
                   <input type="date" class="form-control" name="certif_date" placeholder="Certif Date" value="{{ $trainingStatus->certif_date->format('Y-m-d') }}">
                 </div>
                 <div class="form-group">
-                  <label>Status</label>
-                  <select class="form-control" name="status" id="status">
-                    <option>Select Status</option>
-                    <option value="1" @selected($trainingStatus->status == 1)>Active</option>
-                    <option value="2" @selected($trainingStatus->status == 2)>Warning</option>
-                    <option value="3" @selected($trainingStatus->status == 3)>Expired</option>
-                  </select>
-                </div>
-                <div class="form-group">
                   <label for="exampleInputEmail1">Training Schedule</label>
                   <input type="date" class="form-control" name="training_schedule" placeholder="Certif Date" value="{{ $trainingStatus->training_schedule }}">
                 </div>
