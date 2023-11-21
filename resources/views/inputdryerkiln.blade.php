@@ -286,7 +286,7 @@
       <!-- general form elements -->
       <div class="card card-warning">
         <div class="card-header">
-          <h3 class="card-title">Productivity</h3>
+          <h3 class="card-title">Working Time Allocation</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -301,7 +301,7 @@
               {{-- Header --}}
               <div class="row">
                 <div class="col-4">
-                  <p><b>Department</b></p>
+                  <p><b>Section</b></p>
                 </div>
                 <div class="col-8">
                   <p><b>Update</b></p>
