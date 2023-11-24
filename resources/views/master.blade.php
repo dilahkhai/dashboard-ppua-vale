@@ -32,6 +32,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset('SelainLogin/plugins/summernote/summernote-bs4.min.css')}}">
 
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
 
   <style>
     .gantt-orange {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InitialDetailController;
 use App\Http\Controllers\TrainingStatusController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -79,7 +80,12 @@ Route::middleware([
     Route::post('/updateutlTask', [App\Http\Controllers\inpututlcontroller::class, 'updateTask']);
 
     Route::get('/oncall', [App\Http\Controllers\oncallcontroller::class, 'index']);
+    Route::post('/oncall', [App\Http\Controllers\oncallcontroller::class, 'store']);
+    Route::get('/oncall-source', [App\Http\Controllers\oncallcontroller::class, 'source']);
     Route::post('/oncallfile', [App\Http\Controllers\oncallcontroller::class, 'upload']);
+
+    Route::post('/initial-detail', [InitialDetailController::class, 'store']);
+    Route::delete('/initial-detail/{initialDetail}', [InitialDetailController::class, 'destroy']);
 
     Route::get('/knowledge', [App\Http\Controllers\knowledgecontroller::class, 'index']);
     Route::post('/sharingknowledge', [App\Http\Controllers\knowledgecontroller::class, 'upload']);
