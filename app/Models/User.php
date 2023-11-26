@@ -96,4 +96,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(statusperday::class, "employee_id")->whereDate("created_at", Carbon::now());
     }
+
+    public function overtime_hours(): HasMany
+    {
+        return $this->hasMany(OvertimeHour::class);
+    }
 }

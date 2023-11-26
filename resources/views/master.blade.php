@@ -248,6 +248,12 @@
               <p>WFH Rooster</p>
             </a>
           </li>
+          <li class="nav-item ">
+            <a href="/overtime-hour" class="nav-link {{  Request::is('overtime-hour*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-clock"></i>
+              <p>Overtime Hours</p>
+            </a>
+          </li>
           {{-- <li class="nav-item">
             <a href="/mod" class="nav-link {{  Request::is('mod') ? 'active' : '' }}">
           <i class="nav-icon fas fa-book"></i>

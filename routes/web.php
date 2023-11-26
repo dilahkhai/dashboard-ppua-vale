@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InitialDetailController;
+use App\Http\Controllers\OvertimeHourController;
 use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\WFHRoosterInitialDetailController;
 use Illuminate\Support\Facades\Auth;
@@ -96,6 +97,8 @@ Route::middleware([
     Route::get('/wfhrooster', [App\Http\Controllers\WfhRoosterController::class, 'index']);
     Route::post('/wfhrooster', [App\Http\Controllers\WfhRoosterController::class, 'store']);
     Route::get('/wfhrooster-source', [App\Http\Controllers\WfhRoosterController::class, 'source']);
+
+    Route::resource('overtime-hour', OvertimeHourController::class);
 
     Route::post('/wfh-initial-detail', [WFHRoosterInitialDetailController::class, 'store']);
     Route::delete('/wfh-initial-detail/{initialDetail}', [WFHRoosterInitialDetailController::class, 'destroy']);
