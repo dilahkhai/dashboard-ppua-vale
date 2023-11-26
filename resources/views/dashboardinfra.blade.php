@@ -450,7 +450,7 @@
         data: working_time_per_week[index],
         backgroundColor: [
           'rgb(51, 102, 153)',
-          'rgb(255, 255, 255)',
+          'red',
         ],
         borderColor: 'rgba(0, 0, 0, 0.2)',
         borderWidth: 0.5,

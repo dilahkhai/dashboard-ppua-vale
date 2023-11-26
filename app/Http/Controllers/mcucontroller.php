@@ -178,6 +178,9 @@ class mcucontroller extends Controller
 
         if ($mcu->nextmcu != null || $mcu->nextmcu != '') {
             $mcu->is_due = 0;
+
+            Notification::query()
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'You have next MCU updated! Please check!']);
         }
 
         $mcu->save();

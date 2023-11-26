@@ -104,7 +104,7 @@ class dashboarddryerkilncontroller extends Controller
             if ($value->finished_tasks > 0) {
                 array_push($listWorkingTimePerWeek, [$value->finished_tasks, $value->unfinished_tasks]);
             } else {
-                array_push($listWorkingTimePerWeek, [0, 0]);
+                array_push($listWorkingTimePerWeek, [null, $value->unfinished_tasks]);
             }
 
             if (count($value->statusperday) > 0) {
