@@ -57,7 +57,7 @@
               <div class="modal-body">
                 <div class="form-group">
                   <label for="initial">Initial</label>
-                  <input type="text" class="form-control" name="initial" id="initial">
+                  <input type="text" class="form-control" name="initial" id="initial-add">
                 </div>
                 <div class="form-group">
                   <label for="detail">Full Name</label>

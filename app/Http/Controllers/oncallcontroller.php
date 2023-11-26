@@ -47,8 +47,7 @@ class oncallcontroller extends Controller
 
     public function source()
     {
-
-        $year = now()->year;
+        $year = Carbon::parse(request('start'))->format('Y');
         $weeks = [];
 
         for ($i = 1; $i <= Carbon::create($year)->weekOfYear; $i++) {
