@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InitialDetailController;
 use App\Http\Controllers\TrainingStatusController;
+use App\Http\Controllers\WFHRoosterInitialDetailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -92,10 +93,12 @@ Route::middleware([
 
     Route::post("/importData", [App\Http\Controllers\inputdryerkilncontroller::class, 'import']);
 
-
     Route::get('/wfhrooster', [App\Http\Controllers\WfhRoosterController::class, 'index']);
-    Route::post('/wfhrooster', [App\Http\Controllers\WfhRoosterController::class, 'upload']);
+    Route::post('/wfhrooster', [App\Http\Controllers\WfhRoosterController::class, 'store']);
+    Route::get('/wfhrooster-source', [App\Http\Controllers\WfhRoosterController::class, 'source']);
 
+    Route::post('/wfh-initial-detail', [WFHRoosterInitialDetailController::class, 'store']);
+    Route::delete('/wfh-initial-detail/{initialDetail}', [WFHRoosterInitialDetailController::class, 'destroy']);
 
     Route::get('/mod', [App\Http\Controllers\ModController::class, 'index']);
     Route::post('/mod', [App\Http\Controllers\ModController::class, 'upload']);

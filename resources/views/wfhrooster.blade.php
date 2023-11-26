@@ -2,105 +2,147 @@
 @section('content')
 
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">WFH Rooster</h1>
-          </div><!-- /.col -->
-
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <section class="content">
-      <div class="container-fluid">
-            <!-- Calendar -->
-            <div class="card bg-gradient-success">
-                <div class="card-header border-0">
-
-                  <h3 class="card-title">
-                    <i class="far fa-calendar-alt"></i>
-                    Calendar
-                  </h3>
-
-                  <!-- tools card -->
-                  <div class="card-tools">
-                    <!-- button with a dropdown -->
-                     {{-- <div class="btn-group">
-                      <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                        <i class="fas fa-bars"></i>
-                      </button>
-                      <div class="dropdown-menu" role="menu">
-                        <a href="#" class="dropdown-item">Add new event</a>
-                        <a href="#" class="dropdown-item">Clear events</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">View calendar</a>
-
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button> --}}
-                  </div>
-                  <!-- /. tools -->
-                </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body pt-0">
-                  <!--The calendar -->
-                  <div id="calendar" style="width: 100%"></div>
-                </div>
-                <!-- /.card-body -->
-              </div>
-            <div class="card-body">
-
-              @if(Auth::user()->role=='admin')
-                <form role="form" action="{{url('wfhrooster')}}"  method="POST" enctype="multipart/form-data"  >
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="fileupload" required id="validatedCustomFile" required>
-                                <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                                <div class="invalid-feedback">Example invalid custom file feedback</div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit </button>
-                  </form>
-                @endif
-            </div>
-            <br>
-
-            <div class="container-fluid">
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                           @isset($wfh)
-                              <img src="{{$wfh->file}}" width="100%" alt="not found!">
-                            @endisset
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">WFH Rooster</h1>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
   </div>
 
-    @push('scripts')
-    <script type="application/javascript">
-        $('input[type="file"]').change(function(e){
-            var fileName = e.target.files[0].name;
-            $('.custom-file-label').html(fileName);
-        });
-    </script>
-    @endpush
+  <div class="card">
+    <div class="card-body">
+      <div id="calendar"></div>
+      <div class="row mt-3">
+        <div class="col-md-3">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editInisial">
+            Initial Detail
+          </button>
+        </div>
+
+        <div class="col">
+          <div class="row">
+            @foreach ($initialDetail as $initial)
+            <div class="col-2">
+              <div class="d-flex">
+                <div>{{ $initial->initial }}</div>
+                <div class="mx-1">=</div>
+                <div>{{ $initial->detail }}</div>
+                <form action="/wfh-initial-detail/{{ $initial->id }}" method="post">
+                  @csrf
+                  @method('delete')
+                  <button type="submit" class="close" onclick="return confirm('Are you sure want to delete this data?')" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="editInisial" tabindex="-1" aria-labelledby="editInisialLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <form action="/wfh-initial-detail" method="post">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editInisialLabel">Add Initial Detail</h5>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="initial">Initial</label>
+                  <input type="text" class="form-control" name="initial" id="initial-add">
+                </div>
+                <div class="form-group">
+                  <label for="detail">Full Name</label>
+                  <input type="text" class="form-control" name="detail" id="detail">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Set On Call Automation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="date_attended" id="date_attended">
+
+          <div class="form-group">
+            <label for="initial">Initial Name</label>
+            <input type="text" class="form-control" id="initial">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@push('scripts')
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'multiMonthYear',
+      eventClick: function(info) {
+        $('#exampleModal').modal('toggle');
+        document.getElementById('date_attended').value = info.event.start.toISOString().split('T')[0]
+        document.getElementById('initial').value = info.event.title
+      },
+      eventSources: {
+        'url': '/wfhrooster-source'
+      },
+      height: 'auto'
+    });
+    calendar.render();
+
+    document.getElementById('saveChanges').onclick = function() {
+      $.ajax({
+        'url': '/wfhrooster',
+        'method': 'post',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'data': {
+          initial: document.getElementById('initial').value,
+          attended: document.getElementById('date_attended').value
+        },
+        'success': function(response) {
+          $('#exampleModal').modal('hide')
+          calendar.refetchEvents()
+        },
+        error: function(error) {
+          console.error(error);
+        }
+      })
+    }
+  });
+</script>
+@endpush
+
 @endsection

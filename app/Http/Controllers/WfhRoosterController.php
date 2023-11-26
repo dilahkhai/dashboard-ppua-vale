@@ -2,28 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WFHInitialDetail;
 use Illuminate\Http\Request;
 use App\Models\WfhRooster;
+use App\Models\WorkFromHomeRooster;
+use Carbon\Carbon;
 
 class WfhRoosterController extends Controller
 {
-    public function index(){
-        $WfhRooster = WfhRooster::orderBy('id', 'desc')->first();
-        return view('wfhrooster')->with('wfh', $WfhRooster);
+    public function index()
+    {
+        $initialDetail = WFHInitialDetail::all();
 
-
+        return view('wfhrooster', compact('initialDetail'));
     }
 
-    public function upload(Request $request){
-        $fileextension = $request->file('fileupload')->getClientOriginalExtension();
-        $filename = time().".". $fileextension;
-        // $filename = "splashscreencustomer". $fileextension;
-        $request->file('fileupload')->move(public_path('/upload'), $filename);
+    public function store(Request $request)
+    {
+        $dateAttended = Carbon::parse($request->attended)->addDay()->format('Y-m-d');
 
-        $WfhRooster = new WfhRooster;
-        $WfhRooster->file = asset("upload/$filename");
-        $WfhRooster->save();
+        WorkFromHomeRooster::query()
+            ->updateOrCreate([
+                'date_attend' => $dateAttended
+            ], [
+                'initial' => $request->initial
+            ]);
 
-        return redirect('/wfhrooster');
+        return response()->json(['message' => 'success']);
+    }
+
+    public function source()
+    {
+        $year = Carbon::parse(request('start'))->format('Y');
+        $weeks = [];
+
+        for ($i = 1; $i <= Carbon::create($year)->weekOfYear; $i++) {
+            $weeks[] = Carbon::create($year)->week($i)->format('Y-m-d');
+        }
+
+        foreach ($weeks as $week) {
+            WorkFromHomeRooster::query()
+                ->firstOrCreate(['date_attend' => $week]);
+        }
+
+        $oncall = WorkFromHomeRooster::query()
+            ->get()
+            ->transform(function ($value) {
+                return [
+                    'title' => $value->initial ?? "Kosong",
+                    'start' => $value->date_attend,
+                    'end' => $value->date_attend
+                ];
+            })
+            ->toArray();
+
+        return response()->json($oncall);
     }
 }
