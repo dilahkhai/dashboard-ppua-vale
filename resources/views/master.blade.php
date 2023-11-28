@@ -268,9 +268,6 @@
             </a>
           </li>
           @endif
-
-
-
           @if(Auth::user()->role == 'admin')
           <li class="nav-item {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel')  ? 'active' : '' }}">
@@ -313,10 +310,25 @@
                 </a>
               </li>
               @endif
+              @if(Auth::user()->role=='admin')
+              <li class="nav-item">
+                <a href="/export-excel" class="nav-link {{  Request::is('export-excel') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Export Excel</p>
+                </a>
+              </li>
+              @endif
             </ul>
           </li>
           @endif
-
+          @if(Auth::user()->role != 'admin')
+          <li class="nav-item">
+            <a href="/update-password" class="nav-link {{  Request::is('update-password') ? 'active' : '' }}">
+              <i class="far fa-user nav-icon"></i>
+              <p>Update Password</p>
+            </a>
+          </li>
+          @endif
 
         </ul>
       </nav>

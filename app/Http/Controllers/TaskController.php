@@ -7,23 +7,36 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view("MainProject");
     }
 
-    public function get(){
-        $tasks = Task::with("owner")->get();
+    public function get()
+    {
+        $user = User::find(request('user_id'));
+        $tasks = Task::with("owner")
+            ->when($user->role != 'admin', function ($query) use ($user) {
+                $query->whereBelongsTo($user, 'owner');
+            })
+            ->get();
 
         return response()->json([
             "data" => $tasks->all()
         ]);
     }
 
-    public function manageTask(){
-        $task = Task::with("owner")->get();
+    public function manageTask()
+    {
+        $task = Task::with("owner")
+            ->when(Auth::user()->role != 'admin', function ($query) {
+                $query->whereBelongsTo(Auth::user(), 'owner');
+            })->get();
+
         $list_user = User::pluck("name", "id");
         $areas = Area::all();
 
@@ -34,11 +47,12 @@ class TaskController extends Controller
         ]);
     }
 
-    public function storeTask(Request $request){
+    public function storeTask(Request $request)
+    {
         $task = new Task;
-        $task->name = $request->get("name") ;
-        $task->area_id = $request->get('area_id');
-        $task->user_id = $request->get("owner");
+        $task->name = $request->get("name");
+        $task->area_id = Auth::user()->role == 'admin' ? $request->get('area_id') : Auth::user()->area_id;
+        $task->user_id = Auth::user()->role == 'admin' ? $request->get("owner") : Auth::user()->id;
         $task->priority = $request->get("priority");
         $task->duration = $request->get("duration");
         $task->start_date = $request->get("start_date");
@@ -48,14 +62,15 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'success');
     }
 
-    public function updateTask(Request $request){
+    public function updateTask(Request $request)
+    {
         // dd($request->all());
 
         foreach ($request->get("id") as $index => $task_id) {
             Task::where("id", $task_id)->update([
                 "name"  => $request->get("name")[$index],
-                "area_id" => $request->get("area_id")[$index],
-                "user_id"  => $request->get("owner")[$index],
+                "area_id" => Auth::user()->role == 'admin' ? $request->get("area_id")[$index] : Auth::user()->area_id,
+                "user_id"  => Auth::user()->role == 'admin' ? $request->get("owner")[$index] : Auth::user()->id,
                 "priority"  => $request->get("priority")[$index],
                 "duration"  => $request->get("duration")[$index],
                 "start_date"  => $request->get("start_date")[$index],

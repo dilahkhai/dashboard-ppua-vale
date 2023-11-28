@@ -74,6 +74,9 @@ class OvertimeHourController extends Controller
         $data['areas'] = Area::all();
 
         $data['overtimes'] = OvertimeHour::query()
+            ->when(auth()->user()->role != 'admin', function ($query) {
+                $query->whereBelongsTo(auth()->user());
+            })
             ->get();
 
         return view('overtime.index', $data);
@@ -83,7 +86,7 @@ class OvertimeHourController extends Controller
     {
         OvertimeHour::query()
             ->create([
-                'user_id' => $request->employee,
+                'user_id' => auth()->user()->role == 'admin' ? $request->employee : auth()->user()->id,
                 'hour' => $request->hour,
                 'date' => $request->date
             ]);

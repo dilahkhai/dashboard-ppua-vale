@@ -18,4 +18,9 @@ class Area extends Model
     {
         return $this->hasMany(mcu::class);
     }
+
+    public function OrganizationStructures(): HasMany
+    {
+        return $this->hasMany(OrganizationStructure::class);
+    }
 }

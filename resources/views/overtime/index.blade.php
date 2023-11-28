@@ -49,6 +49,7 @@
                 </button>
               </div>
               <div class="modal-body">
+                @if (auth()->user()->role == 'admin')
                 <div class="form-group">
                   <label for="exampleInputPassword1">Area</label>
                   <select class="form-control" name="area_id" onchange="fetchDataAndPopulate(this.value)">
@@ -63,6 +64,7 @@
                   <select class="form-control" name="employee" id="employee">
                   </select>
                 </div>
+                @endif
                 <div class="form-group">
                   <label for="hour">Hours</label>
                   <input type="number" class="form-control" name="hour" id="hour" placeholder="Overtime hours ...">
@@ -155,6 +157,7 @@
         </div>
       </div>
 
+      @if (auth()->user()->role == 'admin')
       <div class="row">
         <div class="col-md-6">
           <div class="card">
@@ -193,6 +196,7 @@
           </div>
         </div>
       </div>
+      @endif
     </div>
   </section>
 </div>

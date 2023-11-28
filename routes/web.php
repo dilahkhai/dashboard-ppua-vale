@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InitialDetailController;
 use App\Http\Controllers\OvertimeHourController;
 use App\Http\Controllers\TrainingStatusController;
+use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\WFHRoosterInitialDetailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +33,11 @@ Route::middleware([
     Route::get("logout-user", [App\Http\Controllers\crudusercontroller::class, 'logout']);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/import-excel', [App\Http\Controllers\HomeController::class, 'importExcel']);
+    Route::get('/export-excel', [ExportController::class, 'index']);
+    Route::post('/excel', [ExportController::class, 'export']);
+
+    Route::get('/update-password', [UpdatePasswordController::class, 'index']);
+    Route::post('/update-password', [UpdatePasswordController::class, 'update']);
 
     Route::get('/dashboardfurconv', [App\Http\Controllers\dashboardfurconvcontroller::class, 'index']);
     Route::get('/dashboarddryerkiln', [App\Http\Controllers\dashboarddryerkilncontroller::class, 'index']);

@@ -45,12 +45,14 @@
               <div class="col-2">
                 <b>Task Name</b>
               </div>
+              @if (auth()->user()->role == 'admin')
               <div class="col-2">
                 <b>Area</b>
               </div>
               <div class="col-2">
                 <b>Owner</b>
               </div>
+              @endif
               <div class="col-1">
                 <b>Priority</b>
               </div>
@@ -60,7 +62,7 @@
               <div class="col-2">
                 <b>Start</b>
               </div>
-              <div class="col-1">
+              <div class="col-{{ auth()->user()->role == 'admin' ? '1' : '2' }}">
                 <b>Status</b>
               </div>
               <div class="col-1">
@@ -79,6 +81,7 @@
                 <div class="col-2">
                   <input type="text" class="form-control" name="name[]" value="{{$task->name}}">
                 </div>
+                @if (auth()->user()->role == 'admin')
                 <div class="col-2">
                   <select class="form-control" name="area_id[]" onchange="fetchDataAndPopulate(this.value, 'owner-{{ $task->id }}')">
                     @foreach ($areas as $data)
@@ -93,6 +96,7 @@
                     @endforeach
                   </select>
                 </div>
+                @endif
                 <div class="col-1">
                   <select name="priority[]" class="form-control">
                     <option value="Low" {{ ("Low" == $task->priority) ? 'selected' : '' }}>Low</option>
@@ -107,7 +111,7 @@
 
                   <input type="date" class="form-control" name="start_date[]" value="{{ date_format($task->start_date,"Y-m-d") }}">
                 </div>
-                <div class="col-1">
+                <div class="col-{{ auth()->user()->role == 'admin' ? '1' : '2' }}">
                   <select name="status[]" class="form-control">
                     <option value="Not Started" {{ ("Not Started" == $task->status) ? 'selected' : '' }}>Not Started</option>
                     <option value="In Progress" {{ ("In Progress" == $task->status) ? 'selected' : '' }}>In Progress</option>
@@ -147,6 +151,7 @@
                   <label for="name">Task Name</label>
                   <input type="text" required name="name" class="form-control">
                 </div>
+                @if (auth()->user()->role == 'admin')
                 <div class="form-group">
                   <label for="exampleInputPassword1">Area</label>
                   <select class="form-control" name="area_id" onchange="fetchDataAndPopulate(this.value, 'owner')">
@@ -162,6 +167,7 @@
 
                   </select>
                 </div>
+                @endif
                 <div class="form-group">
                   <label for="name">Priority</label>
                   <select name="priority" class="form-control">

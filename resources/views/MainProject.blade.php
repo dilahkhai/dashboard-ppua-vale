@@ -18,9 +18,7 @@
   <!-- Main content -->
   <section class="content">
     <div class="card-body">
-      @if(Auth::user()->role=='admin')
       <a href="{{url('manage-tasks')}}" class="btn btn-md btn-success">Manage Project</a>
-      @endif
 
       <p>&nbsp;</p>
 
@@ -110,7 +108,7 @@
   ];
 
   gantt.init("gantt_here");
-  gantt.load("/api/data-main");
+  gantt.load("/api/data-main?user_id={{ auth()->user()->id }}");
 </script>
 @endpush
 
