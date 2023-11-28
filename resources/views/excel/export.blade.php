@@ -1,35 +1,32 @@
 <table>
   <thead>
     <tr>
-      <th rowspan="2">Date</th>
-      <th colspan="{{ $employees->count() }}">Status Per Day</th>
-      <th colspan="{{ $employees->count() }}">Safety Report</th>
-      <th rowspan="2">Organization</th>
-      <th rowspan="2">Kaizen</th>
-      <th colspan="5">Working Time Allocation</th>
+      <th colspan="9">Employee Status Range: {{ $from }} - {{ $to }}</th>
     </tr>
     <tr>
-      @foreach ($employees as $employee)
-      <th>{{ $employee->name }}</th>
-      @endforeach
-      @foreach ($employees as $employee)
-      <th>{{ $employee->name }}</th>
-      @endforeach
-      <th>RND</th>
-      <th>Automation Project</th>
-      <th>Tech Support</th>
-      <th>Management</th>
-      <th>Maintenance</th>
+      <th>Employee</th>
+      <th>Office</th>
+      <th>HO</th>
+      <th>Training</th>
+      <th>Sick Leave</th>
+      <th>Annual Leave</th>
+      <th>Emergency Leave</th>
+      <th>Medical CheckUp</th>
+      <th>Maternity Leave</th>
     </tr>
   </thead>
   <tbody>
-    @foreach($statusPerDay as $key => $row)
+    @foreach($employees as $key => $row)
     <tr>
-      <td>{{ $key }}</td>
-      @foreach ($row as $key => $status)
-
-      @endforeach
-      <td>{{ $row-> }}</td>
+      <td>{{ $row->name }}</td>
+      <td>{{ $row->office }}</td>
+      <td>{{ $row->ho }}</td>
+      <td>{{ $row->training }}</td>
+      <td>{{ $row->sick_leave }}</td>
+      <td>{{ $row->annual_leave }}</td>
+      <td>{{ $row->emergency_leave }}</td>
+      <td>{{ $row->medical_leave }}</td>
+      <td>{{ $row->maternity_leave }}</td>
     </tr>
     @endforeach
   </tbody>

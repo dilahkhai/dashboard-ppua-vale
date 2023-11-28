@@ -246,4 +246,9 @@ class inputfurconvcontroller extends Controller
         }
         return redirect()->back()->with('success', 'success');
     }
+
+    public function export(Request $request)
+    {
+
+    }
 }

@@ -321,15 +321,12 @@
             </ul>
           </li>
           @endif
-          @if(Auth::user()->role != 'admin')
           <li class="nav-item">
             <a href="/update-password" class="nav-link {{  Request::is('update-password') ? 'active' : '' }}">
               <i class="far fa-user nav-icon"></i>
               <p>Update Password</p>
             </a>
           </li>
-          @endif
-
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

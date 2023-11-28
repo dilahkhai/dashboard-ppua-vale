@@ -21,51 +21,100 @@
   @endif
   <!-- Main content -->
   <section class="content">
-    <div class="card-body">
-      @if(Auth::user()->role=='admin')
-      <form role="form" action="/excel" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="row">
-          <div class="col-md-3">
-            <label for="dateInput">From</label>
-          </div>
-          <div class="col-md-3">
-            <label for="dateInput">To</label>
-          </div>
-          <div class="col-md-3">
-            <label for="dateInput">Area</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-3">
-            <div class="form-group">
-              <input type="date" name="from" class="form-control" id="dateInput">
+    <div class="card">
+      <div class="card-header">Export Employee Status</div>
+      <div class="card-body">
+        @if(Auth::user()->role=='admin')
+        <form role="form" action="/excel" method="POST" enctype="multipart/form-data">
+          @csrf
+          <div class="row">
+            <div class="col-md-3">
+              <label for="dateInput">From</label>
+            </div>
+            <div class="col-md-3">
+              <label for="dateInput">To</label>
+            </div>
+            <div class="col-md-3">
+              <label for="dateInput">Area</label>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <input type="date" name="to" class="form-control" id="dateInput">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="date" name="from" class="form-control" id="dateInput">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="date" name="to" class="form-control" id="dateInput">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <select class="form-control" name="area_id">
+                  @foreach ($areas as $data)
+                  <option value="{{$data->id}}">{{$data->area}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <button type="submit" class="btn btn-primary">Submit </button>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <select class="form-control" name="area_id">
-                @foreach ($areas as $data)
-                <option value="{{$data->id}}">{{$data->area}}</option>
-                @endforeach
-              </select>
+        </form>
+        @endif
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Export Area Data</div>
+      <div class="card-body">
+        @if(Auth::user()->role=='admin')
+        <form role="form" action="/excel" method="POST" enctype="multipart/form-data">
+          @csrf
+          <div class="row">
+            <div class="col-md-3">
+              <label for="dateInput">From</label>
+            </div>
+            <div class="col-md-3">
+              <label for="dateInput">To</label>
+            </div>
+            <div class="col-md-3">
+              <label for="dateInput">Area</label>
             </div>
           </div>
-          <div class="col-lg-3">
-            <button type="submit" class="btn btn-primary">Submit </button>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="date" name="from" class="form-control" id="dateInput">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="date" name="to" class="form-control" id="dateInput">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <select class="form-control" name="area_id">
+                  @foreach ($areas as $data)
+                  <option value="{{$data->id}}">{{$data->area}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <button type="submit" class="btn btn-primary">Submit </button>
+            </div>
           </div>
-        </div>
-      </form>
-      @endif
+        </form>
+        @endif
+      </div>
     </div>
     <!-- /.card -->
-
     <!-- right col -->
+  </section>
 </div>
 <!-- /.row (main row) -->
 </div><!-- /.container-fluid -->
