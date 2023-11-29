@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InitialDetailController;
+use App\Http\Controllers\ManPowerController;
 use App\Http\Controllers\OvertimeHourController;
 use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\UpdatePasswordController;
@@ -138,6 +139,7 @@ Route::middleware([
     Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask']);
 
     Route::resource('training-status', TrainingStatusController::class);
+    Route::get('/man-power', [ManPowerController::class, 'index']);
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 });
