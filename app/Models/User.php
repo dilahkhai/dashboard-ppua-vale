@@ -101,4 +101,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(OvertimeHour::class);
     }
+
+    public function man_powers(): HasMany
+    {
+        return $this->hasMany(ManPower::class);
+    }
 }

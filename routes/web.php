@@ -136,7 +136,7 @@ Route::middleware([
     Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask']);
 
     Route::resource('training-status', TrainingStatusController::class);
-    Route::get('/man-power', [ManPowerController::class, 'index']);
+    Route::resource('man-power', ManPowerController::class);
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 });

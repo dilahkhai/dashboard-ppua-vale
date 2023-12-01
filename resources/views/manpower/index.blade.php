@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Export Excel File</h1>
+          <h1 class="m-0">Man Power</h1>
         </div><!-- /.col -->
 
       </div><!-- /.row -->
@@ -21,112 +21,50 @@
   @endif
   <!-- Main content -->
   <section class="content">
-    <div class="row">
-      @foreach ($areas as $area)
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">{{ $area->area }}</div>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="">Leader</label>
-              <input type="text" class="form-control">
-            </div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Crew</th>
-                  <th>Total</th>
-                  <th>Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Total Hadir</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>UTW - Medical Recomm</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Quarantine</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Leave</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Sick Leave</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Control MCU</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>OT Hours</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>OT</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Total Man Power</td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div class="card">
+      <div class="card-header">Man Power</div>
+      <div class="card-body">
+        @if (auth()->user()->role == 'admin')
+        <a href="{{ route('man-power.create') }}" class="btn btn-sm btn-primary">Input Data</a>
+        @endif
+        <table class="table table-bordered mt-3">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Leader</th>
+              <th>Crew</th>
+              <th>Contractor</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @forelse ($manpowers as $row)
+            <tr>
+              <td>{{ $row->user->area->area }}</td>
+              <td>{{ $row->user->name }}</td>
+              <td>{{ $row->crew->total_power }}</td>
+              <td>{{ $row->contractor->total_power }}</td>
+              <td>{{ $row->date }}</td>
+              <td class="d-flex">
+                <a href="{{ route('man-power.show', $row->id) }}" class="btn btn-sm btn-primary mr-3">Show</a>
+                <a href="{{ route('man-power.edit', $row->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
+                <form action="{{ route('man-power.destroy', $row->id) }}" method="post">
+                  @csrf
+                  @method('delete')
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure want to delete this data?')">Delete</button>
+                </form>
+              </td>
+            </tr>
+            @empty
+            <tr>
+              <td colspan="4">No Data.</td>
+            </tr>
+            @endforelse
+          </tbody>
+        </table>
+        {{ $manpowers->links() }}
       </div>
-      @endforeach
     </div>
   </section>
 </div>
