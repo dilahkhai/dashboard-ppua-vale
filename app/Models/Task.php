@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -26,12 +27,17 @@ class Task extends Model
         return $this->belongsTo(User::class, "user_id");
     }
 
+    public function area(): BelongsTo
+    {
+        return $this->belongsTo(Area::class);
+    }
+
     public function getTaskOwnerAttribute(){
         return $this->owner->name;
     }
 
     public function getTaskOwnerAreaAttribute()
     {
-        return $this->owner->area->area;
+        return $this->area->area;
     }
 }

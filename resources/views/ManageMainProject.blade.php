@@ -85,7 +85,7 @@
                 <div class="col-2">
                   <select class="form-control" name="area_id[]" onchange="fetchDataAndPopulate(this.value, 'owner-{{ $task->id }}')">
                     @foreach ($areas as $data)
-                    <option value="{{$data->id}}" {{ ($task->area_id === $data->id) ? 'selected' : '' }}>{{$data->area}}</option>
+                    <option value="{{$data->id}}" {{ ($task->area_id == $data->id) ? 'selected' : '' }}>{{$data->area}}</option>
                     @endforeach
                   </select>
                 </div>

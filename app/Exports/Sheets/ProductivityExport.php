@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Sheets;
 
-use App\Models\OrganizationStructure;
+use App\Models\productivity;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class OrganizationExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize
+class ProductivityExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithTitle
 {
     protected $from, $to, $area;
 
@@ -21,14 +22,16 @@ class OrganizationExport implements FromQuery, WithMapping, WithHeadings, Should
 
     public function query()
     {
-        return OrganizationStructure::query()->where('area_id', $this->area)->whereBetween('created_at', [$this->from, $this->to]);
+        return productivity::query()->where('area_id', $this->area)->with('departement')->whereBetween('created_at', [$this->from, $this->to]);
     }
 
     public function map($row): array
     {
         return [
             $row->created_at->toDateString(),
-            $row->value
+            $row->departement->name,
+            $row->update,
+            $row->selisih
         ];
     }
 
@@ -36,7 +39,14 @@ class OrganizationExport implements FromQuery, WithMapping, WithHeadings, Should
     {
         return [
             'Date',
-            'Count'
+            'Section',
+            'Productivity',
+            'Difference'
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Productivity';
     }
 }

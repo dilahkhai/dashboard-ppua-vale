@@ -1,34 +1,35 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Sheets;
 
-use App\Models\SafetyReport;
+use App\Models\Kaizen;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class SafetyReportExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize
+class KaizenExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithTitle
 {
-    protected $from, $to;
+    protected $from, $to, $area;
 
-    public function __construct($from, $to)
+    public function __construct($from, $to, $area)
     {
         $this->from = $from;
         $this->to = $to;
+        $this->area = $area;
     }
 
     public function query()
     {
-        return SafetyReport::query()->with('user')->whereBetween('created_at', [$this->from, $this->to]);
+        return Kaizen::query()->where('area_id', $this->area)->whereBetween('created_at', [$this->from, $this->to]);
     }
 
     public function map($row): array
     {
         return [
             $row->created_at->toDateString(),
-            $row->user->name,
-            $row->count
+            $row->value
         ];
     }
 
@@ -36,8 +37,12 @@ class SafetyReportExport implements FromQuery, WithMapping, WithHeadings, Should
     {
         return [
             'Date',
-            'Employee Name',
             'Count'
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Kaizen';
     }
 }

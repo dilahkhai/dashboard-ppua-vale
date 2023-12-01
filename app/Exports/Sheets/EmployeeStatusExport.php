@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Sheets;
 
 use App\Models\statusperday;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class EmployeeStatusExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize
+class EmployeeStatusExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithTitle
 {
     protected $from, $to;
 
@@ -53,5 +54,10 @@ class EmployeeStatusExport implements FromQuery, WithMapping, WithHeadings, Shou
             'Medical Leave',
             'Maternity Leave'
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Employee Status';
     }
 }

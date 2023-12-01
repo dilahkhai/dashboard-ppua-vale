@@ -35,11 +35,7 @@ Route::middleware([
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/import-excel', [App\Http\Controllers\HomeController::class, 'importExcel']);
     Route::get('/export-excel', [ExportController::class, 'index']);
-    Route::post('/excel-status', [ExportController::class, 'exportEmployeeStatus']);
-    Route::post('/excel-safety', [ExportController::class, 'exportSafetyReport']);
-    Route::post('/excel-organization', [ExportController::class, 'OrganizationReport']);
-    Route::post('/excel-kaizen', [ExportController::class, 'KaizenReport']);
-    Route::post('/excel-productivity', [ExportController::class, 'ProductivityReport']);
+    Route::post('/export-excel', [ExportController::class, 'export']);
 
     Route::get('/update-password', [UpdatePasswordController::class, 'index']);
     Route::post('/update-password', [UpdatePasswordController::class, 'update']);

@@ -40,8 +40,6 @@
               <a href="/tambahmcu" class="btn btn-primary btn-md"><i class="fas fa-briefcase-medical"></i> &nbsp; Add </a>
             </div>
             @endif
-
-
             <!-- /.card-header -->
             <div class="card-body">
               <div class="table-responsive">
@@ -54,8 +52,10 @@
                       <th>Due Date</th>
                       <th>Next MCU</th>
                       <th>Status</th>
+                      @if (auth()->user()->role == 'admin')
                       <th>Update</th>
                       <th>Delete</th>
+                      @endif
                     </tr>
                   </thead>
                   <tbody>
@@ -73,6 +73,7 @@
                       @else
                       <td class="text-warning fw-bold"> UNDONE</td>
                       @endif
+                      @if (auth()->user()->role == 'admin')
                       <td>
                         <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         @if ( auth()->user()->role == 'admin')
@@ -84,7 +85,6 @@
                         @endif
                         @endif
                       </td>
-
                       <td>
                         <form action="/deletemcu/{{$item->id_mcu}}" method="post">
                           {{csrf_field()}}
@@ -93,24 +93,17 @@
                             <i class="fas fa-trash"></i> DELETE </button>
                         </form>
                       </td>
+                      @endif
                     </tr>
-
-
                     @endforeach
 
                     @endisset
-
-
-
                   </tbody>
-
                 </table>
               </div>
             </div>
 
             @include('sweetalert::alert')
-
-
             <!-- /.card-body -->
           </div>
         </div>
@@ -134,9 +127,6 @@
 <script src="SelainLogin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="SelainLogin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="SelainLogin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
-
-
 
 <script>
   $(document).ready(function() {

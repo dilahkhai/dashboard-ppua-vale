@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\EmployeeStatusExport;
 use App\Exports\InputExport;
 use App\Exports\KaizenExport;
+use App\Exports\MasterExport;
 use App\Exports\OrganizationExport;
 use App\Exports\ProductivityExport;
 use App\Exports\SafetyReportExport;
@@ -23,7 +24,7 @@ class ExportController extends Controller
         return view('export', compact('areas'));
     }
 
-    public function exportEmployeeStatus(Request $request)
+    public function export(Request $request)
     {
         $area = Area::query()
             ->where('id', $request->area_id)
@@ -34,62 +35,6 @@ class ExportController extends Controller
         $from = Carbon::parse($request->from)->toDateString();
         $to = Carbon::parse($request->to)->toDateString();
 
-        return Excel::download(new EmployeeStatusExport($from, $to), "employee_status_{$area}_{$date}.xlsx");
-    }
-
-    public function exportSafetyReport(Request $request)
-    {
-        $area = Area::query()
-            ->where('id', $request->area_id)
-            ->value('area');
-
-        $date = now()->toDateTimeString();
-
-        $from = Carbon::parse($request->from)->toDateString();
-        $to = Carbon::parse($request->to)->toDateString();
-
-        return Excel::download(new SafetyReportExport($from, $to), "safety_reports_{$area}_{$date}.xlsx");
-    }
-
-    public function OrganizationReport(Request $request)
-    {
-        $area = Area::query()
-            ->where('id', $request->area_id)
-            ->value('area');
-
-        $date = now()->toDateTimeString();
-
-        $from = Carbon::parse($request->from)->toDateString();
-        $to = Carbon::parse($request->to)->toDateString();
-
-        return Excel::download(new OrganizationExport($from, $to, $request->area_id), "organization_{$area}_{$date}.xlsx");
-    }
-
-    public function KaizenReport(Request $request)
-    {
-        $area = Area::query()
-            ->where('id', $request->area_id)
-            ->value('area');
-
-        $date = now()->toDateTimeString();
-
-        $from = Carbon::parse($request->from)->toDateString();
-        $to = Carbon::parse($request->to)->toDateString();
-
-        return Excel::download(new KaizenExport($from, $to, $request->area_id), "kaizen_{$area}_{$date}.xlsx");
-    }
-
-    public function ProductivityReport(Request $request)
-    {
-        $area = Area::query()
-            ->where('id', $request->area_id)
-            ->value('area');
-
-        $date = now()->toDateTimeString();
-
-        $from = Carbon::parse($request->from)->toDateString();
-        $to = Carbon::parse($request->to)->toDateString();
-
-        return Excel::download(new ProductivityExport($from, $to, $request->area_id), "productivity_{$area}_{$date}.xlsx");
+        return Excel::download(new MasterExport($from, $to, $area), "master_data_{$area}_{$date}.xlsx");
     }
 }

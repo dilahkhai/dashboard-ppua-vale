@@ -53,7 +53,9 @@
                       <th>Certif Date</th>
                       <th>Status</th>
                       <th>Training Schedule</th>
+                      @if (auth()->user()->role == 'admin')
                       <th>Action</th>
+                      @endif
                     </tr>
                   </thead>
                   <tbody>
@@ -65,6 +67,7 @@
                         <td>{{ $training->certif_date->format('d/m/y') }}</td>
                         <td>{{ $training->status_text }}</td>
                         <td>{{ $training->training_schedule?->format('d/m/Y') ?? '-' }}</td>
+                        @if (auth()->user()->role == 'admin')
                         <td class="d-flex">
                           <a href="{{ route('training-status.edit', $training->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
                           <form action="{{ route('training-status.destroy', $training->id) }}" method="post">
@@ -74,6 +77,7 @@
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this training status?')">Delete</button>
                           </form>
                         </td>
+                        @endif
                       </tr>
                     @empty
                     <tr>
@@ -81,15 +85,10 @@
                     </tr>
                     @endforelse
                   </tbody>
-
                 </table>
               </div>
             </div>
-
             @include('sweetalert::alert')
-
-
-            <!-- /.card-body -->
           </div>
         </div>
       </div>
