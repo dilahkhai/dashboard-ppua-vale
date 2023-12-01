@@ -15,6 +15,8 @@ class productivity extends Model
     protected $primaryKey = "id_productivity";
     public $timestamps = true;
 
+    protected $guarded = [];
+
     public function area(){
         return $this->belongsTo(Area::class, "area_id");
     }

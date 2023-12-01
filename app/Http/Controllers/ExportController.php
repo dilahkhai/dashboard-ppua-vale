@@ -28,7 +28,7 @@ class ExportController extends Controller
     {
         $area = Area::query()
             ->where('id', $request->area_id)
-            ->value('area');
+            ->value('id');
 
         $date = now()->toDateTimeString();
 

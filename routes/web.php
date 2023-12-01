@@ -33,7 +33,8 @@ Route::middleware([
 ])->group(function () {
     Route::get("logout-user", [App\Http\Controllers\crudusercontroller::class, 'logout']);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/import-excel', [App\Http\Controllers\HomeController::class, 'importExcel']);
+    Route::get('/import-excel', [App\Http\Controllers\ImportController::class, 'index']);
+    Route::post('/import-excel', [App\Http\Controllers\ImportController::class, 'import']);
     Route::get('/export-excel', [ExportController::class, 'index']);
     Route::post('/export-excel', [ExportController::class, 'export']);
 

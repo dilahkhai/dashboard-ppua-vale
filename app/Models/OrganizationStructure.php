@@ -10,6 +10,8 @@ class OrganizationStructure extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class);

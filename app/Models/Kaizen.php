@@ -9,4 +9,6 @@ class Kaizen extends Model
 {
     use HasFactory;
     protected $table = "kaizen";
+
+    protected $guarded = [];
 }

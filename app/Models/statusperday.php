@@ -14,6 +14,8 @@ class statusperday extends Model
     protected $primaryKey = "id_status";
     public $timestamps = true;
 
+    protected $guarded = [];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'employee_id');
