@@ -109,6 +109,7 @@
 
           @foreach ($notifications as $notification)
           <div class="dropdown-item">
+            <span>{{ $notification->created_at->format('d/m/Y H:i') }}</span>
             <h5>{{ $notification->title }}</h5>
             <p>{{ $notification->content }}</p>
           </div>
@@ -254,12 +255,14 @@
               <p>Overtime Hours</p>
             </a>
           </li>
+          @if (auth()->user()->role == 'admin')
           <li class="nav-item ">
             <a href="/man-power" class="nav-link {{  Request::is('man-power*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-user"></i>
               <p>Man Power</p>
             </a>
           </li>
+          @endif
           {{-- <li class="nav-item">
             <a href="/mod" class="nav-link {{  Request::is('mod') ? 'active' : '' }}">
           <i class="nav-icon fas fa-book"></i>

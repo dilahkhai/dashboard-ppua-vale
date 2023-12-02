@@ -47,16 +47,19 @@ class oncallcontroller extends Controller
 
     public function source()
     {
+        $nowYear = now()->year;
         $year = Carbon::parse(request('start'))->format('Y');
         $weeks = [];
 
-        for ($i = 1; $i <= Carbon::create($year)->weekOfYear; $i++) {
-            $weeks[] = Carbon::create($year)->week($i)->format('Y-m-d');
+        for ($i = 1; $i <= Carbon::create($nowYear)->weekOfYear; $i++) {
+            $weeks[] = Carbon::create($nowYear)->week($i)->format('Y-m-d');
         }
 
         foreach ($weeks as $week) {
-            OnCallAutomation::query()
-                ->firstOrCreate(['date_attend' => $week]);
+            $oncall = OnCallAutomation::query()
+                ->firstOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()]);
+
+            $oncall->updateOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()], ['initial' => $oncall->initial]);
         }
 
         $oncall = OnCallAutomation::query()

@@ -57,17 +57,19 @@ class TrainingStatusController extends Controller
             $training->update(['status' => 2]);
 
             Notification::query()
-                ->create(['receiver_id' => $training->employee->id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
+                ->create(['receiver_id' => $training->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
 
             foreach ($superadmin as $admin) {
                 Notification::query()
                     ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
             }
-        } else if (now()->isAfter($certifExpired)) {
-            $training->update(['status' => 2]);
+        }
+
+        if (now()->isAfter($certifExpired)) {
+            $training->update(['status' => 3]);
 
             Notification::query()
-                ->create(['receiver_id' => $training->employee->id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is expired!']);
+                ->create(['receiver_id' => $training->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is expired!']);
 
             foreach ($superadmin as $admin) {
                 Notification::query()
@@ -81,6 +83,44 @@ class TrainingStatusController extends Controller
     public function update(Request $request, TrainingStatus $trainingStatus)
     {
         $trainingStatus->update($request->except('_token', 'area_id'));
+
+        if (!is_null($trainingStatus->training_schedule)) {
+            Notification::query()
+                    ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Training Schedule Updated', 'content' => 'You have new Training Schedule!']);
+        }
+
+        $superadmin = User::query()
+            ->where('role', 'admin')
+            ->get();
+
+        $due = $trainingStatus->certif_date;
+
+        $certifAge = Carbon::parse($due)->addDays(299);
+        $certifExpired = Carbon::parse($due)->addYear();
+
+        if (now()->isAfter($certifAge)) {
+            $trainingStatus->update(['status' => 2]);
+
+            Notification::query()
+                ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
+
+            foreach ($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
+            }
+        }
+
+        if (now()->isAfter($certifExpired)) {
+            $trainingStatus->update(['status' => 3]);
+
+            Notification::query()
+                ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is expired!']);
+
+            foreach ($superadmin as $admin) {
+                Notification::query()
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
+            }
+        }
 
         return redirect()->route('training-status.index')->with('success', 'Success updating training status!');
     }
