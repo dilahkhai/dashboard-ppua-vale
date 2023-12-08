@@ -53,8 +53,9 @@
                 </select>
               </div>
             </div>
-            <div class="col-lg-3">
-              <button type="submit" class="btn btn-primary">Submit </button>
+            <div class="col-lg-3 d-flex align-items-start">
+              <button type="submit" class="btn btn-primary mr-3">Submit </button>
+              <a href="/import_format.xlsx" class="btn btn-success">Import Format</a>
             </div>
           </div>
         </form>

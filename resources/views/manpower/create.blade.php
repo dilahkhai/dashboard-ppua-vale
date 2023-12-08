@@ -31,6 +31,9 @@
               <div class="form-group">
                 <label for="exampleInputPassword1">Date</label>
                 <input required type="date" class="form-control" name="date" id="exampleInputPassword1" placeholder="">
+                @error('date')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
               </div>
               <div class="row">
                 <div class="col-md-6">
@@ -49,6 +52,9 @@
                     <label for="exampleInputPassword1">Leader</label>
                     <select class="form-control" name="employee" id="employee">
                     </select>
+                    @error('employee')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                   </div>
                 </div>
               </div>
@@ -64,82 +70,82 @@
                   <tr>
                     <td>Total Hadir</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total">
+                      <input type="text" class="form-control" name="crew_total">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total_man">
+                      <input type="text" class="form-control" name="crew_total_man">
                     </td>
                   </tr>
                   <tr>
                     <td>UTW - Medical Recomm</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_utw">
+                      <input type="text" class="form-control" name="crew_utw">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_utw_man">
+                      <input type="text" class="form-control" name="crew_utw_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Quarantine</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_quarantine">
+                      <input type="text" class="form-control" name="crew_quarantine">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_quarantine_man">
+                      <input type="text" class="form-control" name="crew_quarantine_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_leave">
+                      <input type="text" class="form-control" name="crew_leave">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_leave_man">
+                      <input type="text" class="form-control" name="crew_leave_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Sick Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_sick_leave">
+                      <input type="text" class="form-control" name="crew_sick_leave">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_sick_leave_man">
+                      <input type="text" class="form-control" name="crew_sick_leave_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Control MCU</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_mcu">
+                      <input type="text" class="form-control" name="crew_mcu">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_mcu_man">
+                      <input type="text" class="form-control" name="crew_mcu_man">
                     </td>
                   </tr>
                   <tr>
                     <td>OT Hours</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot_hours">
+                      <input type="text" class="form-control" name="crew_ot_hours">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot_hours_man">
+                      <input type="text" class="form-control" name="crew_ot_hours_man">
                     </td>
                   </tr>
                   <tr>
                     <td>OT</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot">
+                      <input type="text" class="form-control" name="crew_ot">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot_man">
+                      <input type="text" class="form-control" name="crew_ot_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Total Man Power</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total_power">
+                      <input type="text" class="form-control" name="crew_total_power">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total_power_man">
+                      <input type="text" class="form-control" name="crew_total_power_man">
                     </td>
                   </tr>
                 </tbody>
@@ -157,82 +163,82 @@
                   <tr>
                     <td>Total Hadir</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total">
+                      <input type="text" class="form-control" name="contractor_total">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total_man">
+                      <input type="text" class="form-control" name="contractor_total_man">
                     </td>
                   </tr>
                   <tr>
                     <td>UTW - Medical Recomm</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_utw">
+                      <input type="text" class="form-control" name="contractor_utw">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_utw_man">
+                      <input type="text" class="form-control" name="contractor_utw_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Quarantine</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_quarantine">
+                      <input type="text" class="form-control" name="contractor_quarantine">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_quarantine_man">
+                      <input type="text" class="form-control" name="contractor_quarantine_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_leave">
+                      <input type="text" class="form-control" name="contractor_leave">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_leave_man">
+                      <input type="text" class="form-control" name="contractor_leave_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Sick Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_sick_leave">
+                      <input type="text" class="form-control" name="contractor_sick_leave">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_sick_leave_man">
+                      <input type="text" class="form-control" name="contractor_sick_leave_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Control MCU</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_mcu">
+                      <input type="text" class="form-control" name="contractor_mcu">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_mcu_man">
+                      <input type="text" class="form-control" name="contractor_mcu_man">
                     </td>
                   </tr>
                   <tr>
                     <td>OT Hours</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot_hours">
+                      <input type="text" class="form-control" name="contractor_ot_hours">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot_hours_man">
+                      <input type="text" class="form-control" name="contractor_ot_hours_man">
                     </td>
                   </tr>
                   <tr>
                     <td>OT</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot">
+                      <input type="text" class="form-control" name="contractor_ot">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot_man">
+                      <input type="text" class="form-control" name="contractor_ot_man">
                     </td>
                   </tr>
                   <tr>
                     <td>Total Man Power</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total_power">
+                      <input type="text" class="form-control" name="contractor_total_power">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total_power_man">
+                      <input type="text" class="form-control" name="contractor_total_power_man">
                     </td>
                   </tr>
                 </tbody>

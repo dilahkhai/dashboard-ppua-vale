@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OvertimeHourExport;
 use App\Models\Area;
 use App\Models\OvertimeHour;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OvertimeHourController extends Controller
 {
@@ -77,6 +79,15 @@ class OvertimeHourController extends Controller
             ->when(auth()->user()->role != 'admin', function ($query) {
                 $query->whereBelongsTo(auth()->user());
             })
+            ->when(request('name'), function ($query) {
+                $query->whereRelation('user', 'name', 'like', '%' . request('name') . '%');
+            })
+            ->when(request('from'), function ($query) {
+                $query->whereDate('date', '>=', request('from'));
+            })
+            ->when(request('to'), function ($query) {
+                $query->whereDate('date', '<=', request('to'));
+            })
             ->get();
 
         return view('overtime.index', $data);
@@ -109,5 +120,12 @@ class OvertimeHourController extends Controller
         $overtimeHour->delete();
 
         return back()->with('success', 'Data deleted successfully');
+    }
+
+    public function export(Request $request)
+    {
+        $now = now()->toDateTimeString();
+
+        return Excel::download(new OvertimeHourExport($request->from, $request->to), "overtime_hours_{$now}.xlsx");
     }
 }

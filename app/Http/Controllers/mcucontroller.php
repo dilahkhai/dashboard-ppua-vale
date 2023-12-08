@@ -58,7 +58,7 @@ class mcucontroller extends Controller
         $mcu->employee_id = $request->input('employee');
         $mcu->lastmcu = $request->input('lastmcu');
         $mcu->duedate = $request->input('duedate');
-        $mcu->status = " ";
+        $mcu->status = "DONE";
 
         $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
 

@@ -108,6 +108,7 @@ Route::middleware([
     Route::get('/wfhrooster-source', [App\Http\Controllers\WfhRoosterController::class, 'source']);
 
     Route::resource('overtime-hour', OvertimeHourController::class);
+    Route::post('overtime-hour-export', [OvertimeHourController::class, 'export']);
 
     Route::post('/wfh-initial-detail', [WFHRoosterInitialDetailController::class, 'store']);
     Route::delete('/wfh-initial-detail/{initialDetail}', [WFHRoosterInitialDetailController::class, 'destroy']);

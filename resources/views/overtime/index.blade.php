@@ -1,8 +1,4 @@
 @extends('master')
-@section('css')
-{{-- <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"> --}}
-<link rel="stylesheet" type="text/css" href="{{asset('SelainLogin/tablesearch/DataTables/datatables.min.css')}}" />
-@endsection
 @section('content')
 
 <div class="content-wrapper">
@@ -83,8 +79,69 @@
         </div>
       </div>
 
+      <!-- Modal -->
+      <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <form action="/overtime-hour-export" method="post">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">Export Overtime Hours</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="from">From</label>
+                  <input type="date" class="form-control" name="from" id="from">
+                </div>
+                <div class="form-group">
+                  <label for="to">From</label>
+                  <input type="date" class="form-control" name="to" id="to">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Export</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-body">
+          <form action="">
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" name="name" id="name" value="{{ request('name') }}">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="from">From</label>
+                  <input type="date" class="form-control" name="from" id="from" value="{{ request('from') }}">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="to">To</label>
+                  <div class="row">
+                    <div class="col">
+                      <input type="date" class="form-control" name="to" id="to" value="{{ request('to') }}">
+                    </div>
+                    <div class="col d-flex">
+                      <button type="submit" class="btn btn-primary mr-3">Filter</button>
+                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exportModal">Export</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
           <div class="table-responsive">
             <table id="example2" class="table table-bordered table-hover">
               <thead>
@@ -203,41 +260,6 @@
 @endsection
 @push('scripts')
 <script src="{{asset('SelainLogin/chart.js')}}"></script>
-
-<script type="text/javascript" src="{{asset('SelainLogin/tablesearch/DataTables/datatables.min.js')}}"></script>
-
-<script src="SelainLogin/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="SelainLogin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="SelainLogin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="SelainLogin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="SelainLogin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="SelainLogin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="SelainLogin/plugins/jszip/jszip.min.js"></script>
-<script src="SelainLogin/plugins/pdfmake/pdfmake.min.js"></script>
-<script src="SelainLogin/plugins/pdfmake/vfs_fonts.js"></script>
-<script src="SelainLogin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="SelainLogin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="SelainLogin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
-<script>
-  $(document).ready(function() {
-    $('#tabeluser').DataTable({
-      "responsive": true,
-      "lengthChange": false,
-      "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-    });
-  });
-</script>
 
 <script>
   const dataFurncanceOvertime = {

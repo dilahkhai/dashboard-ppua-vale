@@ -69,19 +69,15 @@
                       <td>{{$item->nextmcu ?? "-" }}</td>
                       @if ($item->status == "DONE")
                       <td class="text-primary"> {{$item->status}}</td>
-
                       @else
-                      <td class="text-warning fw-bold"> UNDONE</td>
+                      <td class="text-warning fw-bold"> Warning</td>
                       @endif
                       @if (auth()->user()->role == 'admin')
                       <td>
                         <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         @if ( auth()->user()->role == 'admin')
-                        @if ($item->status != "DONE")
+                        @if ($item->status != "DONE" && $item->nextmcu != null)
                         <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-primary" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
-                        @endif
-                        @if ($item->status == "DONE")
-                        <a href="/undonemcu/{{$item->id_mcu}}" class="btn btn-warning" onclick="return confirm('Do you want to update the status to UNDONE?')"><i class="fa-solid fa-pen-to-square"></i> Undone! </a>
                         @endif
                         @endif
                       </td>

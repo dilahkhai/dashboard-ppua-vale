@@ -32,6 +32,9 @@
               <div class="form-group">
                 <label for="exampleInputPassword1">Date</label>
                 <input required type="date" class="form-control" name="date" value="{{ $manPower->date }}" id="exampleInputPassword1" placeholder="">
+                @error('date')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
               </div>
               <div class="row">
                 <div class="col-md-6">
@@ -51,6 +54,9 @@
                     <select class="form-control" name="employee" id="employee">
                       <option value="{{ $manPower->user->id }}">{{ $manPower->user->name }}</option>
                     </select>
+                    @error('employee')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                   </div>
                 </div>
               </div>
@@ -66,82 +72,82 @@
                   <tr>
                     <td>Total Hadir</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total" value="{{ $manPower->crew->total }}">
+                      <input type="text" class="form-control" name="crew_total" value="{{ $manPower->crew->total }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total_man" value="{{ $manPower->crew->total_man }}">
+                      <input type="text" class="form-control" name="crew_total_man" value="{{ $manPower->crew->total_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>UTW - Medical Recomm</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_utw" value="{{ $manPower->crew->utw }}">
+                      <input type="text" class="form-control" name="crew_utw" value="{{ $manPower->crew->utw }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_utw_man" value="{{ $manPower->crew->utw_man }}">
+                      <input type="text" class="form-control" name="crew_utw_man" value="{{ $manPower->crew->utw_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Quarantine</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_quarantine" value="{{ $manPower->crew->quarantine }}">
+                      <input type="text" class="form-control" name="crew_quarantine" value="{{ $manPower->crew->quarantine }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_quarantine_man" value="{{ $manPower->crew->quarantine_man }}">
+                      <input type="text" class="form-control" name="crew_quarantine_man" value="{{ $manPower->crew->quarantine_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_leave" value="{{ $manPower->crew->leave }}">
+                      <input type="text" class="form-control" name="crew_leave" value="{{ $manPower->crew->leave }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_leave_man" value="{{ $manPower->crew->leave_man }}">
+                      <input type="text" class="form-control" name="crew_leave_man" value="{{ $manPower->crew->leave_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Sick Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_sick_leave" value="{{ $manPower->crew->sick_leave }}">
+                      <input type="text" class="form-control" name="crew_sick_leave" value="{{ $manPower->crew->sick_leave }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_sick_leave_man" value="{{ $manPower->crew->sick_leave_man }}">
+                      <input type="text" class="form-control" name="crew_sick_leave_man" value="{{ $manPower->crew->sick_leave_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Control MCU</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_mcu" value="{{ $manPower->crew->mcu }}">
+                      <input type="text" class="form-control" name="crew_mcu" value="{{ $manPower->crew->mcu }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_mcu_man" value="{{ $manPower->crew->mcu_man }}">
+                      <input type="text" class="form-control" name="crew_mcu_man" value="{{ $manPower->crew->mcu_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>OT Hours</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot_hours" value="{{ $manPower->crew->ot_hours }}">
+                      <input type="text" class="form-control" name="crew_ot_hours" value="{{ $manPower->crew->ot_hours }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot_hours_man" value="{{ $manPower->crew->ot_hours_man }}">
+                      <input type="text" class="form-control" name="crew_ot_hours_man" value="{{ $manPower->crew->ot_hours_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>OT</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot" value="{{ $manPower->crew->ot }}">
+                      <input type="text" class="form-control" name="crew_ot" value="{{ $manPower->crew->ot }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_ot_man" value="{{ $manPower->crew->ot_man }}">
+                      <input type="text" class="form-control" name="crew_ot_man" value="{{ $manPower->crew->ot_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Total Man Power</td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total_power" value="{{ $manPower->crew->total_power }}">
+                      <input type="text" class="form-control" name="crew_total_power" value="{{ $manPower->crew->total_power }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="crew_total_power_man" value="{{ $manPower->crew->total_power_man }}">
+                      <input type="text" class="form-control" name="crew_total_power_man" value="{{ $manPower->crew->total_power_man }}">
                     </td>
                   </tr>
                 </tbody>
@@ -159,82 +165,82 @@
                   <tr>
                     <td>Total Hadir</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total" value="{{ $manPower->contractor->total }}">
+                      <input type="text" class="form-control" name="contractor_total" value="{{ $manPower->contractor->total }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total_man" value="{{ $manPower->contractor->total_man }}">
+                      <input type="text" class="form-control" name="contractor_total_man" value="{{ $manPower->contractor->total_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>UTW - Medical Recomm</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_utw" value="{{ $manPower->contractor->utw }}">
+                      <input type="text" class="form-control" name="contractor_utw" value="{{ $manPower->contractor->utw }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_utw_man" value="{{ $manPower->contractor->utw_man }}">
+                      <input type="text" class="form-control" name="contractor_utw_man" value="{{ $manPower->contractor->utw_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Quarantine</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_quarantine" value="{{ $manPower->contractor->quarantine }}">
+                      <input type="text" class="form-control" name="contractor_quarantine" value="{{ $manPower->contractor->quarantine }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_quarantine_man" value="{{ $manPower->contractor->quarantine_man }}">
+                      <input type="text" class="form-control" name="contractor_quarantine_man" value="{{ $manPower->contractor->quarantine_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_leave" value="{{ $manPower->contractor->leave }}">
+                      <input type="text" class="form-control" name="contractor_leave" value="{{ $manPower->contractor->leave }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_leave_man" value="{{ $manPower->contractor->leave_man }}">
+                      <input type="text" class="form-control" name="contractor_leave_man" value="{{ $manPower->contractor->leave_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Sick Leave</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_sick_leave" value="{{ $manPower->contractor->sick_leave }}">
+                      <input type="text" class="form-control" name="contractor_sick_leave" value="{{ $manPower->contractor->sick_leave }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_sick_leave_man" value="{{ $manPower->contractor->sick_leave_man }}">
+                      <input type="text" class="form-control" name="contractor_sick_leave_man" value="{{ $manPower->contractor->sick_leave_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Control MCU</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_mcu" value="{{ $manPower->contractor->mcu }}">
+                      <input type="text" class="form-control" name="contractor_mcu" value="{{ $manPower->contractor->mcu }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_mcu_man" value="{{ $manPower->contractor->mcu_man }}">
+                      <input type="text" class="form-control" name="contractor_mcu_man" value="{{ $manPower->contractor->mcu_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>OT Hours</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot_hours" value="{{ $manPower->contractor->ot_hours }}">
+                      <input type="text" class="form-control" name="contractor_ot_hours" value="{{ $manPower->contractor->ot_hours }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot_hours_man" value="{{ $manPower->contractor->ot_hours_man }}">
+                      <input type="text" class="form-control" name="contractor_ot_hours_man" value="{{ $manPower->contractor->ot_hours_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>OT</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot" value="{{ $manPower->contractor->ot }}">
+                      <input type="text" class="form-control" name="contractor_ot" value="{{ $manPower->contractor->ot }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_ot_man" value="{{ $manPower->contractor->ot_man }}">
+                      <input type="text" class="form-control" name="contractor_ot_man" value="{{ $manPower->contractor->ot_man }}">
                     </td>
                   </tr>
                   <tr>
                     <td>Total Man Power</td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total_power" value="{{ $manPower->contractor->total_power }}">
+                      <input type="text" class="form-control" name="contractor_total_power" value="{{ $manPower->contractor->total_power }}">
                     </td>
                     <td>
-                      <input required type="text" class="form-control" name="contractor_total_power_man" value="{{ $manPower->contractor->total_power_man }}">
+                      <input type="text" class="form-control" name="contractor_total_power_man" value="{{ $manPower->contractor->total_power_man }}">
                     </td>
                   </tr>
                 </tbody>

@@ -19,7 +19,7 @@ class oncallcontroller extends Controller
 
     public function store(Request $request)
     {
-        $dateAttended = Carbon::parse($request->attended)->addDay()->format('Y-m-d');
+        $dateAttended = Carbon::parse($request->attended)->format('Y-m-d');
 
         OnCallAutomation::query()
             ->updateOrCreate([
@@ -48,7 +48,7 @@ class oncallcontroller extends Controller
     public function source()
     {
         $nowYear = now()->year;
-        $year = Carbon::parse(request('start'))->format('Y');
+        $year = request('year');
         $weeks = [];
 
         for ($i = 1; $i <= Carbon::create($nowYear)->weekOfYear; $i++) {
@@ -66,7 +66,7 @@ class oncallcontroller extends Controller
             ->get()
             ->transform(function ($value) {
                 return [
-                    'title' => $value->initial ?? "Kosong",
+                    'title' => $value->initial ?? "-",
                     'start' => $value->date_attend,
                     'end' => $value->date_attend
                 ];

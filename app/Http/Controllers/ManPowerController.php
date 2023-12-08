@@ -12,9 +12,24 @@ class ManPowerController extends Controller
 {
     public function index()
     {
-        $manpowers = ManPower::query()->with(['user'])->paginate(10);
+        $manpowers = ManPower::query()
+            ->when(request('area_id'), function ($query) {
+                $query->whereRelation('user', 'area_id', request('area_id'));
+            })
+            ->when(request('employee'), function ($query) {
+                $query->whereRelation('user', 'id', request('employee'));
+            })
+            ->when(request('from'), function ($query) {
+                $query->whereDate('date', '>=', request('from'));
+            })
+            ->when(request('to'), function ($query) {
+                $query->whereDate('date', '<=', request('to'));
+            })
+            ->with(['user'])
+            ->paginate(10);
+        $areas = Area::all();
 
-        return view('manpower.index', compact('manpowers'));
+        return view('manpower.index', compact('manpowers', 'areas'));
     }
 
     public function create()
@@ -26,6 +41,11 @@ class ManPowerController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'employee' => 'required|exists:users,id',
+            'date' => 'required'
+        ]);
+
         $manpower = ManPower::query()
             ->create([
                 'user_id' => $request->employee,
@@ -91,6 +111,11 @@ class ManPowerController extends Controller
 
     public function update(Request $request, ManPower $manPower)
     {
+        $request->validate([
+            'employee' => 'required|exists:users,id',
+            'date' => 'required'
+        ]);
+
         $manPower->update([
             'user_id' => $request->employee,
             'date' => $request->date
