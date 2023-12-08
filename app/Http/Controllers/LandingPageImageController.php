@@ -8,8 +8,12 @@ use App\Models\LandingPageImage;
 class LandingPageImageController extends Controller
 {
     public function index(){
-        $LandingPageImage = LandingPageImage::orderBy('id', 'desc')->first();
-        return view('imagelanding')->with('image', $LandingPageImage);
+        $furconv = LandingPageImage::where('type', 'furconv')->orderBy('id', 'desc')->first();
+        $dryer = LandingPageImage::where('type', 'dryer')->orderBy('id', 'desc')->first();
+        $infra = LandingPageImage::where('type', 'infra')->orderBy('id', 'desc')->first();
+        $util = LandingPageImage::where('type', 'util')->orderBy('id', 'desc')->first();
+
+        return view('imagelanding', compact('furconv', 'dryer', 'infra', 'util'));
     }
 
     public function upload(Request $request){
@@ -20,13 +24,18 @@ class LandingPageImageController extends Controller
 
         $LandingPageImage = new LandingPageImage;
         $LandingPageImage->file = asset("upload/$filename");
+        $LandingPageImage->type = $request->type;
         $LandingPageImage->save();
 
         return redirect('/image-landing');
     }
 
     public function landing(){
-        $LandingPageImage = LandingPageImage::orderBy('id', 'desc')->first();
-        return view('landing')->with('image', $LandingPageImage);
+        $furconv = LandingPageImage::where('type', 'furconv')->orderBy('id', 'desc')->first();
+        $dryer = LandingPageImage::where('type', 'dryer')->orderBy('id', 'desc')->first();
+        $infra = LandingPageImage::where('type', 'infra')->orderBy('id', 'desc')->first();
+        $util = LandingPageImage::where('type', 'util')->orderBy('id', 'desc')->first();
+
+        return view('landing', compact('furconv', 'dryer', 'infra', 'util'));
     }
 }
