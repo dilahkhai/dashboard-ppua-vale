@@ -64,7 +64,7 @@
                     <tr>
                       <td>{{ $item->area?->area }}</td>
                       <td>{{$item->employee->name}}</td>
-                      <td>{{$item->lastmcu}}</td>
+                      <td>{{is_null($item->lastmcu) ? '-' : $item->lastmcu}}</td>
                       <td class="{{ $item->is_due ? 'text-warning' : '' }}">{{$item->duedate}}</td>
                       <td>{{$item->nextmcu ?? "-" }}</td>
                       @if ($item->status == "DONE")
@@ -76,7 +76,7 @@
                       <td>
                         <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         @if ( auth()->user()->role == 'admin')
-                        @if ($item->status != "DONE" && $item->nextmcu != null)
+                        @if ($item->status != "DONE")
                         <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-primary" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
                         @endif
                         @endif

@@ -96,9 +96,9 @@ class mcucontroller extends Controller
         $mcu = mcu::find($id);
         $mcu->status = "DONE";
         $mcu->is_due = 0;
+        $mcu->lastmcu = is_null($mcu->nextmcu) ? null : $mcu->nextmcu;
+        $mcu->nextmcu = null;
         $mcu->save();
-
-        Alert::success('Data Updated!');
 
         return redirect('/mcu')->with('done', 'done');
     }
