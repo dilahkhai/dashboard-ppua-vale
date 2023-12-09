@@ -46,11 +46,11 @@ class CheckStatusMcu extends Command
                 $value->update(['is_due' => true]);
 
                 Notification::query()
-                    ->create(['receiver_id' => $value->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+                    ->create(['receiver_id' => $value->employee_id, 'title' => 'Due Date User', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
 
                 foreach($superadmin as $admin) {
                     Notification::query()
-                        ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+                        ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
                 }
             }
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\OvertimeHourController;
 use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\WFHRoosterInitialDetailController;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -140,4 +141,18 @@ Route::middleware([
     Route::resource('man-power', ManPowerController::class);
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
+
+    Route::get('/read-notif', function () {
+        Notification::query()
+            ->where('receiver_id', auth()->user()?->id)
+            ->latest()
+            ->get()
+            ->each(function ($notification) {
+                $notification->update([
+                    'is_read' => 1
+                ]);
+            });
+
+        return response()->json(['success' => true]);
+    });
 });

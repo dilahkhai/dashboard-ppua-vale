@@ -67,7 +67,7 @@
                       <td>{{is_null($item->lastmcu) ? '-' : $item->lastmcu}}</td>
                       <td class="{{ $item->is_due ? 'text-warning' : '' }}">{{$item->duedate}}</td>
                       <td>{{$item->nextmcu ?? "-" }}</td>
-                      @if ($item->status == "DONE")
+                      @if ($item->status == "DONE" && $item->is_due != 1)
                       <td class="text-primary"> {{$item->status}}</td>
                       @else
                       <td class="text-warning fw-bold"> Warning</td>

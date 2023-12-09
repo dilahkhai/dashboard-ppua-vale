@@ -20,7 +20,7 @@ class mcucontroller extends Controller
 
     public function index()
     {
-        $data = mcu::with("employee")->get();
+        $data = mcu::with("employee")->latest()->get();
 
         return view('mcu')->with('data', $data);
     }
@@ -58,6 +58,7 @@ class mcucontroller extends Controller
         $mcu->employee_id = $request->input('employee');
         $mcu->lastmcu = $request->input('lastmcu');
         $mcu->duedate = $request->input('duedate');
+        $mcu->nextmcu = $request->input('nextmcu');
         $mcu->status = "DONE";
 
         $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
@@ -97,6 +98,7 @@ class mcucontroller extends Controller
         $mcu->status = "DONE";
         $mcu->is_due = 0;
         $mcu->lastmcu = is_null($mcu->nextmcu) ? null : $mcu->nextmcu;
+        $mcu->duedate = is_null($mcu->nextmcu) ? null : Carbon::parse($mcu->nextmcu)->addYear()->toDateString();
         $mcu->nextmcu = null;
         $mcu->save();
 
@@ -117,11 +119,11 @@ class mcucontroller extends Controller
             $mcu->is_due = 1;
 
             Notification::query()
-                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Due Date User', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
 
             foreach($superadmin as $admin) {
                 Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
             }
         }
 
@@ -168,11 +170,11 @@ class mcucontroller extends Controller
             $mcu->is_due = 1;
 
             Notification::query()
-                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Due Date User', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
 
             foreach($superadmin as $admin) {
                 Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
             }
         }
 
@@ -180,7 +182,7 @@ class mcucontroller extends Controller
             $mcu->is_due = 0;
 
             Notification::query()
-                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'You have next MCU updated! Please check!']);
+                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU User', 'content' => 'You have next MCU updated! Please check!']);
         }
 
         $mcu->save();

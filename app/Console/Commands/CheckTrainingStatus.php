@@ -60,11 +60,11 @@ class CheckTrainingStatus extends Command
                 $value->update(['status' => 3]);
 
                 Notification::query()
-                    ->create(['receiver_id' => $value->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is expired!']);
+                    ->create(['receiver_id' => $value->user_id, 'title' => 'Certif Date Expired', 'content' => 'Your certification is expired!']);
 
                 foreach ($superadmin as $admin) {
                     Notification::query()
-                        ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
+                        ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Expired', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
                 }
             }
         }

@@ -100,8 +100,9 @@
         </div>
       </li> --}}
       <li class="nav-item dropdown show">
-        <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+        <a class="nav-link" data-toggle="dropdown" href="#" id="notification-button" aria-expanded="true">
           <i class="fas fa-bell"></i>
+          <span class="badge badge-danger" id="unread-count">{{ $notifications->filter(fn ($notification) => !$notification->is_read)->count() }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
           <span class="dropdown-item dropdown-header">Notifications</span>
@@ -388,8 +389,25 @@
   <!-- AdminLTE App -->
   <script src="{{asset('SelainLogin/dist/js/adminlte.js')}}"></script>
 
-  @stack('scripts')
+  <script>
+    $('#notification-button').click(function() {
+      $.ajax({
+        'url': '/read-notif',
+        'method': 'get',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'success': function(response) {
+          $('#unread-count').text('0')
+        },
+        error: function(error) {
+          console.error(error);
+        }
+      })
+    })
+  </script>
 
+  @stack('scripts')
 </body>
 
 </html>

@@ -26,7 +26,9 @@ class ManPowerController extends Controller
                 $query->whereDate('date', '<=', request('to'));
             })
             ->with(['user'])
+            ->orderBy('date', 'desc')
             ->paginate(10);
+
         $areas = Area::all();
 
         return view('manpower.index', compact('manpowers', 'areas'));
