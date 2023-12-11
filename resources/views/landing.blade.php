@@ -98,7 +98,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4">
-        <img src="{{ $dryer->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
+        <img src="{{ $dryer?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
       </div>
       <div class="col-md-8">
         <h4>Dryer-Kiln</h4>
@@ -108,7 +108,7 @@
 
     <div class="row mt-4">
       <div class="col-md-4">
-        <img src="{{ $furconv->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
+        <img src="{{ $furconv?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
       </div>
       <div class="col-md-8">
         <h4>Furnace-Converter</h4>
@@ -118,7 +118,7 @@
 
     <div class="row mt-4">
       <div class="col-md-4">
-        <img src="{{ $infra->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
+        <img src="{{ $infra?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
       </div>
       <div class="col-md-8">
         <h4>Infrastructure</h4>
@@ -128,7 +128,7 @@
 
     <div class="row mt-4">
       <div class="col-md-4">
-        <img src="{{ $util->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
+        <img src="{{ $util?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
       </div>
       <div class="col-md-8">
         <h4>Utilities</h4>

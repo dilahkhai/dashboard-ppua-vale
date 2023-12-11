@@ -66,7 +66,7 @@
                       <td>{{$item->employee->name}}</td>
                       <td>{{is_null($item->lastmcu) ? '-' : $item->lastmcu}}</td>
                       <td class="{{ $item->is_due ? 'text-warning' : '' }}">{{$item->duedate}}</td>
-                      <td>{{$item->nextmcu ?? "-" }}</td>
+                      <td class="{{ $item->next_mcu_status ? 'text-danger' : '' }}">{{$item->nextmcu ?? "-" }}</td>
                       @if ($item->status == "DONE" && $item->is_due != 1)
                       <td class="text-primary"> {{$item->status}}</td>
                       @else
@@ -76,7 +76,7 @@
                       <td>
                         <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         @if ( auth()->user()->role == 'admin')
-                        @if ($item->status != "DONE")
+                        @if (!is_null($item->nextmcu))
                         <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-primary" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
                         @endif
                         @endif

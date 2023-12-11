@@ -114,7 +114,8 @@
       eventClick: function(info) {
 
       },
-      height: 'auto'
+      height: 'auto',
+      firstDay: 5
     });
     calendar.render();
 
