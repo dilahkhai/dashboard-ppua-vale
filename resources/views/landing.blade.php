@@ -101,8 +101,8 @@
         <img src="{{ $dryer?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
       </div>
       <div class="col-md-8">
-        <h4>Dryer-Kiln</h4>
-        <p>Update OT Standards of Dryer-Kiln area. Perform automation technical supports for Dryer-Kiln operation and maintenance groups, Conduct automation studies and automation projects across Dryer-Kiln Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
+        <h4>Process Plant Automation</h4>
+        <p>Update OT Standards of Process Plant Automation area. Perform automation technical supports for Process Plant Automation operation and maintenance groups, Conduct automation studies and automation projects across Process Plant Automation Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
       </div>
     </div>
 

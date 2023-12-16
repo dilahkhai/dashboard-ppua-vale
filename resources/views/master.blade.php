@@ -32,6 +32,11 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset('SelainLogin/plugins/summernote/summernote-bs4.min.css')}}">
 
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@forevolve/bootstrap-dark@1.0.0/dist/css/bootstrap-dark.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@forevolve/bootstrap-dark@1.0.0/dist/css/toggle-bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@forevolve/bootstrap-dark@1.0.0/dist/css/toggle-bootstrap-dark.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@forevolve/bootstrap-dark@1.0.0/dist/css/toggle-bootstrap-print.min.css" /> -->
+
   <meta name="csrf-token" content="{{ csrf_token() }}" />
 
   <style>
@@ -49,6 +54,47 @@
 
     .gantt-blue {
       background-color: rgb(142, 169, 219);
+    }
+
+    .checkbox {
+      opacity: 0;
+      position: absolute;
+    }
+
+    .checkbox-label {
+      background-color: #111;
+      width: 50px;
+      height: 26px;
+      border-radius: 50px;
+      position: relative;
+      padding: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fa-moon {
+      color: #f1c40f;
+    }
+
+    .fa-sun {
+      color: #f39c12;
+    }
+
+    .checkbox-label .ball {
+      background-color: #fff;
+      width: 22px;
+      height: 22px;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      border-radius: 50%;
+      transition: transform 0.2s linear;
+    }
+
+    .checkbox:checked+.checkbox-label .ball {
+      transform: translateX(24px);
     }
   </style>
   @yield('css')
@@ -78,27 +124,16 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Navbar Search -->
-      {{-- <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          </form>
+      <li class="nav-item">
+        <div class="mt-2 mr-3">
+          <input type="checkbox" class="checkbox" id="checkbox">
+          <label for="checkbox" class="checkbox-label">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+            <span class="ball"></span>
+          </label>
         </div>
-      </li> --}}
+      </li>
       <li class="nav-item dropdown show">
         <a class="nav-link" data-toggle="dropdown" href="#" id="notification-button" aria-expanded="true">
           <i class="fas fa-bell"></i>
@@ -256,14 +291,12 @@
               <p>Overtime Hours</p>
             </a>
           </li>
-          @if (auth()->user()->role == 'admin')
           <li class="nav-item ">
             <a href="/man-power" class="nav-link {{  Request::is('man-power*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-user"></i>
               <p>Man Power</p>
             </a>
           </li>
-          @endif
           {{-- <li class="nav-item">
             <a href="/mod" class="nav-link {{  Request::is('mod') ? 'active' : '' }}">
           <i class="nav-icon fas fa-book"></i>
@@ -297,7 +330,7 @@
               <li class="nav-item">
                 <a href="/inputdryerkiln" class="nav-link {{  Request::is('inputdryerkiln') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Dryer-Kiln</p>
+                  <p>Process Plant Automation</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -348,8 +381,6 @@
 
   <!-- /.content-wrapper -->
   @yield('content')
-
-
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -408,6 +439,117 @@
   </script>
 
   @stack('scripts')
+
+  <script>
+    $('#checkbox').change(function() {
+      if ($('.navbar').hasClass('navbar-light')) {
+        $('.navbar').removeClass('navbar-light navbar-white')
+        $('.navbar').addClass('navbar-dark navbar-black')
+      } else {
+        $('.navbar').removeClass('navbar-dark navbar-black')
+        $('.navbar').addClass('navbar-light navbar-white')
+      }
+
+      $('.content-wrapper').toggleClass('bg-dark')
+      $('.card').toggleClass('text-white bg-secondary')
+      $('.fc-day').toggleClass('bg-secondary text-white')
+      var myChartColor = myChart.options.color
+      var myChartYTicksColor = myChart.options.scales.y.ticks.color
+      var myChartXTicksColor = myChart.options.scales.x.ticks.color
+
+      if (myChartColor == '#000') {
+        myChart.options.color = '#fff'
+      } else {
+        myChart.options.color = '#000'
+      }
+
+      if (myChartYTicksColor == '#000') {
+        myChart.options.scales.y.ticks.color = '#fff'
+      } else {
+        myChart.options.scales.y.ticks.color = '#000'
+      }
+
+      if (myChartXTicksColor == '#000') {
+        myChart.options.scales.x.ticks.color = '#fff'
+      } else {
+        myChart.options.scales.x.ticks.color = '#000'
+      }
+
+      myChart.update()
+
+      var myChartProductivityColor = myChartProductivity.options.color
+      var myChartProductivityYTicksColor = myChartProductivity.options.scales.y.ticks.color
+      var myChartProductivityXTicksColor = myChartProductivity.options.scales.x.ticks.color
+
+      if (myChartProductivityColor == '#000') {
+        myChartProductivity.options.color = '#fff'
+      } else {
+        myChartProductivity.options.color = '#000'
+      }
+
+      if (myChartProductivityYTicksColor == '#000') {
+        myChartProductivity.options.scales.y.ticks.color = '#fff'
+      } else {
+        myChartProductivity.options.scales.y.ticks.color = '#000'
+      }
+
+      if (myChartProductivityXTicksColor == '#000') {
+        myChartProductivity.options.scales.x.ticks.color = '#fff'
+      } else {
+        myChartProductivity.options.scales.x.ticks.color = '#000'
+      }
+
+      myChartProductivity.update()
+
+      var myChartManhoursColor = myChartManhours.options.color
+      var myChartManhoursYTicksColor = myChartManhours.options.scales.y.ticks.color
+      var myChartManhoursXTicksColor = myChartManhours.options.scales.x.ticks.color
+
+      if (myChartManhoursColor == '#000') {
+        myChartManhours.options.color = '#fff'
+      } else {
+        myChartManhours.options.color = '#000'
+      }
+
+      if (myChartManhoursYTicksColor == '#000') {
+        myChartManhours.options.scales.y.ticks.color = '#fff'
+      } else {
+        myChartManhours.options.scales.y.ticks.color = '#000'
+      }
+
+      if (myChartManhoursXTicksColor == '#000') {
+        myChartManhours.options.scales.x.ticks.color = '#fff'
+      } else {
+        myChartManhours.options.scales.x.ticks.color = '#000'
+      }
+
+      myChartManhours.update()
+
+      var myChartAutomationColor = myChartAutomation.options.color
+      var myChartAutomationYTicksColor = myChartAutomation.options.scales.y.ticks.color
+      var myChartAutomationXTicksColor = myChartAutomation.options.scales.x.ticks.color
+
+      if (myChartAutomationColor == '#000') {
+        myChartAutomation.options.color = '#fff'
+      } else {
+        myChartAutomation.options.color = '#000'
+      }
+
+      if (myChartAutomationYTicksColor == '#000') {
+        myChartAutomation.options.scales.y.ticks.color = '#fff'
+      } else {
+        myChartAutomation.options.scales.y.ticks.color = '#000'
+      }
+
+      if (myChartAutomationXTicksColor == '#000') {
+        myChartAutomation.options.scales.x.ticks.color = '#fff'
+      } else {
+        myChartAutomation.options.scales.x.ticks.color = '#000'
+      }
+
+      myChartAutomation.update()
+    })
+  </script>
 </body>
 
 </html>

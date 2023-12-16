@@ -1,6 +1,6 @@
 @extends('master')
 @section('content')
-    
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -29,12 +29,12 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-              
 
-                <p>Dryer-Kiln</p>
+
+                <p>Process Plant Automation</p>
               </div>
               <div class="icon">
-               
+
               </div>
               <a href="/dashboarddryerkiln" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -44,12 +44,12 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                
+
 
                 <p>Furnace-Converter</p>
               </div>
               <div class="icon">
-                
+
               </div>
               <a href="/dashboardfurconv" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -59,12 +59,12 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                
+
 
                 <p>Infrastructure</p>
               </div>
               <div class="icon">
-                
+
               </div>
               <a href="/dashboardinfra" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -74,13 +74,13 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                
 
-                
+
+
                 <p>Utilities</p>
               </div>
               <div class="icon">
-                
+
               </div>
 
               <a href="/dashboardutl" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
@@ -89,7 +89,7 @@
           <!-- ./col -->
         </div>
 
-        
+
         <div class="row">
           <div class="col-4"></div>
             <div class="chart-container" style="position: center; height:10vh; width:15vw">
@@ -125,9 +125,9 @@
 
 const data = {
   labels: [
-   
+
     'Furnace-Converter',
-    'Dryer-Kiln',
+    'Process Plant Automation',
     'Infrastructure',
     'Utilities'
   ],
@@ -141,7 +141,7 @@ const data = {
       'rgb(54, 162, 235)'
     ]
   }]
-  
+
 };
 
 const config = {

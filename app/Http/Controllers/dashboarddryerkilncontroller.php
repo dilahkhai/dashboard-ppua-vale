@@ -76,7 +76,7 @@ class dashboarddryerkilncontroller extends Controller
                 $query->whereNot('status', 'Complete');
             }])
             ->whereHas("area", function ($query) {
-                $query->where("area", "Dryer-Kiln");
+                $query->where("area", "Process Plant Automation");
             })->get();
 
         $listSafetyEmployee = [];
@@ -154,7 +154,7 @@ class dashboarddryerkilncontroller extends Controller
                     $query->whereDate('created_at', '<=', now()->endOfDay());
                 })
                 ->whereHas("area", function ($query) {
-                    $query->where("area", "Dryer-Kiln");
+                    $query->where("area", "Process Plant Automation");
                 });
         }])->get();
 

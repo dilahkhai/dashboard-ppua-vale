@@ -9,11 +9,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Dryer-Kiln</h1>
+            <h1>Process Plant Automation</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">Dryer-Kiln</li>
+              <li class="breadcrumb-item active">Process Plant Automation</li>
             </ol>
           </div>
         </div>

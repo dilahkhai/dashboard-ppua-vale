@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 "area"  => "Furnace-Converter"
             ],
             [
-                "area"  => "Dryer-Kiln"
+                "area"  => "Process Plant Automation"
             ],
             [
                 "area"  => "Infrastructure"

@@ -29,11 +29,11 @@ class inputdryerkilncontroller extends Controller
             "todaystatusperday"
         ])
             ->whereHas("area", function ($query) {
-                $query->where("area", "Dryer-Kiln");
+                $query->where("area", "Process Plant Automation");
             })->get();
         $department = Department::with(["today_productivity" => function ($query) {
             $query->whereHas("area", function ($query) {
-                $query->where("area", "Dryer-Kiln");
+                $query->where("area", "Process Plant Automation");
             });
         }])->get();
 
