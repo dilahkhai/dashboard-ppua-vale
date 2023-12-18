@@ -18,10 +18,12 @@
       <div id="calendar"></div>
       <div class="row mt-3">
         <div class="col-md-3">
+          @if (auth()->user()->role == 'admin')
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editInisial">
             Initial Detail
           </button>
+          @endif
         </div>
 
         <div class="col">
@@ -120,7 +122,7 @@
     });
     calendar.render();
 
-    document.getElementById('saveChanges').onclick = function() {
+    $(document).on('click', '#saveChanges', function () {
       $.ajax({
         'url': '/oncall',
         'method': 'post',
@@ -183,7 +185,7 @@
           console.error(error);
         }
       })
-    }
+    })
 
     $('.fc-prev-button').click(function() {
       var year = calendar.getDate().getYear()

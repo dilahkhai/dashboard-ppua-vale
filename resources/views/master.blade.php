@@ -96,6 +96,14 @@
     .checkbox:checked+.checkbox-label .ball {
       transform: translateX(24px);
     }
+
+    a {
+      color: inherit;
+    }
+
+    .added-right {
+      text-align: center;
+    }
   </style>
   @yield('css')
 
@@ -453,9 +461,24 @@
       $('.content-wrapper').toggleClass('bg-dark')
       $('.card').toggleClass('text-white bg-secondary')
       $('.fc-day').toggleClass('bg-secondary text-white')
+
+      try {
+        var homeChartColor = homeChart.options.color
+
+        if (homeChartColor == '#000') {
+          homeChart.options.color = '#fff'
+        } else {
+          homeChart.options.color = '#000'
+        }
+
+        homeChart.update()
+      } catch (e) {
+
+      }
+
       var myChartColor = myChart.options.color
-      var myChartYTicksColor = myChart.options.scales.y.ticks.color
-      var myChartXTicksColor = myChart.options.scales.x.ticks.color
+      var myChartYTicksColor = myChart.options.scales?.y?.ticks?.color
+      var myChartXTicksColor = myChart.options.scales?.x?.ticks?.color
 
       if (myChartColor == '#000') {
         myChart.options.color = '#fff'

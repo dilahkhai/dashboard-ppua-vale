@@ -18,10 +18,12 @@
       <div id="calendar"></div>
       <div class="row mt-3">
         <div class="col-md-3">
+          @if (auth()->user()->role == 'admin')
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editInisial">
             Initial Detail
           </button>
+          @endif
         </div>
 
         <div class="col">
@@ -75,12 +77,13 @@
     </div>
   </div>
 
+  @if (auth()->user()->role == 'admin')
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Set On Call Automation</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Set WFH Rooster</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -100,6 +103,7 @@
       </div>
     </div>
   </div>
+  @endif
 </div>
 
 @push('scripts')

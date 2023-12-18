@@ -176,8 +176,9 @@
     </section>
     <!-- /.content -->
   </div>
+@endsection
 
-  @push('scripts')
+@push('scripts')
   <script src="{{asset('SelainLogin/chart.js')}}"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0-rc"></script>
 
@@ -200,6 +201,7 @@
         type: 'pie',
         data: data,
         options: {
+          color: '#000',
           plugins: {
             datalabels: {
               color: "white",
@@ -213,10 +215,9 @@
         plugins: [ChartDataLabels]
     };
 
-    const myChart = new Chart(
+    const homeChart = new Chart(
       document.getElementById('myChart'),
       config
     );
   </script>
   @endpush
-@endsection
