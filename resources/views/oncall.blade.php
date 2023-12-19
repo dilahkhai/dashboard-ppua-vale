@@ -34,6 +34,7 @@
                 <div>{{ $initial->initial }}</div>
                 <div class="mx-1">=</div>
                 <div>{{ $initial->detail }}</div>
+                @if (auth()->user()->role == 'admin')
                 <form action="/initial-detail/{{ $initial->id }}" method="post">
                   @csrf
                   @method('delete')
@@ -41,6 +42,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </form>
+                @endif
               </div>
             </div>
             @endforeach

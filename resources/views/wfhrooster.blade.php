@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">WFH Rooster</h1>
+          <h1 class="m-0">WFH Roosters</h1>
         </div><!-- /.col -->
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -34,6 +34,7 @@
                 <div>{{ $initial->initial }}</div>
                 <div class="mx-1">=</div>
                 <div>{{ $initial->detail }}</div>
+                @if (auth()->user()->role == 'admin')
                 <form action="/wfh-initial-detail/{{ $initial->id }}" method="post">
                   @csrf
                   @method('delete')
@@ -41,6 +42,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </form>
+                @endif
               </div>
             </div>
             @endforeach
@@ -112,20 +114,17 @@
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
+      themeSystem: 'bootstrap',
       initialView: 'multiMonthYear',
       eventClick: function(info) {
-        $('#exampleModal').modal('toggle');
-        document.getElementById('date_attended').value = info.event.start.toISOString().split('T')[0]
-        document.getElementById('initial').value = info.event.title
+
       },
-      eventSources: {
-        'url': '/wfhrooster-source'
-      },
-      height: 'auto'
+      height: 'auto',
+      firstDay: 5
     });
     calendar.render();
 
-    document.getElementById('saveChanges').onclick = function() {
+    $(document).on('click', '#saveChanges', function () {
       $.ajax({
         'url': '/wfhrooster',
         'method': 'post',
@@ -138,13 +137,195 @@
         },
         'success': function(response) {
           $('#exampleModal').modal('hide')
-          calendar.refetchEvents()
+          calendar.render()
+
+          $('.added-left').remove()
+          $('.added-right').remove()
+
+          $.ajax({
+            'url': '/wfhrooster-source',
+            'method': 'get',
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            'success': function(response) {
+              $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell"></th>');
+              $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell"></th>');
+
+              var week = 1;
+              response.forEach((item, index) => {
+                let td = $(`.fc-daygrid-day[data-date='${item.start}']`)
+
+                if (td.length > 0) {
+                  var newTd = document.createElement('td')
+                  var button = document.createElement('button')
+
+                  var weekTd = document.createElement('td')
+
+                  button.classList = 'btn btn-primary btn-sm w-100 h-100';
+                  button.innerText = item.title
+                  button.onclick = function() {
+                    $('#exampleModal').modal('toggle');
+                    document.getElementById('date_attended').value = item.start
+                    document.getElementById('initial').value = item.title
+                  }
+
+                  newTd.append(button)
+                  weekTd.append(`W${week++}`)
+
+                  td[0].parentNode.prepend(newTd);
+                  td[0].parentNode.append(weekTd);
+                }
+              })
+            },
+            error: function(error) {
+              console.error(error);
+            }
+          })
         },
         error: function(error) {
           console.error(error);
         }
       })
-    }
+    })
+
+    $('.fc-prev-button').click(function() {
+      var year = calendar.getDate().getYear()
+      $.ajax({
+        'url': '/wfhrooster-source?year=' + year,
+        'method': 'get',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'success': function(response) {
+          $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
+          $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-right"></th>');
+
+          var week = 1;
+
+          response.forEach((item, index) => {
+            let td = $(`.fc-daygrid-day[data-date='${item.start}']`)
+
+            if (td.length > 0) {
+              var newTd = document.createElement('td')
+              var button = document.createElement('button')
+
+              var weekTd = document.createElement('td')
+
+              newTd.classList = 'added-left'
+              weekTd.classList = 'added-right'
+
+              button.classList = 'btn btn-primary btn-sm w-100 h-100';
+              button.innerText = item.title
+              button.onclick = function() {
+                $('#exampleModal').modal('toggle');
+                document.getElementById('date_attended').value = item.start
+                document.getElementById('initial').value = item.title
+              }
+
+              newTd.append(button)
+              weekTd.append(`W${week++}`)
+
+              td[0].parentNode.prepend(newTd);
+              td[0].parentNode.append(weekTd);
+            }
+          })
+        },
+        error: function(error) {
+          console.error(error);
+        }
+      })
+    })
+
+    $('.fc-next-button').click(function() {
+      var year = calendar.getDate().getYear()
+      $.ajax({
+        'url': '/wfhrooster-source?year=' + year,
+        'method': 'get',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        'success': function(response) {
+          $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
+          $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-right"></th>');
+          var week = 1;
+
+          response.forEach((item, index) => {
+            let td = $(`.fc-daygrid-day[data-date='${item.start}']`)
+
+            if (td.length > 0) {
+              var newTd = document.createElement('td')
+              var button = document.createElement('button')
+
+              var weekTd = document.createElement('td')
+
+              newTd.classList = 'added-left'
+              weekTd.classList = 'added-right'
+
+              button.classList = 'btn btn-primary btn-sm w-100 h-100';
+              button.innerText = item.title
+              button.onclick = function() {
+                $('#exampleModal').modal('toggle');
+                document.getElementById('date_attended').value = item.start
+                document.getElementById('initial').value = item.title
+              }
+
+              newTd.append(button)
+              weekTd.append(`W${week++}`)
+
+              td[0].parentNode.prepend(newTd);
+              td[0].parentNode.append(weekTd);
+            }
+          })
+        },
+        error: function(error) {
+          console.error(error);
+        }
+      })
+    })
+
+    $.ajax({
+      'url': '/wfhrooster-source',
+      'method': 'get',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      'success': function(response) {
+        $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
+        $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-right"></th>');
+        var week = 1;
+        response.forEach((item, index) => {
+          let td = $(`.fc-daygrid-day[data-date='${item.start}']`)
+
+          if (td.length > 0) {
+            var newTd = document.createElement('td')
+            var button = document.createElement('button')
+
+            var weekTd = document.createElement('td')
+
+            newTd.classList = 'added-left'
+            weekTd.classList = 'added-right'
+
+            button.classList = 'btn btn-primary btn-sm w-100 h-100';
+            button.innerText = item.title
+            button.onclick = function() {
+              $('#exampleModal').modal('toggle');
+              document.getElementById('date_attended').value = item.start
+              document.getElementById('initial').value = item.title
+            }
+
+            newTd.append(button)
+            weekTd.append(`W${week++}`)
+
+            td[0].parentNode.prepend(newTd);
+            td[0].parentNode.append(weekTd);
+          }
+        })
+      },
+      error: function(error) {
+        console.error(error);
+      }
+    })
   });
 </script>
 @endpush

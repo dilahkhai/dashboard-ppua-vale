@@ -85,12 +85,14 @@
               <td>{{ $row->date }}</td>
               <td class="d-flex">
                 <a href="{{ route('man-power.show', $row->id) }}" class="btn btn-sm btn-primary mr-3">Show</a>
+                @if (auth()->user()->role == 'admin')
                 <a href="{{ route('man-power.edit', $row->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
                 <form action="{{ route('man-power.destroy', $row->id) }}" method="post">
                   @csrf
                   @method('delete')
                   <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure want to delete this data?')">Delete</button>
                 </form>
+                @endif
               </td>
             </tr>
             @empty

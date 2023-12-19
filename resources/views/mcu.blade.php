@@ -74,10 +74,10 @@
                       @endif
                       @if (auth()->user()->role == 'admin')
                       <td>
-                        <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-success btn-md"><i class="fa-solid fa-pen-to-square"></i> Update </a>
+                        <a href="/editmcu/{{$item->id_mcu}}" class="btn btn-sm btn-success mb-1"><i class="fa-solid fa-pen-to-square"></i> Update </a>
                         @if ( auth()->user()->role == 'admin')
                         @if (!is_null($item->nextmcu))
-                        <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-primary" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
+                        <a href="/donemcu/{{$item->id_mcu}}" class="btn btn-sm btn-primary mb-1" onclick="return confirm('Do you want to update the status to DONE?')"><i class="fa-solid fa-pen-to-square"></i> Done! </a>
                         @endif
                         @endif
                       </td>

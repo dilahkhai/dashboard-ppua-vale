@@ -19,7 +19,7 @@ class WfhRoosterController extends Controller
 
     public function store(Request $request)
     {
-        $dateAttended = Carbon::parse($request->attended)->addDay()->format('Y-m-d');
+        $dateAttended = Carbon::parse($request->attended)->format('Y-m-d');
 
         WorkFromHomeRooster::query()
             ->updateOrCreate([
@@ -33,29 +33,32 @@ class WfhRoosterController extends Controller
 
     public function source()
     {
-        $year = Carbon::parse(request('start'))->format('Y');
+        $nowYear = now()->year;
+        $year = request('year') ?? $nowYear;
         $weeks = [];
 
-        for ($i = 1; $i <= Carbon::create($year)->weekOfYear; $i++) {
-            $weeks[] = Carbon::create($year)->week($i)->format('Y-m-d');
+        for ($i = 1; $i <= Carbon::create($nowYear)->weekOfYear; $i++) {
+            $weeks[] = Carbon::create($nowYear)->week($i)->format('Y-m-d');
         }
 
         foreach ($weeks as $week) {
-            WorkFromHomeRooster::query()
-                ->firstOrCreate(['date_attend' => $week]);
+            $wfhRooster = WorkFromHomeRooster::query()
+                ->firstOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()]);
+
+            $wfhRooster->updateOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()], ['initial' => $wfhRooster->initial]);
         }
 
-        $oncall = WorkFromHomeRooster::query()
+        $wfhRoosters = WorkFromHomeRooster::query()
             ->get()
             ->transform(function ($value) {
                 return [
-                    'title' => $value->initial ?? "Kosong",
+                    'title' => $value->initial ?? "-",
                     'start' => $value->date_attend,
                     'end' => $value->date_attend
                 ];
             })
             ->toArray();
 
-        return response()->json($oncall);
+        return response()->json($wfhRoosters);
     }
 }

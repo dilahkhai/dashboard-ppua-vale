@@ -37,7 +37,7 @@
 <script type="text/javascript">
   gantt.config.readonly = true;
   // gantt.config.date_format = "%Y-%m-%d";
-  gantt.config.grid_width = 400;
+  gantt.config.grid_width = 500;
   gantt.config.columns = [{
       name: "name",
       label: "Task name",
@@ -68,7 +68,8 @@
     {
       name: "status",
       label: "Status",
-      align: "center"
+      align: "center",
+      width: 200
     }
   ];
 
