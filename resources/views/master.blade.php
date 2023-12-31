@@ -329,46 +329,62 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/inputfurconv" class="nav-link {{  Request::is('inputfurconv') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Furnace-Converter</p>
+              <li class="nav-item {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel')  ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-copy"></i>
+                  <p>
+                    Data
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="/inputdryerkiln" class="nav-link {{  Request::is('inputdryerkiln') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>PP Automation</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/inputinfra" class="nav-link {{  Request::is('inputinfra') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Infrastructure</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/inpututl" class="nav-link {{  Request::is('inpututl') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Utilities</p>
+                    </a>
+                  </li>
+                </ul>
               </li>
-              <li class="nav-item">
-                <a href="/inputdryerkiln" class="nav-link {{  Request::is('inputdryerkiln') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Process Plant Automation</p>
+              <li class="nav-item {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel')  ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-copy"></i>
+                  <p>
+                    Import / Export
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
                 </a>
+                <ul class="nav nav-treeview">
+                  @if(Auth::user()->role=='admin')
+                  <li class="nav-item">
+                    <a href="/import-excel" class="nav-link {{  Request::is('import-excel') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Import Excel</p>
+                    </a>
+                  </li>
+                  @endif
+                  @if(Auth::user()->role=='admin')
+                  <li class="nav-item">
+                    <a href="/export-excel" class="nav-link {{  Request::is('export-excel') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Export Excel</p>
+                    </a>
+                  </li>
+                  @endif
+                </ul>
               </li>
-              <li class="nav-item">
-                <a href="/inputinfra" class="nav-link {{  Request::is('inputinfra') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Infrastructure</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/inpututl" class="nav-link {{  Request::is('inpututl') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Utilities</p>
-                </a>
-              </li>
-              @if(Auth::user()->role=='admin')
-              <li class="nav-item">
-                <a href="/import-excel" class="nav-link {{  Request::is('import-excel') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Import Excel</p>
-                </a>
-              </li>
-              @endif
-              @if(Auth::user()->role=='admin')
-              <li class="nav-item">
-                <a href="/export-excel" class="nav-link {{  Request::is('export-excel') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Export Excel</p>
-                </a>
-              </li>
-              @endif
             </ul>
           </li>
           @endif

@@ -97,9 +97,6 @@
   <h2 class="text-center mb-4">Area Information</h2>
   <div class="container">
     <div class="row">
-      <div class="col-md-4">
-        <img src="{{ $dryer?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
-      </div>
       <div class="col-md-8">
         <h4>Process Plant Automation</h4>
         <p>Update OT Standards of Process Plant Automation area. Perform automation technical supports for Process Plant Automation operation and maintenance groups, Conduct automation studies and automation projects across Process Plant Automation Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
@@ -107,9 +104,6 @@
     </div>
 
     <div class="row mt-4">
-      <div class="col-md-4">
-        <img src="{{ $furconv?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
-      </div>
       <div class="col-md-8">
         <h4>Furnace-Converter</h4>
         <p>Update OT Standards of Furnace-Converter area. Perform automation technical supports for Furnace-Converter operation and maintenance groups, Conduct automation studies and automation projects across Furnace-Converter Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
@@ -117,9 +111,6 @@
     </div>
 
     <div class="row mt-4">
-      <div class="col-md-4">
-        <img src="{{ $infra?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
-      </div>
       <div class="col-md-8">
         <h4>Infrastructure</h4>
         <p>Update the IT/OT network standards of the PTVI process plant,  provide technical support for process plant operation, process plant maintenance, process plant technology, process plant engineering & planning related to automation network in all area of process plant.</p>
@@ -127,15 +118,14 @@
     </div>
 
     <div class="row mt-4">
-      <div class="col-md-4">
-        <img src="{{ $util?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
-      </div>
       <div class="col-md-8">
         <h4>Utilities</h4>
         <p>Update OT Standards of Utilities area. Perform automation technical supports for Utilities operation and maintenance groups, Conduct automation studies and automation projects across Utilities Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
       </div>
     </div>
   </div>
+
+  <img src="{{ $furconv?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
 
   <footer class="mt-5"></footer>
   <!-- jQuery -->

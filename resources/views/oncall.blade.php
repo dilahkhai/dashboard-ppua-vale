@@ -291,7 +291,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       'success': function(response) {
-        $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
+        $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
         $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-right"></th>');
         var week = 1;
         response.forEach((item, index) => {
@@ -317,10 +317,24 @@
             newTd.append(button)
             weekTd.append(`W${week++}`)
 
-            td[0].parentNode.prepend(newTd);
             td[0].parentNode.append(weekTd);
+            td[0].parentNode.append(newTd);
           }
         })
+
+        $('.fc-multimonth-daygrid-table').each(function (i, el) {
+          let tr = el.getElementsByTagName('tr');
+          for (let i = 0; i < tr.length; i++) {
+            if(tr[i].getElementsByTagName('td').length === 7) {
+              var newTd = document.createElement('td')
+              var newTd2 = document.createElement('td')
+              newTd.classList = 'fc-day fc-day-fri fc-day-disabled fc-daygrid-day'
+              newTd2.classList = 'fc-day fc-day-fri fc-day-disabled fc-daygrid-day'
+              tr[i].append(newTd)
+              tr[i].append(newTd2)
+            }
+          }
+        });
       },
       error: function(error) {
         console.error(error);
