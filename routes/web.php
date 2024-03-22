@@ -4,6 +4,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InitialDetailController;
 use App\Http\Controllers\ManPowerController;
 use App\Http\Controllers\OvertimeHourController;
+use App\Http\Controllers\SimperController;
 use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\WFHRoosterInitialDetailController;
@@ -139,6 +140,8 @@ Route::middleware([
 
     Route::resource('training-status', TrainingStatusController::class);
     Route::resource('man-power', ManPowerController::class);
+
+    Route::resource('simper', SimperController::class);
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 

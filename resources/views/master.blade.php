@@ -287,6 +287,15 @@
             </a>
           </li>
 
+          <li class="nav-item">
+            <a href="/simper" class="nav-link {{  Request::is('simper') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-hospital-alt"></i>
+              <p>
+                SIM Status
+              </p>
+            </a>
+          </li>
+
           <li class="nav-item ">
             <a href="/wfhrooster" class="nav-link {{  Request::is('wfhrooster') ? 'active' : '' }}">
               <i class="nav-icon fas fa-home"></i>
