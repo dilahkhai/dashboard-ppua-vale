@@ -260,6 +260,15 @@
           </li>
 
           <li class="nav-item">
+            <a href="/sharing-schedule" class="nav-link {{  Request::is('sharing-schedule') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-phone-alt"></i>
+              <p>
+                Sharing Schedule
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="/knowledge" class="nav-link {{  Request::is('knowledge') ? 'active' : '' }}">
               <i class="nav-icon fas fa-book-open"></i>
               <p>

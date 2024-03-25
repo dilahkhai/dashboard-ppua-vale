@@ -4,6 +4,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InitialDetailController;
 use App\Http\Controllers\ManPowerController;
 use App\Http\Controllers\OvertimeHourController;
+use App\Http\Controllers\SharingController;
 use App\Http\Controllers\SimperController;
 use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\UpdatePasswordController;
@@ -142,6 +143,12 @@ Route::middleware([
     Route::resource('man-power', ManPowerController::class);
 
     Route::resource('simper', SimperController::class);
+
+    Route::get('/sharing-schedule', [SharingController::class, 'index'])->name('sharing-schedule.index');
+    Route::post('/sharing-schedule', [SharingController::class, 'store'])->name('sharing-schedule.store');
+    Route::post('/sharing-schedule-file', [SharingController::class, 'storeFile'])->name('sharing-schedule.store-file');
+    Route::get('/sharing-schedule-source', [SharingController::class, 'source'])->name('sharing-schedule.source');
+    Route::get('/sharing-schedule-source-detail', [SharingController::class, 'sourceDetail'])->name('sharing-schedule.source-detail');
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 
