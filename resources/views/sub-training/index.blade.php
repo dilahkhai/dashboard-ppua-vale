@@ -11,7 +11,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Training Status</h1>
+          <h1>{{$training->name}} Sub Trainings</h1>
         </div>
         @if(session()->has('success'))
         <div class="alert alert-success" role="alert">
@@ -37,7 +37,7 @@
 
             @if ( auth()->user()->role == 'admin')
             <div class="card-header">
-              <a href="{{ route('training-status.create') }}" class="btn btn-primary btn-md"><i class="fas fa-briefcase-medical"></i> &nbsp; Add </a>
+              <a href="{{ route('sub-training.create', ['training_status' => $training->id]) }}" class="btn btn-primary btn-md"><i class="fas fa-briefcase-medical"></i> &nbsp; Add </a>
             </div>
             @endif
 
@@ -48,20 +48,29 @@
                   <thead>
                     <tr>
                       <th>Training Name</th>
+                      <th>Area</th>
+                      <th>Employee</th>
+                      <th>Certif Date</th>
+                      <th>Status</th>
+                      <th>Training Schedule</th>
                       @if (auth()->user()->role == 'admin')
                       <th>Action</th>
                       @endif
                     </tr>
                   </thead>
                   <tbody>
-                    @forelse ($trainings as $training)
+                    @forelse ($trainings as $row)
                       <tr>
-                        <td>{{ $training->name }}</td>
+                        <td>{{ $row->name }}</td>
+                        <td>{{ $row->employee->area->area }}</td>
+                        <td>{{ $row->employee->name }}</td>
+                        <td>{{ $row->certif_date->format('d/m/y') }}</td>
+                        <td>{{ $row->status_text }}</td>
+                        <td>{{ $row->training_schedule?->format('d/m/Y') ?? '-' }}</td>
                         @if (auth()->user()->role == 'admin')
                         <td class="d-flex">
-                          <a href="{{ route('sub-training.index', ['training_status' => $training->id]) }}" class="btn btn-sm btn-success mr-3">SubTraining</a>
-                          <a href="{{ route('training-status.edit', $training->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
-                          <form action="{{ route('training-status.destroy', $training->id) }}" method="post">
+                          <a href="{{ route('sub-training.edit', $row->id) }}?training_status={{ request('training_status') }}" class="btn btn-sm btn-success mr-3">Edit</a>
+                          <form action="{{ route('sub-training.destroy', $row->id) }}" method="post">
                             @csrf
                             @method('delete')
 

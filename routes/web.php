@@ -6,6 +6,8 @@ use App\Http\Controllers\ManPowerController;
 use App\Http\Controllers\OvertimeHourController;
 use App\Http\Controllers\SharingController;
 use App\Http\Controllers\SimperController;
+use App\Http\Controllers\StudyController;
+use App\Http\Controllers\SubTrainingController;
 use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\WFHRoosterInitialDetailController;
@@ -140,6 +142,7 @@ Route::middleware([
     Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask']);
 
     Route::resource('training-status', TrainingStatusController::class);
+    Route::resource('sub-training', SubTrainingController::class);
     Route::resource('man-power', ManPowerController::class);
 
     Route::resource('simper', SimperController::class);
@@ -149,6 +152,12 @@ Route::middleware([
     Route::post('/sharing-schedule-file', [SharingController::class, 'storeFile'])->name('sharing-schedule.store-file');
     Route::get('/sharing-schedule-source', [SharingController::class, 'source'])->name('sharing-schedule.source');
     Route::get('/sharing-schedule-source-detail', [SharingController::class, 'sourceDetail'])->name('sharing-schedule.source-detail');
+
+    Route::get('/study-schedule', [StudyController::class, 'index'])->name('study-schedule.index');
+    Route::post('/study-schedule', [StudyController::class, 'store'])->name('study-schedule.store');
+    Route::post('/study-schedule-file', [StudyController::class, 'storeFile'])->name('study-schedule.store-file');
+    Route::get('/study-schedule-source', [StudyController::class, 'source'])->name('study-schedule.source');
+    Route::get('/study-schedule-source-detail', [StudyController::class, 'sourceDetail'])->name('study-schedule.source-detail');
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 

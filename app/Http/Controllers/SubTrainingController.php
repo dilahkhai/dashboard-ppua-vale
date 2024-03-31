@@ -3,32 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
-use App\Models\employee;
 use App\Models\Notification;
+use App\Models\SubTraining;
 use App\Models\TrainingStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class TrainingStatusController extends Controller
+class SubTrainingController extends Controller
 {
     public function index()
     {
-        $trainings = TrainingStatus::query()->get();
+        $training = TrainingStatus::query()->findOrFail(request('training_status'));
 
-        return view('training-status.index', compact('trainings'));
+        $trainings = SubTraining::query()->whereBelongsTo($training, 'training')->with('employee.area')->get();
+
+        return view('sub-training.index', compact('trainings', 'training'));
     }
 
     public function create()
     {
+        $training = TrainingStatus::query()->find(request('training_status'));
+
+        if (!$training) {
+            return redirect()->route('training-status.index')->with('fail', 'Please select training first!');
+        }
+
         $areas = Area::query()
             ->get(['area', 'id']);
 
-        return view('training-status.create', compact('areas'));
+        return view('sub-training.create', compact('areas'));
     }
 
-    public function edit(TrainingStatus $trainingStatus)
+    public function edit(SubTraining $subTraining)
     {
+        $training = TrainingStatus::query()->find(request('training_status'));
+
+        if (!$training) {
+            return redirect()->route('training-status.index')->with('fail', 'Please select training first!');
+        }
+
         $employees = User::query()
             ->where('role', 'user')
             ->get();
@@ -36,12 +50,12 @@ class TrainingStatusController extends Controller
         $areas = Area::query()
             ->get();
 
-        return view('training-status.edit', compact('trainingStatus', 'employees', 'areas'));
+        return view('sub-training.edit', compact('subTraining', 'employees', 'areas'));
     }
 
     public function store(Request $request)
     {
-        $training = TrainingStatus::query()
+        $training = SubTraining::query()
             ->create($request->except('_token', 'area_id') + ['status' => 1]);
 
         $superadmin = User::query()
@@ -77,32 +91,32 @@ class TrainingStatusController extends Controller
             }
         }
 
-        return redirect()->route('training-status.index')->with('success', 'Success create training status!');
+        return redirect()->route('sub-training.index', ['training_status' => $request->training_status])->with('success', 'Success create training status!');
     }
 
-    public function update(Request $request, TrainingStatus $trainingStatus)
+    public function update(Request $request, SubTraining $subTraining)
     {
-        $trainingStatus->update($request->except('_token', 'area_id') + ['status' => 1]);
+        $subTraining->update($request->except('_token', 'area_id') + ['status' => 1]);
 
-        if (!is_null($trainingStatus->training_schedule)) {
+        if (!is_null($subTraining->training_schedule)) {
             Notification::query()
-                    ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Training Schedule Updated', 'content' => 'You have new Training Schedule!']);
+                    ->create(['receiver_id' => $subTraining->user_id, 'title' => 'Training Schedule Updated', 'content' => 'You have new Training Schedule!']);
         }
 
         $superadmin = User::query()
             ->where('role', 'admin')
             ->get();
 
-        $due = $trainingStatus->certif_date;
+        $due = $subTraining->certif_date;
 
         $certifAge = Carbon::parse($due)->addDays(299);
         $certifExpired = Carbon::parse($due)->addYear();
 
         if (now()->isAfter($certifAge)) {
-            $trainingStatus->update(['status' => 2]);
+            $subTraining->update(['status' => 2]);
 
             Notification::query()
-                ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
+                ->create(['receiver_id' => $subTraining->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
 
             foreach ($superadmin as $admin) {
                 Notification::query()
@@ -111,10 +125,10 @@ class TrainingStatusController extends Controller
         }
 
         if (now()->isAfter($certifExpired)) {
-            $trainingStatus->update(['status' => 3]);
+            $subTraining->update(['status' => 3]);
 
             Notification::query()
-                ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Certif Date Expired', 'content' => 'Your certification is expired!']);
+                ->create(['receiver_id' => $subTraining->user_id, 'title' => 'Certif Date Expired', 'content' => 'Your certification is expired!']);
 
             foreach ($superadmin as $admin) {
                 Notification::query()
@@ -122,12 +136,12 @@ class TrainingStatusController extends Controller
             }
         }
 
-        return redirect()->route('training-status.index')->with('success', 'Success updating training status!');
+        return redirect()->route('sub-training.index', ['training_status' => $subTraining->training_status_id])->with('success', 'Success updating training status!');
     }
 
-    public function destroy(TrainingStatus $trainingStatus)
+    public function destroy(SubTraining $subTraining)
     {
-        $trainingStatus->delete();
+        $subTraining->delete();
 
         return back()->with('success', 'Success deleting training status!');
     }
