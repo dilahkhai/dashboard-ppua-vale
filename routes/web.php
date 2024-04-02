@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FMDSController;
 use App\Http\Controllers\InitialDetailController;
 use App\Http\Controllers\ManPowerController;
 use App\Http\Controllers\OvertimeHourController;
@@ -42,6 +43,9 @@ Route::middleware([
     Route::post('/import-excel', [App\Http\Controllers\ImportController::class, 'import']);
     Route::get('/export-excel', [ExportController::class, 'index']);
     Route::post('/export-excel', [ExportController::class, 'export']);
+    Route::get('/fmds', [FMDSController::class, 'index'])->name('fmds.index');
+    Route::post('/fmds-download', [FMDSController::class, 'download'])->name('fmds.download');
+    Route::post('/fmds-upload', [FMDSController::class, 'upload'])->name('fmds.upload');
 
     Route::get('/update-password', [UpdatePasswordController::class, 'index']);
     Route::post('/update-password', [UpdatePasswordController::class, 'update']);

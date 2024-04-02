@@ -10,6 +10,17 @@
           <h1 class="m-0">Study Schedule</h1>
         </div><!-- /.col -->
       </div><!-- /.row -->
+      @if(session()->has('success'))
+      <div class="alert alert-success" role="alert">
+        Data Saved succesfully!
+      </div>
+      @endif
+
+      @if(session()->has('fail'))
+      <div class="alert alert-danger" role="alert">
+        Failed!
+      </div>
+      @endif
     </div><!-- /.container-fluid -->
   </div>
 

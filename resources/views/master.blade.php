@@ -219,8 +219,6 @@
   </nav>
   <!-- /.navbar -->
 
-
-
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -242,6 +240,13 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="{{url('fmds')}}" class="nav-link {{  Request::is('fmds') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-tasks"></i>
+              <p>FMDS</p>
+            </a>
+          </li>
 
           <li class="nav-item">
             <a href="{{url('tasks')}}" class="nav-link {{  Request::is('tasks') ? 'active' : '' }}">
@@ -418,9 +423,6 @@
     </div>
     <!-- /.sidebar -->
   </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-
   <!-- /.content-wrapper -->
   @yield('content')
   <!-- Control Sidebar -->
