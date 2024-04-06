@@ -42,7 +42,7 @@ class TrainingStatusController extends Controller
     public function store(Request $request)
     {
         $training = TrainingStatus::query()
-            ->create($request->except('_token', 'area_id') + ['status' => 1]);
+            ->create($request->only('name'));
 
         $superadmin = User::query()
             ->where('role', 'admin')

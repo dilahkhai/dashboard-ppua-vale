@@ -147,6 +147,14 @@ Route::middleware([
 
     Route::resource('training-status', TrainingStatusController::class);
     Route::resource('sub-training', SubTrainingController::class);
+
+    Route::patch('/training-status/sub-training/{subTraining}', [SubTrainingController::class, 'update'])->name('sub-training.update');
+    Route::delete('/training-status/sub-training/{subTraining}', [SubTrainingController::class, 'destroy'])->name('sub-training.destroy');
+    Route::get('/training-status/{trainingStatus}/sub-training', [SubTrainingController::class, 'index'])->name('sub-training.index');
+    Route::get('/training-status/{trainingStatus}/sub-training/create', [SubTrainingController::class, 'create'])->name('sub-training.create');
+    Route::post('/training-status/{trainingStatus}/sub-training', [SubTrainingController::class, 'store'])->name('sub-training.store');
+    Route::get('/training-status/{trainingStatus}/sub-training/{subTraining}/edit', [SubTrainingController::class, 'edit'])->name('sub-training.edit');
+
     Route::resource('man-power', ManPowerController::class);
 
     Route::resource('simper', SimperController::class);

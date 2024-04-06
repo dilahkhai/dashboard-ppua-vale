@@ -12,37 +12,23 @@ use Illuminate\Http\Request;
 
 class SubTrainingController extends Controller
 {
-    public function index()
+    public function index(TrainingStatus $trainingStatus)
     {
-        $training = TrainingStatus::query()->findOrFail(request('training_status'));
+        $trainings = SubTraining::query()->whereBelongsTo($trainingStatus, 'training')->with('employee.area')->get();
 
-        $trainings = SubTraining::query()->whereBelongsTo($training, 'training')->with('employee.area')->get();
-
-        return view('sub-training.index', compact('trainings', 'training'));
+        return view('sub-training.index', compact('trainings', 'trainingStatus'));
     }
 
-    public function create()
+    public function create(TrainingStatus $trainingStatus)
     {
-        $training = TrainingStatus::query()->find(request('training_status'));
-
-        if (!$training) {
-            return redirect()->route('training-status.index')->with('fail', 'Please select training first!');
-        }
-
         $areas = Area::query()
             ->get(['area', 'id']);
 
-        return view('sub-training.create', compact('areas'));
+        return view('sub-training.create', compact('areas', 'trainingStatus'));
     }
 
-    public function edit(SubTraining $subTraining)
+    public function edit(TrainingStatus $trainingStatus, SubTraining $subTraining)
     {
-        $training = TrainingStatus::query()->find(request('training_status'));
-
-        if (!$training) {
-            return redirect()->route('training-status.index')->with('fail', 'Please select training first!');
-        }
-
         $employees = User::query()
             ->where('role', 'user')
             ->get();
@@ -50,12 +36,12 @@ class SubTrainingController extends Controller
         $areas = Area::query()
             ->get();
 
-        return view('sub-training.edit', compact('subTraining', 'employees', 'areas'));
+        return view('sub-training.edit', compact('subTraining', 'employees', 'areas', 'trainingStatus'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, TrainingStatus $trainingStatus)
     {
-        $training = SubTraining::query()
+        $training = $trainingStatus->subTrainings()
             ->create($request->except('_token', 'area_id') + ['status' => 1]);
 
         $superadmin = User::query()
@@ -91,7 +77,7 @@ class SubTrainingController extends Controller
             }
         }
 
-        return redirect()->route('sub-training.index', ['training_status' => $request->training_status])->with('success', 'Success create training status!');
+        return redirect()->route('sub-training.index', ['trainingStatus' => $trainingStatus->id])->with('success', 'Success create training status!');
     }
 
     public function update(Request $request, SubTraining $subTraining)
@@ -136,7 +122,7 @@ class SubTrainingController extends Controller
             }
         }
 
-        return redirect()->route('sub-training.index', ['training_status' => $subTraining->training_status_id])->with('success', 'Success updating training status!');
+        return redirect()->route('sub-training.index', ['trainingStatus' => $subTraining->training->id])->with('success', 'Success updating training status!');
     }
 
     public function destroy(SubTraining $subTraining)

@@ -59,7 +59,7 @@
                         <td>{{ $training->name }}</td>
                         @if (auth()->user()->role == 'admin')
                         <td class="d-flex">
-                          <a href="{{ route('sub-training.index', ['training_status' => $training->id]) }}" class="btn btn-sm btn-success mr-3">SubTraining</a>
+                          <a href="{{ route('sub-training.index', ['trainingStatus' => $training->id]) }}" class="btn btn-sm btn-success mr-3">SubTraining</a>
                           <a href="{{ route('training-status.edit', $training->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
                           <form action="{{ route('training-status.destroy', $training->id) }}" method="post">
                             @csrf

@@ -99,7 +99,11 @@
             <div class="icon">
               <i class="ion ion-ios-eye"></i>
             </div>
-            <a role="button" class="small-box-footer" {{ $latestDocument ? 'id="view"' : '' }}>{{ $latestDocument ? 'More info' : 'No Document' }} <i class="fas fa-arrow-circle-right"></i></a>
+            @if ($latestDocument)
+            <a role="button" class="small-box-footer" id="view">More info <i class="fas fa-arrow-circle-right"></i></a>
+            @else
+            <a role="button" class="small-box-footer">{{ $latestDocument ? 'More info' : 'No Document' }} <i class="fas fa-arrow-circle-right"></i></a>
+            @endif
           </div>
         </div>
         <!-- ./col -->

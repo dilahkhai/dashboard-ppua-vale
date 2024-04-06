@@ -36,24 +36,6 @@
                   <label for="name">Training Name</label>
                   <input type="text" name="name" id="name" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Area</label>
-                  <select class="form-control" name="area_id" onchange="fetchDataAndPopulate(this.value)">
-                    <option>Select Area</option>
-                    @foreach ($areas as $id => $data)
-                    <option value="{{$data->id}}">{{$data->area}}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Employee</label>
-                  <select class="form-control" name="user_id" id="employee">
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Certif Date</label>
-                  <input type="date" class="form-control" name="certif_date" placeholder="Certif Date">
-                </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary"> Submit </button>
                 </div>

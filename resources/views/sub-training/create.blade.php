@@ -28,14 +28,11 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" action="{{ route('sub-training.store') }}" method="POST" enctype="multipart/form-data">
+            <form role="form" action="{{ route('sub-training.store', ['trainingStatus' => $trainingStatus->id]) }}" method="POST" enctype="multipart/form-data">
               @csrf
-
-              <input type="hidden" name="training_status_id" value="{{ request('training_status') }}">
-
               <div class="card-body">
                 <div class="form-group">
-                  <label for="name">Training Name</label>
+                  <label for="name">Sub Training Name</label>
                   <input type="text" name="name" id="name" class="form-control">
                 </div>
                 <div class="form-group">
