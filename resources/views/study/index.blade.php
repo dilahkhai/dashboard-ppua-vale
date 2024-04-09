@@ -12,13 +12,13 @@
       </div><!-- /.row -->
       @if(session()->has('success'))
       <div class="alert alert-success" role="alert">
-        Data Saved succesfully!
+        {{ session('success') }}
       </div>
       @endif
 
       @if(session()->has('fail'))
       <div class="alert alert-danger" role="alert">
-        Failed!
+        {{ session('fail') }}
       </div>
       @endif
     </div><!-- /.container-fluid -->
@@ -41,7 +41,7 @@
         <!-- Modal -->
         <div class="modal fade" id="addSchedule" tabindex="-1" aria-labelledby="addScheduleLabel" aria-hidden="true">
           <div class="modal-dialog">
-            <form action="{{ route('study-schedule.store') }}" method="post">
+            <form action="{{ route('study-schedule.store') }}" method="post" enctype="multipart/form-data">
               @csrf
               <div class="modal-content">
                 <div class="modal-header">
@@ -49,22 +49,19 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Area</label>
-                    <select class="form-control" name="area_id" onchange="fetchDataAndPopulate(this.value)">
-                      <option>Select Area</option>
-                      @foreach ($areas as $id => $data)
-                      <option value="{{$data->id}}">{{$data->area}}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Employee</label>
-                    <select class="form-control" name="user_id" id="employee">
-                    </select>
+                    <label for="name">Subject</label>
+                    <input type="text" class="form-control" name="name" id="name">
                   </div>
                   <div class="form-group">
                     <label for="date">Date</label>
                     <input type="date" class="form-control" name="study_date" id="date">
+                  </div>
+                  <div class="form-group">
+                    <label for="file">File</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="customFile" name="file">
+                      <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -122,7 +119,8 @@
           },
           'success': function(response) {
             if (response?.isOwner) {
-              $('#modalContent').append(`<form action="{{ route('study-schedule.store-file') }}" method="post" enctype="multipart/form-data">
+              $('#modalContent').empty()
+              $('#modalContent').append(`<form action="{{ route('study-schedule.update') }}" method="post" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Set Study File</h5>
@@ -132,6 +130,11 @@
                   </div>
                   <div class="modal-body">
                     <input type="hidden" name="study_date" id="study_date">
+
+                    <div class="form-group">
+                      <label for="study_date">Date</label>
+                      <input type="date" name="study_date" class="form-control" id="study_date" value="${response?.study?.study_date}">
+                    </div>
 
                     <div class="form-group">
                       <label for="name">Subject</label>
@@ -154,6 +157,7 @@
                 </form>
                 `)
             } else {
+              $('#modalContent').empty()
               $('#modalContent').append(`
                   <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Study</h5>
@@ -162,6 +166,14 @@
                     </button>
                   </div>
                   <div class="modal-body">
+                    <div class="row">
+                      <div class="col-2">
+                        <p>Study Date</p>
+                      </div>
+                      <div class="col">
+                        <p target="_blank">${response?.study?.date || 'dd/mm/yyyy'}</p>
+                      </div>
+                    </div>
                     <div class="row">
                       <div class="col-2">
                         <p>Subject</p>
@@ -175,7 +187,7 @@
                         <p>file</p>
                       </div>
                       <div class="col">
-                        <a href="${response?.study?.file}" target="_blank">${response?.study?.file || "File hasn't uploaded yet!"}</a>
+                        <a href="${response?.study?.file}" class="btn btn-primary btn-sm" target="_blank">${response?.study?.file ? 'Download File' : "File hasn't uploaded yet!"}</a>
                       </div>
                     </div>
                   </div>
@@ -202,38 +214,6 @@
       $('.custom-file-label').html(fileName);
     });
   });
-</script>
-<script>
-  function fetchDataAndPopulate(selectedId) {
-    // Assuming you have an API endpoint that returns data based on the selected ID
-    const apiUrl = `/tambahmcu?id=${selectedId}`;
-
-    // Perform a fetch request to the API
-    fetch(apiUrl, {
-        headers: {
-          'Accept': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-
-        // Get the second select element
-        const select2 = document.getElementById('employee');
-
-        // Clear existing options
-        select2.innerHTML = '';
-
-        // Populate options based on API data
-        data.forEach(item => {
-          const option = document.createElement('option');
-          option.value = item.id;
-          option.text = item.name; // Assuming your API returns 'name' property
-          select2.appendChild(option);
-        });
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  }
 </script>
 @endpush
 

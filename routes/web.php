@@ -164,10 +164,11 @@ Route::middleware([
     Route::post('/sharing-schedule-file', [SharingController::class, 'storeFile'])->name('sharing-schedule.store-file');
     Route::get('/sharing-schedule-source', [SharingController::class, 'source'])->name('sharing-schedule.source');
     Route::get('/sharing-schedule-source-detail', [SharingController::class, 'sourceDetail'])->name('sharing-schedule.source-detail');
+    Route::delete('/destroy-sharing-schedule/{sharing}', [SharingController::class, 'destroy'])->name('sharing-schedule.destroy');
 
     Route::get('/study-schedule', [StudyController::class, 'index'])->name('study-schedule.index');
     Route::post('/study-schedule', [StudyController::class, 'store'])->name('study-schedule.store');
-    Route::post('/study-schedule-file', [StudyController::class, 'storeFile'])->name('study-schedule.store-file');
+    Route::post('/study-schedule-update', [StudyController::class, 'update'])->name('study-schedule.update');
     Route::get('/study-schedule-source', [StudyController::class, 'source'])->name('study-schedule.source');
     Route::get('/study-schedule-source-detail', [StudyController::class, 'sourceDetail'])->name('study-schedule.source-detail');
 

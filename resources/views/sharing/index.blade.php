@@ -10,6 +10,18 @@
           <h1 class="m-0">Sharing Schedule</h1>
         </div><!-- /.col -->
       </div><!-- /.row -->
+
+      @if(session()->has('success'))
+      <div class="alert alert-success" role="alert">
+        {{ session('success') }}
+      </div>
+      @endif
+
+      @if(session()->has('fail'))
+      <div class="alert alert-danger" role="alert">
+        {{ session('fail') }}
+      </div>
+      @endif
     </div><!-- /.container-fluid -->
   </div>
 
@@ -82,7 +94,15 @@
             </button>
           </div>
           <div class="modal-body">
-            <input type="hidden" name="sharing_date" id="sharing_date">
+            <div class="form-group">
+              <label for="file">Date</label>
+              <input type="text" name="sharing_date" class="form-control" id="sharing_date" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="file">Employee</label>
+              <input type="text" class="form-control" id="employee_detail" readonly>
+            </div>
 
             <div class="form-group">
               <label for="file">File</label>
@@ -94,8 +114,14 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" id="deleteSchedule">Delete</button>
             <button type="submit" class="btn btn-primary" id="saveChanges">Save changes</button>
           </div>
+        </form>
+
+        <form action="" method="post" id="deleteForm">
+          @csrf
+          @method('delete')
         </form>
       </div>
     </div>
@@ -133,7 +159,10 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           'success': function(response) {
+            console.log(response);
             if (response?.isOwner) {
+              $('#modalContent').empty()
+
               $('#modalContent').append(`<form action="{{ route('sharing-schedule.store-file') }}" method="post" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-header">
@@ -151,7 +180,7 @@
                         <input type="file" class="custom-file-input" id="customFile" name="file">
                         <label class="custom-file-label" for="customFile">Choose file</label>
                       </div>
-                      <a href="${response?.sharing?.file}" target="_blank">${response?.sharing?.file || 'Please upload file!'}</a>
+                      ${response?.sharing?.file ? `<a href="${response?.sharing?.file}" class="btn btn-primary mt-2" target="_blank">Dowload File</a>` : `<span class="text-danger">No File</span>`}
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -161,23 +190,30 @@
                 </form>
                 `)
             } else {
+              $('#modalContent').empty()
+
               $('#modalContent').append(`
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Set Sharing File</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Download Sharing File</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <a href="${response?.sharing?.file}" target="_blank">${response?.sharing?.file || 'Please upload file!'}</a>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    ${response?.sharing?.file ? `<a href="${response?.sharing?.file}" class="btn btn-primary" target="_blank">Dowload File</a>` : `<a href="#" class="btn btn-primary" target="_blank">No File</a>`}
                   </div>
                 `)
             }
 
             $('#sharing_date').val(new Date(info.event.start).toLocaleDateString())
+            $('#employee_detail').val(response?.sharing?.employee?.name)
+            $('#deleteForm').attr('action', `/destroy-sharing-schedule/${response?.sharing?.id}`)
+
+            $(document).on('click', '#deleteSchedule', function(e) {
+              if (confirm('Do you want to delete this schedule?')) {
+                $('#deleteForm').submit()
+              }
+            })
           },
           error: function(error) {
             console.error(error);

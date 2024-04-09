@@ -22,19 +22,21 @@ class StudyController extends Controller
 
     public function store(Request $request)
     {
+        $filename = Str::snake($request->name . Carbon::parse($request->study_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
+
+        $request->file('file')->storePubliclyAs('public/study_file', $filename);
+
         Study::query()
-            ->create($request->except('_token', 'area_id'));
+            ->create($request->only('study_date') + ['file' => 'storage/study_file/' . $filename, 'name' => $request->name]);
 
         return back()->with('success', 'Schedule saved!');
     }
 
-    public function storeFile(Request $request)
+    public function update(Request $request)
     {
         $study = Study::query()
             ->where('study_date', Carbon::parse($request->study_date)->toDateString())
-            ->firstOr(function () {
-                return back()->with('error', 'Sharing Schedule not Found!');
-            });
+            ->first();
 
         if ($study->file) {
             Storage::delete($study->file);
@@ -46,7 +48,7 @@ class StudyController extends Controller
 
         $study->update(['file' => 'storage/study_file/' . $filename, 'name' => $request->name]);
 
-        return back()->with('success', 'File saved!');
+        return back()->with('success', 'Study schedule saved!');
     }
 
     public function source()
@@ -56,7 +58,7 @@ class StudyController extends Controller
             ->get()
             ->transform(function ($value) {
                 return [
-                    'title' => $value->employee->name ?? "-",
+                    'title' => $value->name ?? "-",
                     'start' => $value->study_date,
                     'end' => $value->study_date
                 ];

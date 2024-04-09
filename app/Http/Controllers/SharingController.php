@@ -49,6 +49,17 @@ class SharingController extends Controller
         return back()->with('success', 'File saved!');
     }
 
+    public function destroy(Sharing $sharing)
+    {
+        if ($sharing->file && Storage::exists($sharing->file)) {
+            Storage::delete($sharing->file);
+        }
+
+        $sharing->delete();
+
+        return back()->with('success', 'Sharing date deleted!');
+    }
+
     public function source()
     {
         $oncall = Sharing::query()
@@ -69,6 +80,7 @@ class SharingController extends Controller
     public function sourceDetail()
     {
         $sharing = Sharing::query()
+            ->with('employee')
             ->where('sharing_date', Carbon::parse(request('sharing_date'))->format('Y-m-d'))
             ->first();
 
