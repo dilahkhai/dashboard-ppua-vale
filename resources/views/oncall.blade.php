@@ -13,67 +13,33 @@
     </div><!-- /.container-fluid -->
   </div>
 
-  <div class="card">
-    <div class="card-body">
-      <div id="calendar"></div>
-      <div class="row mt-3">
-        <div class="col-md-3">
-          @if (auth()->user()->role == 'admin')
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editInisial">
-            Initial Detail
-          </button>
-          @endif
-        </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div id="calendar"></div>
 
-        <div class="col">
-          <div class="row">
-            @foreach ($initialDetail as $initial)
-            <div class="col-2">
-              <div class="d-flex">
-                <div>{{ $initial->initial }}</div>
-                <div class="mx-1">=</div>
-                <div>{{ $initial->detail }}</div>
-                @if (auth()->user()->role == 'admin')
-                <form action="/initial-detail/{{ $initial->id }}" method="post">
-                  @csrf
-                  @method('delete')
-                  <button type="submit" class="close" onclick="return confirm('Are you sure want to delete this data?')" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </form>
-                @endif
-              </div>
-            </div>
-            @endforeach
+        <h5 class="mt-3">Initial Detail</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Employee</th>
+                  <th scope="col">Initial</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($usersWithInitial as $user)
+                <tr>
+                  <th scope="row">{{ $loop->iteration }}</th>
+                  <td>{{ $user->name }}</td>
+                  <td>{{ $user->initial }}</td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
-      <!-- Modal -->
-      <div class="modal fade" id="editInisial" tabindex="-1" aria-labelledby="editInisialLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <form action="/initial-detail" method="post">
-            @csrf
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="editInisialLabel">Add Initial Detail</h5>
-              </div>
-              <div class="modal-body">
-                <div class="form-group">
-                  <label for="initial">Initial</label>
-                  <input type="text" class="form-control" name="initial" id="initial-add">
-                </div>
-                <div class="form-group">
-                  <label for="detail">Full Name</label>
-                  <input type="text" class="form-control" name="detail" id="detail">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
-              </div>
-            </div>
-          </form>
         </div>
       </div>
     </div>
@@ -94,8 +60,31 @@
           <input type="hidden" name="date_attended" id="date_attended">
 
           <div class="form-group">
-            <label for="initial">Initial Name</label>
-            <input type="text" class="form-control" id="initial">
+            <label for="user_id">Employee</label>
+            <select class="form-control" id="user_id" name="user_id">
+              <option value="">-- Select User --</option>
+              @foreach ($users as $user)
+              <option value="{{ $user->id }}">{{ $user->name }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input class="form-control" id="title" name="title" />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="file">File</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="file" name="file">
+              <label class="custom-file-label" for="file">Choose file</label>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -124,17 +113,24 @@
     });
     calendar.render();
 
-    $(document).on('click', '#saveChanges', function () {
+    $(document).on('click', '#saveChanges', function() {
+      let formData = new FormData()
+
+      formData.append('user_id', document.getElementById('user_id').value)
+      formData.append('attended', document.getElementById('date_attended').value)
+      formData.append('title', document.getElementById('title').value)
+      formData.append('description', document.getElementById('description').value)
+      formData.append('file', document.getElementById('file').files[0])
+
       $.ajax({
         'url': '/oncall',
         'method': 'post',
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        'data': {
-          initial: document.getElementById('initial').value,
-          attended: document.getElementById('date_attended').value
-        },
+        data: formData,
+        processData: false,
+        contentType: false,
         'success': function(response) {
           $('#exampleModal').modal('hide')
           calendar.render()
@@ -149,7 +145,7 @@
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             'success': function(response) {
-              $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell"></th>');
+              $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell"></th>');
               $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell"></th>');
 
               var week = 1;
@@ -167,14 +163,14 @@
                   button.onclick = function() {
                     $('#exampleModal').modal('toggle');
                     document.getElementById('date_attended').value = item.start
-                    document.getElementById('initial').value = item.title
+                    document.getElementById('user_id').value = item.title
                   }
 
                   newTd.append(button)
                   weekTd.append(`W${week++}`)
 
-                  td[0].parentNode.prepend(newTd);
                   td[0].parentNode.append(weekTd);
+                  td[0].parentNode.append(newTd);
                 }
               })
             },
@@ -198,8 +194,8 @@
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         'success': function(response) {
-          $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
           $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-right"></th>');
+          $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
 
           var week = 1;
 
@@ -220,14 +216,14 @@
               button.onclick = function() {
                 $('#exampleModal').modal('toggle');
                 document.getElementById('date_attended').value = item.start
-                document.getElementById('initial').value = item.title
+                document.getElementById('user_id').value = item.title
               }
 
               newTd.append(button)
               weekTd.append(`W${week++}`)
 
-              td[0].parentNode.prepend(newTd);
               td[0].parentNode.append(weekTd);
+              td[0].parentNode.append(newTd);
             }
           })
         },
@@ -246,8 +242,8 @@
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         'success': function(response) {
-          $('.fc-col-header-cell.fc-day-sun').parent().prepend('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
           $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-right"></th>');
+          $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell added-left"></th>');
           var week = 1;
 
           response.forEach((item, index) => {
@@ -267,14 +263,14 @@
               button.onclick = function() {
                 $('#exampleModal').modal('toggle');
                 document.getElementById('date_attended').value = item.start
-                document.getElementById('initial').value = item.title
+                document.getElementById('user_id').value = item.title
               }
 
               newTd.append(button)
               weekTd.append(`W${week++}`)
 
-              td[0].parentNode.prepend(newTd);
               td[0].parentNode.append(weekTd);
+              td[0].parentNode.append(newTd);
             }
           })
         },
@@ -309,9 +305,13 @@
             button.classList = 'btn btn-primary btn-sm w-100 h-100';
             button.innerText = item.title
             button.onclick = function() {
-              $('#exampleModal').modal('toggle');
-              document.getElementById('date_attended').value = item.start
-              document.getElementById('initial').value = item.title
+              if (item.title != '-') {
+                window.location = '/oncall-detail?date=' + item.start
+              } else {
+                $('#exampleModal').modal('toggle');
+                document.getElementById('date_attended').value = item.start
+                document.getElementById('user_id').value = item.title
+              }
             }
 
             newTd.append(button)
@@ -322,10 +322,10 @@
           }
         })
 
-        $('.fc-multimonth-daygrid-table').each(function (i, el) {
+        $('.fc-multimonth-daygrid-table').each(function(i, el) {
           let tr = el.getElementsByTagName('tr');
           for (let i = 0; i < tr.length; i++) {
-            if(tr[i].getElementsByTagName('td').length === 7) {
+            if (tr[i].getElementsByTagName('td').length === 7) {
               var newTd = document.createElement('td')
               var newTd2 = document.createElement('td')
               newTd.classList = 'fc-day fc-day-fri fc-day-disabled fc-daygrid-day'
@@ -340,6 +340,11 @@
         console.error(error);
       }
     })
+
+    $(document).on('change', 'input[type="file"]', function(e) {
+      var fileName = e.target.files[0].name;
+      $('.custom-file-label').html(fileName);
+    });
   });
 </script>
 @endpush

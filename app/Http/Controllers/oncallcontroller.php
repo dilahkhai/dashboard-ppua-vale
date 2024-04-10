@@ -2,47 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InitialDetail;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\oncall;
 use App\Models\OnCallAutomation;
+use App\Models\User;
 use Carbon\Carbon;
 
 class oncallcontroller extends Controller
 {
     public function index()
     {
-        $initialDetail = InitialDetail::all();
+        $users = User::all();
+        $usersWithInitial = User::query()
+            ->whereHas('oncalls')
+            ->get();
 
-        return view('oncall', compact('initialDetail'));
+        return view('oncall', compact('users', 'usersWithInitial'));
+    }
+
+    public function show()
+    {
+        if (is_null(request('date'))) {
+            abort(404);
+        }
+
+        $dateAttended = Carbon::parse(request('date'))->format('Y-m-d');
+
+        $oncall = OnCallAutomation::query()
+            ->whereDate('date_attend', $dateAttended)
+            ->firstOrFail();
+
+        return view('oncalldetail', compact('oncall'));
     }
 
     public function store(Request $request)
     {
         $dateAttended = Carbon::parse($request->attended)->format('Y-m-d');
 
+        if ($request->hasFile('file')) {
+            $filename = Str::random() . '.' . $request->file('file')->getClientOriginalExtension();
+
+            $request->file('file')->storePubliclyAs('public/oncall', $filename);
+        }
+
         OnCallAutomation::query()
             ->updateOrCreate([
                 'date_attend' => $dateAttended
             ], [
-                'initial' => $request->initial
+                'user_id' => $request->user_id,
+                'title' => $request->title,
+                'description' => $request->description,
+                'file' => $request->hasFile('file') ?  : null
             ]);
 
         return response()->json(['message' => 'success']);
     }
 
-    public function upload(Request $request)
+    public function update(Request $request, OnCallAutomation $oncall)
     {
-        $fileextension = $request->file('fileupload')->getClientOriginalExtension();
-        $filename = time() . "." . $fileextension;
-        // $filename = "splashscreencustomer". $fileextension;
-        $request->file('fileupload')->move(public_path('/upload'), $filename);
+        $oncall->update($request->only('title', 'description'));
 
-        $oncall = new oncall;
-        $oncall->file = asset("upload/$filename");
-        $oncall->save();
+        return back()->with('success', 'Data Saved!');
+    }
 
-        return redirect('/oncall');
+    public function upload(Request $request, OnCallAutomation $oncall)
+    {
+        if ($request->hasFile('file')) {
+            $filename = Str::random() . '.' . $request->file('file')->getClientOriginalExtension();
+
+            $request->file('file')->storePubliclyAs('public/oncall', $filename);
+
+            $oncall->update(['file' => 'storage/oncall/' . $filename]);
+
+            return back()->with('success', 'File Saved!');
+        }
+
+        return back()->with('fail', 'Please input file!');
     }
 
     public function source()
@@ -59,14 +95,17 @@ class oncallcontroller extends Controller
             $oncall = OnCallAutomation::query()
                 ->firstOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()]);
 
-            $oncall->updateOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()], ['initial' => $oncall->initial]);
+            $oncall->updateOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()], ['user_id' => $oncall->user_id]);
         }
 
         $oncall = OnCallAutomation::query()
+            ->with('employee')
+            ->whereYear('date_attend', today()->year)
+            ->take(52)
             ->get()
             ->transform(function ($value) {
                 return [
-                    'title' => $value->initial ?? "-",
+                    'title' => $value->employee->initial ?? "-",
                     'start' => $value->date_attend,
                     'end' => $value->date_attend
                 ];

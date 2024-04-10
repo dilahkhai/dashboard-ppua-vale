@@ -101,8 +101,10 @@ Route::middleware([
 
     Route::get('/oncall', [App\Http\Controllers\oncallcontroller::class, 'index']);
     Route::post('/oncall', [App\Http\Controllers\oncallcontroller::class, 'store']);
+    Route::patch('/oncall/{oncall}', [App\Http\Controllers\oncallcontroller::class, 'update'])->name('oncall.update');
     Route::get('/oncall-source', [App\Http\Controllers\oncallcontroller::class, 'source']);
-    Route::post('/oncallfile', [App\Http\Controllers\oncallcontroller::class, 'upload']);
+    Route::post('/oncallfile/{oncall}', [App\Http\Controllers\oncallcontroller::class, 'upload'])->name('oncall.upload');
+    Route::get('/oncall-detail', [App\Http\Controllers\oncallcontroller::class, 'show']);
 
     Route::post('/initial-detail', [InitialDetailController::class, 'store']);
     Route::delete('/initial-detail/{initialDetail}', [InitialDetailController::class, 'destroy']);

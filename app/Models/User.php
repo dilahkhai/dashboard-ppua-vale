@@ -12,6 +12,7 @@ use App\Models\WorkingTimePerWeek;
 use App\Models\statusperday;
 use App\Models\ManHour;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
@@ -106,5 +107,17 @@ class User extends Authenticatable
     public function man_powers(): HasMany
     {
         return $this->hasMany(ManPower::class);
+    }
+
+    public function oncalls(): HasMany
+    {
+        return $this->hasMany(OnCallAutomation::class, 'user_id');
+    }
+
+    public function initial(): Attribute
+    {
+        return Attribute::get(function ($value, $attributes) {
+            return $value ?? implode("", json_decode(\Illuminate\Support\Str::initials($attributes['name'])));
+        });
     }
 }

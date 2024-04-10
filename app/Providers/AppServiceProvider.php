@@ -6,6 +6,7 @@ use App\Models\Notification;
 use Illuminate\Support\Facades;
 use Illuminate\View\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,5 +36,9 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('notifications', $notifications);
         });
+
+        Str::macro('initials', fn ($value, $sep = ' ', $glue = ' ') => trim(collect(explode($sep, $value))->map(function ($segment) {
+            return $segment[0] ?? '';
+        })));
     }
 }
