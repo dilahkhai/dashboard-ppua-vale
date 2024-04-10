@@ -32,7 +32,7 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add New User</h3>
+              <h3 class="card-title">Edit User</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -42,6 +42,10 @@
                 <div class="form-group">
                   <label for="exampleInputEmail1">Name</label>
                   <input type="text" class="form-control" required name="name" id="exampleInputEmail1" placeholder="Full Name" value="{{$data->name}}">
+                </div>
+                <div class="form-group">
+                  <label for="initial">Initial</label>
+                  <input type="text" class="form-control" name="initial" required id="initial" placeholder="Initial" value="{{ $data->initial }}">
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Area</label>
@@ -56,6 +60,17 @@
                   <select class="form-control" required name="role" id="">
                     <option value="admin" {{ $data->role == 'admin' ? 'selected' : '' }}>Super Admin</option>
                     <option value="user" {{ $data->role == 'user' ? 'selected' : '' }}>User</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="position">Position</label>
+                  <select class="form-control" required name="position" id="position">
+                    <option value="">-- Select Position --</option>
+                    <option value="junior engineer" {{ $data->position == 'junior engineer' ? 'selected' : '' }}>Junior Engineer</option>
+                    <option value="engineer" {{ $data->position == 'engineer' ? 'selected' : '' }}>Engineer</option>
+                    <option value="senior engineer" {{ $data->position == 'senior engineer' ? 'selected' : '' }}>Senior Engineer</option>
+                    <option value="designer" {{ $data->position == 'designer' ? 'selected' : '' }}>Designer</option>
+                    <option value="analyst" {{ $data->position == 'analyst' ? 'selected' : '' }}>Analyst</option>
                   </select>
                 </div>
                 <div class="form-group">

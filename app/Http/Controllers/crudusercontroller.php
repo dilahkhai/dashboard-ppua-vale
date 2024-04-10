@@ -49,8 +49,10 @@ class crudusercontroller extends Controller
         $cruduser = new User;
         $cruduser->username = $request->input('username');
         $cruduser->name = $request->input('name');
+        $cruduser->initial = $request->input('initial');
         $cruduser->area_id = $request->input('area');
         $cruduser->role = $request->input('role');
+        $cruduser->position = $request->input('position');
         $cruduser->password = Hash::make($request->input('password'));
         $cruduser->confirmpassword = $request->input('password');
         $cruduser->save();
@@ -101,8 +103,10 @@ class crudusercontroller extends Controller
         $cruduser = User::find($id);
         $cruduser->username = $request->input('username');
         $cruduser->name = $request->input('name');
+        $cruduser->initial = $request->input('initial');
         $cruduser->area_id = $request->input('area');
         $cruduser->role = $request->input('role');
+        $cruduser->position = $request->input('position');
         $cruduser->confirmpassword = Hash::make($request->input('password'));
         $cruduser->save();
 

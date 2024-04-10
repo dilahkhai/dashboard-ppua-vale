@@ -50,6 +50,10 @@
                   <input type="text" class="form-control" required name="name" id="exampleInputEmail1" placeholder="Full Name">
                 </div>
                 <div class="form-group">
+                  <label for="initial">Initial</label>
+                  <input type="text" class="form-control" name="initial" required id="initial" placeholder="Initial">
+                </div>
+                <div class="form-group">
                   <label for="exampleInputPassword1">Area</label>
                   <select class="form-control" required name="area" id="">
                     @foreach ($areas as $id => $area)
@@ -61,8 +65,20 @@
                 <div class="form-group">
                   <label for="exampleInputPassword1">Role</label>
                   <select class="form-control" required name="role" id="">
+                    <option value="">-- Select Role --</option>
                     <option value="admin">Super Admin</option>
                     <option value="user">User</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="position">Position</label>
+                  <select class="form-control" required name="position" id="position">
+                    <option value="">-- Select Position --</option>
+                    <option value="junior engineer">Junior Engineer</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="senior engineer">Senior Engineer</option>
+                    <option value="designer">Designer</option>
+                    <option value="analyst">Analyst</option>
                   </select>
                 </div>
                 <div class="form-group">
