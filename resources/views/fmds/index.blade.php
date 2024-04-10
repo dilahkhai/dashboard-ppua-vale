@@ -112,7 +112,7 @@
   </section>
 
   <div class="frame">
-    <iframe src='https://view.officeapps.live.com/op/embed.aspx?src={{ asset($latestDocument->file) }}' title="presentation" width='100%' height='100%' frameborder='0'></iframe>
+    <iframe src='https://view.officeapps.live.com/op/embed.aspx?src={{ asset($latestDocument?->file) }}' title="presentation" width='100%' height='100%' frameborder='0'></iframe>
   </div>
 
   <!-- Modal -->
