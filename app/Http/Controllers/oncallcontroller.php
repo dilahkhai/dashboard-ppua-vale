@@ -8,6 +8,8 @@ use App\Models\oncall;
 use App\Models\OnCallAutomation;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class oncallcontroller extends Controller
 {
@@ -39,11 +41,12 @@ class oncallcontroller extends Controller
     public function store(Request $request)
     {
         $dateAttended = Carbon::parse($request->attended)->format('Y-m-d');
+        $filename = null;
 
         if ($request->hasFile('file')) {
             $filename = Str::random() . '.' . $request->file('file')->getClientOriginalExtension();
 
-            $request->file('file')->storePubliclyAs('public/oncall', $filename);
+            $request->file('file')->storeAs('oncall', $filename, ['disk' => 'public_uploads']);
         }
 
         OnCallAutomation::query()
@@ -53,7 +56,7 @@ class oncallcontroller extends Controller
                 'user_id' => $request->user_id,
                 'title' => $request->title,
                 'description' => $request->description,
-                'file' => $request->hasFile('file') ?  : null
+                'file' => $request->hasFile('file') ? 'uploads/oncall/' . $filename : null
             ]);
 
         return response()->json(['message' => 'success']);
@@ -71,9 +74,9 @@ class oncallcontroller extends Controller
         if ($request->hasFile('file')) {
             $filename = Str::random() . '.' . $request->file('file')->getClientOriginalExtension();
 
-            $request->file('file')->storePubliclyAs('public/oncall', $filename);
+            $request->file('file')->storeAs('oncall', $filename, ['disk' => 'public_uploads']);
 
-            $oncall->update(['file' => 'storage/oncall/' . $filename]);
+            $oncall->update(['file' => 'uploads/oncall/' . $filename]);
 
             return back()->with('success', 'File Saved!');
         }
@@ -113,5 +116,21 @@ class oncallcontroller extends Controller
             ->toArray();
 
         return response()->json($oncall);
+    }
+
+    public function destroy(OnCallAutomation $oncall)
+    {
+        if (File::exists($oncall->file)) {
+            File::delete($oncall->file);
+        }
+
+        $oncall->update([
+            'user_id' => null,
+            'title' => null,
+            'description' => null,
+            'file' => null
+        ]);
+
+        return redirect()->route('oncall.index')->with('success', 'Oncall has been deleted!');
     }
 }

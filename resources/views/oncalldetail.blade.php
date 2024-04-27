@@ -106,6 +106,15 @@
           </div>
         </div>
       </div>
+
+      @if (auth()->user()->role == 'admin')
+      <form action="{{ route('oncall.destroy', $oncall->id) }}" method="post">
+        @csrf
+        @method('delete')
+
+        <button class="btn btn-danger" type="submit" onclick="return confirm('Do you want to delete this on call?')">Delete</button>
+      </form>
+      @endif
     </div>
   </section>
 

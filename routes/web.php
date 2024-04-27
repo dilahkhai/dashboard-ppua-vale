@@ -99,12 +99,13 @@ Route::middleware([
     Route::post('/inpututlTask', [App\Http\Controllers\inpututlcontroller::class, 'storeTask']);
     Route::post('/updateutlTask', [App\Http\Controllers\inpututlcontroller::class, 'updateTask']);
 
-    Route::get('/oncall', [App\Http\Controllers\oncallcontroller::class, 'index']);
+    Route::get('/oncall', [App\Http\Controllers\oncallcontroller::class, 'index'])->name('oncall.index');
     Route::post('/oncall', [App\Http\Controllers\oncallcontroller::class, 'store']);
     Route::patch('/oncall/{oncall}', [App\Http\Controllers\oncallcontroller::class, 'update'])->name('oncall.update');
     Route::get('/oncall-source', [App\Http\Controllers\oncallcontroller::class, 'source']);
     Route::post('/oncallfile/{oncall}', [App\Http\Controllers\oncallcontroller::class, 'upload'])->name('oncall.upload');
     Route::get('/oncall-detail', [App\Http\Controllers\oncallcontroller::class, 'show']);
+    Route::delete('/oncall-delete/{oncall}', [App\Http\Controllers\oncallcontroller::class, 'destroy'])->name('oncall.destroy');
 
     Route::post('/initial-detail', [InitialDetailController::class, 'store']);
     Route::delete('/initial-detail/{initialDetail}', [InitialDetailController::class, 'destroy']);

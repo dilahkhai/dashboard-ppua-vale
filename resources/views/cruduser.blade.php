@@ -54,10 +54,12 @@
                       <th>Name</th>
                       <th>Area</th>
                       <th>Username</th>
+                      <th>Initial</th>
+                      <th>Position</th>
+                      <th>Role</th>
 
                       @if ( auth()->user()->role == 'admin')
-                      <th>Update</th>
-                      <th>Delete</th>
+                      <th>Action</th>
                       @endif
                     </tr>
                   </thead>
@@ -68,22 +70,25 @@
                       <td>{{$item->name}}</td>
                       <td>{{$item->area->area}}</td>
                       <td>{{$item->username}}</td>
+                      <td>{{$item->initial}}</td>
+                      <td>{{$item->position}}</td>
+                      <td style="width: 10%;">{{$item->role}}</td>
 
                       @if ( auth()->user()->role == 'admin')
-                      <td class="d-flex">
-                        <a href="/edituser/{{$item->id}}" class="btn btn-success btn-md mr-3"><i class="fa-solid fa-pen-to-square"></i> Update </a>
-                        <form action="/resetpassword/{{ $item->id }}" method="post">
-                          @csrf
-                          <button type="submit" class="btn btn-success btn-md" onclick="return confirm('Apakah anda yakin akan mereset password user ini?')"><i class="fa-solid fa-pen-to-square"></i> Reset Password </button>
-                        </form>
-                      </td>
-                      <td>
-                        <form action="/deleteuser/{{$item->id}}" method="post">
-                          {{csrf_field()}}
-                          {{method_field('DELETE')}}
-                          <button type="submit" class="btn btn-danger" onclick="return confirm('yakin ingin menghapus data ?')">
-                            <i class="fas fa-trash"></i> DELETE </button>
-                        </form>
+                      <td class="">
+                        <div class="d-flex">
+                          <a href="/edituser/{{$item->id}}" class="btn btn-success btn-md mr-1"><i class="fa-solid fa-pen-to-square"></i> Update </a>
+                          <form action="/resetpassword/{{ $item->id }}" method="post" class="mr-1">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-md" onclick="return confirm('Apakah anda yakin akan mereset password user ini?')"><i class="fa-solid fa-pen-to-square"></i> Reset Password </button>
+                          </form>
+                          <form action="/deleteuser/{{$item->id}}" method="post">
+                            {{csrf_field()}}
+                            {{method_field('DELETE')}}
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('yakin ingin menghapus data ?')">
+                              <i class="fas fa-trash"></i> DELETE </button>
+                          </form>
+                        </div>
                       </td>
                     </tr>
                     @endif

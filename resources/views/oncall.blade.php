@@ -132,52 +132,7 @@
         processData: false,
         contentType: false,
         'success': function(response) {
-          $('#exampleModal').modal('hide')
-          calendar.render()
-
-          $('.added-left').remove()
-          $('.added-right').remove()
-
-          $.ajax({
-            'url': '/oncall-source',
-            'method': 'get',
-            headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            'success': function(response) {
-              $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell"></th>');
-              $('.fc-col-header-cell.fc-day-sun').parent().append('<th role="columnheader" class="fc-col-header-cell"></th>');
-
-              var week = 1;
-              response.forEach((item, index) => {
-                let td = $(`.fc-daygrid-day[data-date='${item.start}']`)
-
-                if (td.length > 0) {
-                  var newTd = document.createElement('td')
-                  var button = document.createElement('button')
-
-                  var weekTd = document.createElement('td')
-
-                  button.classList = 'btn btn-primary btn-sm w-100 h-100';
-                  button.innerText = item.title
-                  button.onclick = function() {
-                    $('#exampleModal').modal('toggle');
-                    document.getElementById('date_attended').value = item.start
-                    document.getElementById('user_id').value = item.title
-                  }
-
-                  newTd.append(button)
-                  weekTd.append(`W${week++}`)
-
-                  td[0].parentNode.append(weekTd);
-                  td[0].parentNode.append(newTd);
-                }
-              })
-            },
-            error: function(error) {
-              console.error(error);
-            }
-          })
+          window.location.reload()
         },
         error: function(error) {
           console.error(error);

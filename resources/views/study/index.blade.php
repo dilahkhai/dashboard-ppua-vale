@@ -51,16 +51,25 @@
                   <div class="form-group">
                     <label for="name">Subject</label>
                     <input type="text" class="form-control" name="name" id="name">
+                    @error('name')
+                    <span class="text-danger text-sm">{{ $message }}</span>
+                    @enderror
                   </div>
                   <div class="form-group">
                     <label for="date">Date</label>
                     <input type="date" class="form-control" name="study_date" id="date">
+                    @error('study_date')
+                    <span class="text-danger text-sm">{{ $message }}</span>
+                    @enderror
                   </div>
                   <div class="form-group">
                     <label for="file">File</label>
                     <div class="custom-file">
                       <input type="file" class="custom-file-input" id="customFile" name="file">
                       <label class="custom-file-label" for="customFile">Choose file</label>
+                      @error('file')
+                      <span class="text-danger text-sm">{{ $message }}</span>
+                      @enderror
                     </div>
                   </div>
                 </div>
@@ -100,9 +109,17 @@
 </div>
 
 @push('scripts')
+
+@if ($errors->any())
+<script>
+  $('#addSchedule').modal()
+</script>
+@endif
+
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    let file = false
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
       events: '{{ route("study-schedule.source") }}',
@@ -120,7 +137,7 @@
           'success': function(response) {
             if (response?.isOwner) {
               $('#modalContent').empty()
-              $('#modalContent').append(`<form action="{{ route('study-schedule.update') }}" method="post" enctype="multipart/form-data">
+              $('#modalContent').append(`<form action="{{ route('study-schedule.update') }}" method="post" id="adminForm" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Set Study File</h5>
@@ -156,6 +173,13 @@
                   </div>
                 </form>
                 `)
+
+              $(document).on('submit', '#adminForm', function() {
+                if (!file) {
+                  alert('please input file!')
+                  return false
+                }
+              })
             } else {
               $('#modalContent').empty()
               $('#modalContent').append(`
@@ -212,6 +236,7 @@
     $(document).on('change', 'input[type="file"]', function(e) {
       var fileName = e.target.files[0].name;
       $('.custom-file-label').html(fileName);
+      file = true
     });
   });
 </script>

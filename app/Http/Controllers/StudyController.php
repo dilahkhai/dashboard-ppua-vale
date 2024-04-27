@@ -7,6 +7,7 @@ use App\Models\Study;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -22,12 +23,23 @@ class StudyController extends Controller
 
     public function store(Request $request)
     {
-        $filename = Str::snake($request->name . Carbon::parse($request->study_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
+        $request->validate([
+            'name' => 'required',
+            'study_date' => 'required',
+            'file' => 'required|file'
+        ]);
 
-        $request->file('file')->storePubliclyAs('public/study_file', $filename);
+        $filename = null;
+
+        if ($request->hasFile('file')) {
+            $filename = Str::snake($request->name . Carbon::parse($request->study_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
+
+            $request->file('file')->storePubliclyAs('public/study_file', $filename);
+            $path = 'storage/study_file/' . $filename;
+        }
 
         Study::query()
-            ->create($request->only('study_date') + ['file' => 'storage/study_file/' . $filename, 'name' => $request->name]);
+            ->create($request->only('study_date') + ['file' => $path, 'name' => $request->name]);
 
         return back()->with('success', 'Schedule saved!');
     }
@@ -38,11 +50,11 @@ class StudyController extends Controller
             ->where('study_date', Carbon::parse($request->study_date)->toDateString())
             ->first();
 
-        if ($study->file) {
-            Storage::delete($study->file);
+        if ($study->file && File::exists($study->file)) {
+            File::delete($study->file);
         }
 
-        $filename = Str::snake($study->employee->name . Carbon::parse($request->study_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
+        $filename = Str::snake($study->name . Carbon::parse($request->study_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
 
         $request->file('file')->storePubliclyAs('public/study_file', $filename);
 

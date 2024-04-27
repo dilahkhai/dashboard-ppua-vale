@@ -7,6 +7,7 @@ use App\Models\Sharing;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -32,12 +33,10 @@ class SharingController extends Controller
     {
         $sharing = Sharing::query()
             ->where('sharing_date', Carbon::parse($request->sharing_date)->toDateString())
-            ->firstOr(function () {
-                return back()->with('error', 'Sharing Schedule not Found!');
-            });
+            ->firstOrFail();
 
-        if ($sharing->file) {
-            Storage::delete($sharing->file);
+        if ($sharing?->file && File::exists($sharing?->file)) {
+            File::delete($sharing->file);
         }
 
         $filename = Str::snake($sharing->employee->name . Carbon::parse($request->sharing_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
