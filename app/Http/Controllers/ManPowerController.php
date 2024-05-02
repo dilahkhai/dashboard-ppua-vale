@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Area;
 use App\Models\ManPower;
+use App\Models\OnCallAutomation;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use function Ramsey\Uuid\v1;
@@ -11,6 +14,28 @@ use function Ramsey\Uuid\v1;
 class ManPowerController extends Controller
 {
     public function index()
+    {
+        $manpowers = ManPower::query()
+            ->with(['crew', 'contractor', 'user'])
+            ->whereDate('date', today()->toDateString())
+            ->get()
+            ->groupBy(function ($manpower) {
+                return $manpower->user->area_id;
+            })
+            ->map(function ($manpower) {
+                return $manpower->last();
+            });
+
+        $areas = Area::all();
+        $users = User::query()
+            ->with('area')
+            ->get()
+            ->groupBy('area_id');
+
+        return view('manpower.index', compact('manpowers', 'areas', 'users'));
+    }
+
+    public function history()
     {
         $manpowers = ManPower::query()
             ->when(request('area_id'), function ($query) {
@@ -31,7 +56,7 @@ class ManPowerController extends Controller
 
         $areas = Area::all();
 
-        return view('manpower.index', compact('manpowers', 'areas'));
+        return view('manpower.history', compact('manpowers', 'areas'));
     }
 
     public function create()
@@ -43,16 +68,20 @@ class ManPowerController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'employee' => 'required|exists:users,id',
-            'date' => 'required'
-        ]);
-
         $manpower = ManPower::query()
             ->create([
                 'user_id' => $request->employee,
-                'date' => $request->date
+                'date' => today()->toDateString()
             ]);
+
+        $crewLeaveDates = explode(' - ', $request->crew_date_leave);
+
+        $manpower->leave()->create([
+            'user_id' => $request->crew_leave,
+            'date_start' => Carbon::parse($crewLeaveDates[0])->toDateString(),
+            'date_end' => Carbon::parse($crewLeaveDates[1])->toDateString(),
+            'type' => 'leave'
+        ]);
 
         $manpower->crew()->create([
             'total' => $request->crew_total,
@@ -61,8 +90,8 @@ class ManPowerController extends Controller
             'utw_man' => $request->crew_utw_man,
             'quarantine' => $request->crew_quarantine,
             'quarantine_man' => $request->crew_quarantine_man,
-            'leave' => $request->crew_leave,
-            'leave_man' => $request->crew_leave_man,
+            'leave' => 0,
+            'leave_man' => 0,
             'sick_leave' => $request->crew_sick_leave,
             'sick_leave_man' => $request->crew_sick_leave_man,
             'mcu' => $request->crew_mcu,

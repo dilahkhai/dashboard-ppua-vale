@@ -27,4 +27,9 @@ class ManPower extends Model
     {
         return $this->hasOne(ContractorManPower::class, 'man_power_id');
     }
+
+    public function leave(): HasOne
+    {
+        return $this->hasOne(EmployeeLeave::class, 'man_power_id');
+    }
 }

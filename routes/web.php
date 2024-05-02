@@ -159,6 +159,7 @@ Route::middleware([
     Route::get('/training-status/{trainingStatus}/sub-training/{subTraining}/edit', [SubTrainingController::class, 'edit'])->name('sub-training.edit');
 
     Route::resource('man-power', ManPowerController::class);
+    Route::get('/man-power-history', [ManPowerController::class, 'history'])->name('man-power.history');
 
     Route::resource('simper', SimperController::class);
 

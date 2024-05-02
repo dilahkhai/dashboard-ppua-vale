@@ -114,6 +114,11 @@ class User extends Authenticatable
         return $this->hasMany(OnCallAutomation::class, 'user_id');
     }
 
+    public function leaves(): HasMany
+    {
+        return $this->hasMany(EmployeeLeave::class, 'user_id');
+    }
+
     public function initial(): Attribute
     {
         return Attribute::get(function ($value, $attributes) {

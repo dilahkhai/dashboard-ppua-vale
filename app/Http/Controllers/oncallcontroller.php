@@ -102,7 +102,9 @@ class oncallcontroller extends Controller
         }
 
         $oncall = OnCallAutomation::query()
-            ->with('employee')
+            ->with(['employee' => function ($query) {
+                $query->whereDoesntHave('leaves');
+            }])
             ->whereYear('date_attend', today()->year)
             ->take(52)
             ->get()
