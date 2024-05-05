@@ -10,6 +10,11 @@ class Area extends Model
 {
     use HasFactory;
 
+    public function key_performance_indexes(): HasMany
+    {
+        return $this->hasMany(KeyPerformanceIndex::class, 'area_id');
+    }
+
     public function employees(){
         return $this->hasMany(User::class, "area_id");
     }

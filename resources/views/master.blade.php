@@ -256,6 +256,13 @@
           </li>
 
           <li class="nav-item">
+            <a href="{{url('key-performance-index')}}" class="nav-link {{  Request::is('key-performance-index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-tasks"></i>
+              <p>Key Performance Index</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="/oncall" class="nav-link {{  Request::is('oncall') ? 'active' : '' }}">
               <i class="nav-icon fas fa-phone-alt"></i>
               <p>

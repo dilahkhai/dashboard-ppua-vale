@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FMDSController;
 use App\Http\Controllers\InitialDetailController;
+use App\Http\Controllers\KeyPerformanceIndexController;
 use App\Http\Controllers\ManPowerController;
 use App\Http\Controllers\OvertimeHourController;
 use App\Http\Controllers\SharingController;
@@ -160,6 +161,10 @@ Route::middleware([
 
     Route::resource('man-power', ManPowerController::class);
     Route::get('/man-power-history', [ManPowerController::class, 'history'])->name('man-power.history');
+
+    Route::get('key-performance-index/{keyPerformanceIndex}/input', [KeyPerformanceIndexController::class, 'input'])->name('key-performance-index.input');
+    Route::post('key-performance-index/{keyPerformanceIndex}/input', [KeyPerformanceIndexController::class, 'storeInput'])->name('key-performance-index.storeInput');
+    Route::resource('key-performance-index', KeyPerformanceIndexController::class);
 
     Route::resource('simper', SimperController::class);
 

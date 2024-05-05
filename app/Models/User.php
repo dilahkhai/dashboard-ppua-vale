@@ -14,6 +14,7 @@ use App\Models\ManHour;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -119,10 +120,24 @@ class User extends Authenticatable
         return $this->hasMany(EmployeeLeave::class, 'user_id');
     }
 
+    public function position(): Attribute
+    {
+        return Attribute::get(function ($value) {
+            return ucwords($value);
+        });
+    }
+
     public function initial(): Attribute
     {
         return Attribute::get(function ($value, $attributes) {
             return $value ?? implode("", json_decode(\Illuminate\Support\Str::initials($attributes['name'])));
+        });
+    }
+
+    public function isAdmin(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->role == 'admin';
         });
     }
 }
