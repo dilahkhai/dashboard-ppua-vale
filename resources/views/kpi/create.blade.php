@@ -23,26 +23,14 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add New KPI</h3>
+              <h3 class="card-title">Add New KPI for {{ $area->area }}</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" action="{{ route('key-performance-index.store') }}" method="POST" enctype="multipart/form-data">
+            <form role="form" action="{{ route('key-performance-index.store', $area->id) }}" method="POST" enctype="multipart/form-data">
               @csrf
 
               <div class="card-body">
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Area</label>
-                  <select class="form-control" name="area_id">
-                    <option>Select Area</option>
-                    @foreach ($areas as $id => $data)
-                    <option value="{{$data->id}}">{{$data->area}}</option>
-                    @endforeach
-                  </select>
-                  @error('area_id')
-                    <span class="text-sm text-danger">{{ $message }}</span>
-                  @enderror
-                </div>
                 <div class="form-group">
                   <label for="exampleInputEmail1">Title</label>
                   <textarea type="date" class="form-control" name="title" placeholder="Title"></textarea>

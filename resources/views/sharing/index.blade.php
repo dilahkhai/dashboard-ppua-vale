@@ -114,6 +114,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a href="" target="_blank" id="downloadFile" type="button" class="btn btn-success">Download</a>
             <button type="button" class="btn btn-danger" id="deleteSchedule">Delete</button>
             <button type="submit" class="btn btn-primary" id="saveChanges">Save changes</button>
           </div>
@@ -159,7 +160,6 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           'success': function(response) {
-            console.log(response);
             if (response?.isOwner) {
               $('#modalContent').empty()
 
@@ -180,15 +180,21 @@
                         <input type="file" class="custom-file-input" id="customFile" name="file">
                         <label class="custom-file-label" for="customFile">Choose file</label>
                       </div>
-                      ${response?.sharing?.file ? `<a href="${response?.sharing?.file}" class="btn btn-primary mt-2" target="_blank">Dowload File</a>` : `<span class="text-danger">No File</span>`}
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="" target="_blank" id="ownerDownloadFile" type="button" class="btn btn-success">Download</a>
                     <button type="submit" class="btn btn-primary" id="saveChanges">Save changes</button>
                   </div>
                 </form>
                 `)
+
+              if (response?.sharing?.file) {
+                $(document).find('#ownerDownloadFile').attr('href', response?.sharing?.file).removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success');
+              } else {
+                $(document).find('#ownerDownloadFile').removeAttr('href').removeClass('btn-success').addClass('btn-secondary');
+              }
             } else {
               $('#modalContent').empty()
 
@@ -208,6 +214,11 @@
             $('#sharing_date').val(new Date(info.event.start).toLocaleDateString())
             $('#employee_detail').val(response?.sharing?.employee?.name)
             $('#deleteForm').attr('action', `/destroy-sharing-schedule/${response?.sharing?.id}`)
+            if (response?.sharing?.file) {
+              $('#downloadFile').attr('href', response?.sharing?.file).removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success');
+            } else {
+              $('#downloadFile').removeAttr('href').removeClass('btn-success').addClass('btn-secondary');
+            }
 
             $(document).on('click', '#deleteSchedule', function(e) {
               if (confirm('Do you want to delete this schedule?')) {

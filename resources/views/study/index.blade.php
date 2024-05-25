@@ -164,10 +164,10 @@
                         <input type="file" class="custom-file-input" id="customFile" name="file">
                         <label class="custom-file-label" for="customFile">Choose file</label>
                       </div>
-                      <a href="${response?.study?.file}" target="_blank">${response?.study?.file || 'Please upload file!'}</a>
                     </div>
                   </div>
                   <div class="modal-footer">
+                    <a href="${response?.study?.file}" target="_blank" class="btn btn-success" id="downloadFile">Download File</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" id="saveChanges">Save changes</button>
                   </div>
@@ -191,15 +191,15 @@
                   </div>
                   <div class="modal-body">
                     <div class="row">
-                      <div class="col-2">
+                      <div class="col-3">
                         <p>Study Date</p>
                       </div>
                       <div class="col">
-                        <p target="_blank">${response?.study?.date || 'dd/mm/yyyy'}</p>
+                        <p target="_blank">${response?.study?.study_date}</p>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-2">
+                      <div class="col-3">
                         <p>Subject</p>
                       </div>
                       <div class="col">
@@ -207,7 +207,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-2">
+                      <div class="col-3">
                         <p>file</p>
                       </div>
                       <div class="col">

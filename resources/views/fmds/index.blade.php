@@ -188,9 +188,11 @@
 
     $('.frame').addClass('show-presentation')
 
-    $('.navbar-nav').append(`<li class="nav-item d-none d-sm-inline-block">
+    $('.navbar-nav').first().append(`<li class="nav-closePersentation nav-item d-none d-sm-inline-block">
       <a role="button" class="nav-link" id="closePresentation">Close Presentation</a>
     </li>`)
+
+    $('.navbar-nav').slideUp()
   })
 
   $(document).on('click', '#closePresentation', function () {

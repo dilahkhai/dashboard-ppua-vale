@@ -3,6 +3,8 @@
   @csrf
 
   <div class="card-body">
+    <label>Title: </label>
+    <p>{{ $keyPerformanceIndex->title }}</p>
     <div class="table-responsive">
       <table id="example2" class="table table-bordered table-hover">
         <thead>
@@ -27,12 +29,12 @@
             </td>
             <td>
               <div>
-                <input type="text" class="form-control" name="{{ $user->id }}[actual]" value="{{ $details->has($user->id) ? $details[$user->id]->actual : 0 }}" {{ ($details->has($user->id) && $details[$user->id]->user_id == auth()->user()->id) || auth()->user()->role == 'admin' ? '' : 'disabled' }}>
+                <input type="text" class="form-control" name="{{ $user->id }}[actual]" value="{{ $details->has($user->id) ? $details[$user->id]->actual : 0 }}" {{ (($details->has($user->id) && $details[$user->id]->user_id == auth()->user()->id) || auth()->user()->id === $user->id) || auth()->user()->role == 'admin' ? '' : 'disabled' }}>
               </div>
             </td>
             <td>
               <div>
-                <input type="text" class="form-control" name="{{ $user->id }}[remark]" value="{{ $details->has($user->id) ? $details[$user->id]->remark : '' }}" {{ ($details->has($user->id) && $details[$user->id]->user_id == auth()->user()->id) || auth()->user()->role == 'admin' ? '' : 'disabled' }}>
+                <input type="text" class="form-control" name="{{ $user->id }}[remark]" value="{{ $details->has($user->id) ? $details[$user->id]->remark : '' }}" {{ (($details->has($user->id) && $details[$user->id]->user_id == auth()->user()->id) || auth()->user()->id === $user->id) || auth()->user()->role == 'admin' ? '' : 'disabled' }}>
               </div>
             </td>
             <td>

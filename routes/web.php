@@ -162,9 +162,15 @@ Route::middleware([
     Route::resource('man-power', ManPowerController::class);
     Route::get('/man-power-history', [ManPowerController::class, 'history'])->name('man-power.history');
 
+    Route::get('/key-performance-index', [KeyPerformanceIndexController::class, 'home'])->name('key-performance-index.home');
+    Route::get('/key-performance-index/{area}', [KeyPerformanceIndexController::class, 'index'])->name('key-performance-index.index');
+    Route::get('/key-performance-index/{area}/create', [KeyPerformanceIndexController::class, 'create'])->name('key-performance-index.create');
+    Route::post('/key-performance-index/{area}/store', [KeyPerformanceIndexController::class, 'store'])->name('key-performance-index.store');
+    Route::get('/key-performance-index/{keyPerformanceIndex}/edit', [KeyPerformanceIndexController::class, 'edit'])->name('key-performance-index.edit');
     Route::get('key-performance-index/{keyPerformanceIndex}/input', [KeyPerformanceIndexController::class, 'input'])->name('key-performance-index.input');
     Route::post('key-performance-index/{keyPerformanceIndex}/input', [KeyPerformanceIndexController::class, 'storeInput'])->name('key-performance-index.storeInput');
-    Route::resource('key-performance-index', KeyPerformanceIndexController::class);
+    Route::patch('key-performance-index/{keyPerformanceIndex}/update', [KeyPerformanceIndexController::class, 'update'])->name('key-performance-index.update');
+    Route::delete('key-performance-index/{keyPerformanceIndex}/destroy', [KeyPerformanceIndexController::class, 'destroy'])->name('key-performance-index.destroy');
 
     Route::resource('simper', SimperController::class);
 

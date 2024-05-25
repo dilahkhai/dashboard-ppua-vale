@@ -12,10 +12,16 @@ class KeyPerformanceIndexDetail extends Model
     use HasFactory;
 
     protected $guarded = [];
+    public $appends = ['status'];
 
     public function key_performance_index(): BelongsTo
     {
         return $this->belongsTo(KeyPerformanceIndex::class, 'index_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function plan(): Attribute

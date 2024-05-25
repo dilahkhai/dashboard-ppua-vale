@@ -11,7 +11,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Key Performance Index</h1>
+          <h1>Key Performance Index for {{ $area->area }}</h1>
         </div>
       </div>
       @if(session()->has('success'))
@@ -35,26 +35,41 @@
 
         @if ( auth()->user()->role == 'admin')
         <div class="card-header">
-          <a href="{{ route('key-performance-index.create') }}" class="btn btn-primary btn-md"><i class="fas fa-briefcase-medical"></i> &nbsp; Add </a>
+          <a href="{{ route('key-performance-index.create', $area->id) }}" class="btn btn-primary btn-md"><i class="fas fa-briefcase-medical"></i> &nbsp; Add </a>
         </div>
         @endif
 
         <!-- /.card-header -->
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="">
             <table id="example2" class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th>Area</th>
-                  <th>Title</th>
-                  <th>Action</th>
+                  <th rowspan="2">Title</th>
+                  @foreach ($users as $user)
+                  <th colspan="4">{{ $user->name }}</th>
+                  @endforeach
+                  <th rowspan="2">Action</th>
+                </tr>
+                <tr>
+                  @foreach ($users as $user)
+                  <td>Plan</td>
+                  <td>Actual</td>
+                  <td>Remark</td>
+                  <td>Progress</td>
+                  @endforeach
                 </tr>
               </thead>
               <tbody>
                 @forelse ($indexes as $index)
                 <tr>
-                  <td>{{ $index->area->area }}</td>
                   <td>{{ $index->title }}</td>
+                  @foreach ($users as $user)
+                  <td class="{{ in_array($user->position, $index->allowed) ? '' : 'bg-light' }}">{{ in_array($user->position, $index->allowed) ? (array_key_exists($index->id, $details) ? (array_key_exists($user->id, $details[$index->id]) ? $details[$index->id][$user->id]['plan'] : 0) : 0) : '' }}</td>
+                  <td class="{{ in_array($user->position, $index->allowed) ? '' : 'bg-light' }}">{{ in_array($user->position, $index->allowed) ? (array_key_exists($index->id, $details) ? (array_key_exists($user->id, $details[$index->id]) ? $details[$index->id][$user->id]['actual'] : 0) : 0) : '' }}</td>
+                  <td class="{{ in_array($user->position, $index->allowed) ? '' : 'bg-light' }}">{{ in_array($user->position, $index->allowed) ? (array_key_exists($index->id, $details) ? (array_key_exists($user->id, $details[$index->id]) ? $details[$index->id][$user->id]['remark'] : '-') : "-") : '' }}</td>
+                  <td class="{{ in_array($user->position, $index->allowed) ? '' : 'bg-light' }}">{{ in_array($user->position, $index->allowed) ? (array_key_exists($index->id, $details) ? (array_key_exists($user->id, $details[$index->id]) ? $details[$index->id][$user->id]['status'] : '-') : "-") : '' }}</td>
+                  @endforeach
                   <td class="">
                     <div class="d-flex">
                       @if ($index->is_owner)
@@ -71,6 +86,7 @@
                       @endif
                     </div>
                   </td>
+
                 </tr>
                 @empty
                 <tr>

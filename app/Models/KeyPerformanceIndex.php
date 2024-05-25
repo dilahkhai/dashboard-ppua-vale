@@ -16,8 +16,6 @@ class KeyPerformanceIndex extends Model
     protected $table = 'key_performance_indexes';
     protected $guarded = [];
 
-    public $appends = ['status'];
-
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_id');

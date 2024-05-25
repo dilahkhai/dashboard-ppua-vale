@@ -33,18 +33,6 @@
 
               <div class="card-body">
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Area</label>
-                  <select class="form-control" name="area_id">
-                    <option value="">Select Area</option>
-                    @foreach ($areas as $id => $data)
-                    <option value="{{$data->id}}" {{ $keyPerformanceIndex->area->id == $data->id ? 'selected' : '' }}>{{$data->area}}</option>
-                    @endforeach
-                  </select>
-                  @error('area_id')
-                    <span class="text-sm text-danger">{{ $message }}</span>
-                  @enderror
-                </div>
-                <div class="form-group">
                   <label for="exampleInputEmail1">Title</label>
                   <textarea type="date" class="form-control" name="title" placeholder="Title">{{ $keyPerformanceIndex->title }}</textarea>
                   @error('title')

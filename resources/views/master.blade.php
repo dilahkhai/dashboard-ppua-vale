@@ -240,14 +240,6 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-          <li class="nav-item">
-            <a href="{{url('fmds')}}" class="nav-link {{  Request::is('fmds') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-tasks"></i>
-              <p>FMDS</p>
-            </a>
-          </li>
-
           <li class="nav-item">
             <a href="{{url('tasks')}}" class="nav-link {{  Request::is('tasks') ? 'active' : '' }}">
               <i class="nav-icon fas fa-tasks"></i>
