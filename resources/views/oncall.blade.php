@@ -105,6 +105,7 @@
     var calendar = new FullCalendar.Calendar(calendarEl, {
       themeSystem: 'bootstrap',
       initialView: 'multiMonthYear',
+      showNonCurrentDates: true,
       eventClick: function(info) {
 
       },
@@ -141,7 +142,7 @@
     })
 
     $('.fc-prev-button').click(function() {
-      var year = calendar.getDate().getYear()
+      var year = new Date().getFullYear()
       $.ajax({
         'url': '/oncall-source?year=' + year,
         'method': 'get',
@@ -189,7 +190,7 @@
     })
 
     $('.fc-next-button').click(function() {
-      var year = calendar.getDate().getYear()
+      var year = new Date().getFullYear()
       $.ajax({
         'url': '/oncall-source?year=' + year,
         'method': 'get',
@@ -235,8 +236,10 @@
       })
     })
 
+    var year = new Date().getFullYear()
+
     $.ajax({
-      'url': '/oncall-source',
+      'url': '/oncall-source?year=' + year,
       'method': 'get',
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

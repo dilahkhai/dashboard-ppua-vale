@@ -28,4 +28,9 @@ class Area extends Model
     {
         return $this->hasMany(OrganizationStructure::class);
     }
+
+    public function man_powers(): HasMany
+    {
+        return $this->hasMany(ManPower::class, 'area_id');
+    }
 }

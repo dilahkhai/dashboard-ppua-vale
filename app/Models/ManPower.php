@@ -13,6 +13,11 @@ class ManPower extends Model
 
     protected $guarded = [];
 
+    public function area(): BelongsTo
+    {
+        return $this->belongsTo(Area::class, 'area_id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

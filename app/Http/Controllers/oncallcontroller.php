@@ -8,11 +8,14 @@ use App\Models\oncall;
 use App\Models\OnCallAutomation;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class oncallcontroller extends Controller
 {
+    private $weeks = [];
+
     public function index()
     {
         $users = User::all();
@@ -88,36 +91,28 @@ class oncallcontroller extends Controller
     {
         $nowYear = now()->year;
         $year = request('year');
-        $weeks = [];
 
-        for ($i = 1; $i <= Carbon::create($nowYear)->weekOfYear; $i++) {
-            $weeks[] = Carbon::create($nowYear)->week($i)->format('Y-m-d');
+        for ($i = 1; $i <= Carbon::create($nowYear)->weeksInYear; $i++) {
+            $this->weeks[] = Carbon::create($nowYear)->week($i)->format('Y-m-d');
         }
 
-        foreach ($weeks as $week) {
-            $oncall = OnCallAutomation::query()
-                ->firstOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()]);
-
-            $oncall->updateOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()], ['user_id' => $oncall->user_id]);
-        }
+        $this->updateOnCall($year);
 
         $oncall = OnCallAutomation::query()
-            ->with(['employee' => function ($query) {
-                $query->whereDoesntHave('leaves');
-            }])
+            ->with(['employee'])
             ->whereYear('date_attend', today()->year)
             ->take(52)
-            ->get()
-            ->transform(function ($value) {
-                return [
-                    'title' => $value->employee->initial ?? "-",
-                    'start' => $value->date_attend,
-                    'end' => $value->date_attend
-                ];
-            })
-            ->toArray();
+            ->get();
 
-        return response()->json($oncall);
+        $data = $oncall->map(function ($value, $key) use ($oncall) {
+            return [
+                'title' => $value->employee?->initial ?? '-',
+                'start' => $value->date_attend,
+                'end' => $value->date_attend
+            ];
+        })->toArray();
+
+        return response()->json($data);
     }
 
     public function destroy(OnCallAutomation $oncall)
@@ -134,5 +129,33 @@ class oncallcontroller extends Controller
         ]);
 
         return redirect()->route('oncall.index')->with('success', 'Oncall has been deleted!');
+    }
+
+    private function updateOnCall($year)
+    {
+        foreach ($this->weeks as $week) {
+            $oncall = OnCallAutomation::query()
+                ->firstOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()]);
+
+            $userExists = User::query()
+                ->whereHas('leaves', function ($query) use ($oncall) {
+                    $query->whereDate('date_start', '>=', $oncall->date_attend);
+                })
+                ->where('id', $oncall->user_id)
+                ->exists();
+
+            if ($userExists) {
+                $updateOncall = OnCallAutomation::query()
+                    ->whereDate('date_attend', '>', $oncall->date_attend)
+                    ->whereYear('date_attend', $year)
+                    ->get();
+
+                foreach ($updateOncall as $updateOnCall) {
+                    $oncall->updateOrCreate(['date_attend' => Carbon::parse($updateOnCall->date_attend)->subDays(7)->toDateString()], ['user_id' => $updateOnCall->user_id]);
+                }
+            } else {
+                $oncall->updateOrCreate(['date_attend' => Carbon::parse($week)->setYear($year)->toDateString()], ['user_id' => $oncall->user_id]);
+            }
+        }
     }
 }

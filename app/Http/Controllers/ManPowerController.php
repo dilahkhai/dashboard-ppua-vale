@@ -15,18 +15,22 @@ class ManPowerController extends Controller
 {
     public function index()
     {
+        $areas = Area::all();
+
+        $areas->each(function (Area $area) {
+            ManPower::query()
+                ->updateOrCreate(['area_id' => $area->id, 'date' => today()->toDateString()]);
+        });
+
         $manpowers = ManPower::query()
             ->with(['crew', 'contractor', 'user'])
             ->whereDate('date', today()->toDateString())
             ->get()
-            ->groupBy(function ($manpower) {
-                return $manpower->user->area_id;
-            })
+            ->groupBy('area_id')
             ->map(function ($manpower) {
                 return $manpower->last();
             });
 
-        $areas = Area::all();
         $users = User::query()
             ->with('area')
             ->get()

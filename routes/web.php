@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeLeaveController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FMDSController;
 use App\Http\Controllers\InitialDetailController;
@@ -161,6 +162,8 @@ Route::middleware([
 
     Route::resource('man-power', ManPowerController::class);
     Route::get('/man-power-history', [ManPowerController::class, 'history'])->name('man-power.history');
+    Route::get('/employee-leave/{manPower}', [EmployeeLeaveController::class, 'index'])->name('employee-leave.index');
+    Route::post('/employee-leave/{manPower}', [EmployeeLeaveController::class, 'store'])->name('employee-leave.store');
 
     Route::get('/key-performance-index', [KeyPerformanceIndexController::class, 'home'])->name('key-performance-index.home');
     Route::get('/key-performance-index/{area}', [KeyPerformanceIndexController::class, 'index'])->name('key-performance-index.index');

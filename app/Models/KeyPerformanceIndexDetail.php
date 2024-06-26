@@ -41,7 +41,7 @@ class KeyPerformanceIndexDetail extends Model
     public function status(): Attribute
     {
         return Attribute::get(function () {
-            return $this->actual > $this->plan ? 'Done' : '';
+            return $this->actual >= $this->plan ? 'Done' : '';
         });
     }
 }
