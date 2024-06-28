@@ -32,7 +32,9 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">
+            @if (auth()->user()->role == 'admin' || auth()->user()->area_id == $manPower->area_id)
             <button type="button" data-toggle="modal" data-target="#TaskModal" class="btn btn-primary">Input Data</button>
+            @endif
           </div>
         </div>
         <table class="table table-bordered mt-4">
@@ -67,6 +69,7 @@
     </div>
   </section>
 
+  @if (auth()->user()->role == 'admin' || auth()->user()->area_id == $manPower->area_id)
   <div class="modal fade" id="TaskModal" tabindex="-1" role="dialog" aria-labelledby="TaskModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <form action="{{ route('employee-leave.store', $manPower->id) }}" method="POST">
@@ -116,6 +119,7 @@
       </form>
     </div>
   </div>
+  @endif
 </div>
 @push('scripts')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
