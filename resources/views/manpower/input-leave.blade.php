@@ -32,9 +32,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">
-            @if (auth()->user()->role == 'admin')
             <button type="button" data-toggle="modal" data-target="#TaskModal" class="btn btn-primary">Input Data</button>
-            @endif
           </div>
         </div>
         <table class="table table-bordered mt-4">

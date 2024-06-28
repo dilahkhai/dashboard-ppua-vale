@@ -7,6 +7,7 @@ use App\Models\EmployeeLeave;
 use App\Models\ManPower;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeLeaveController extends Controller
 {
@@ -26,13 +27,22 @@ class EmployeeLeaveController extends Controller
 
     public function store(Request $request, ManPower $manPower)
     {
-        EmployeeLeave::query()
-            ->create($request->validate([
-                'user_id' => 'required|exists:users,id',
-                'type' => 'required',
-                'date_start' => 'required',
-                'date_end' => 'required'
-            ]) + ['man_power_id' => $manPower->id]);
+        if (Auth::user()->role == 'admin') {
+            EmployeeLeave::query()
+                ->create($request->validate([
+                    'user_id' => 'required|exists:users,id',
+                    'type' => 'required',
+                    'date_start' => 'required',
+                    'date_end' => 'required'
+                ]) + ['man_power_id' => $manPower->id]);
+        } else {
+            EmployeeLeave::query()
+                ->create($request->validate([
+                    'type' => 'required',
+                    'date_start' => 'required',
+                    'date_end' => 'required'
+                ]) + ['man_power_id' => $manPower->id, 'user_id' => Auth::user()->id]);
+        }
 
         return back()->with('success', 'Success!');
     }
