@@ -10,25 +10,27 @@ use App\Models\productivity;
 use App\Models\statusperday;
 use App\Models\Kaizen;
 use App\Models\StatusMcu;
-use App\Models\Task;
 use Carbon\Carbon;
 use App\Models\WorkingTimePerWeek;
 use App\Models\OrganizationStructure;
+use App\Models\Task;
 
 class inpututlcontroller extends Controller
 {
     public function index(){
+        // Perbaiki filter area_id jika area_id adalah ID dan bukan string
         $user = User::with([
                 "today_safety_report",
                 "today_working_time_per_week",
                 "todaystatusperday"
             ])
             ->whereHas("area", function($query){
-                $query->where("area", "Utulities");
+                $query->where("id", 4); // Ganti dengan ID jika area_id adalah ID
             })->get();
+            
         $department = Department::with(["today_productivity" => function($query){
                     $query->whereHas("area", function($query){
-                        $query->where("area", "Utulities");
+                        $query->where("id", 4); // Ganti dengan ID jika area_id adalah ID
                     });
                 }])->get();
 
@@ -36,15 +38,15 @@ class inpututlcontroller extends Controller
                             ->whereDate("created_at", Carbon::now())
                             ->first();
 
-
         $Kaizen = Kaizen::where("area_id", 4)
                         ->whereDate("created_at", Carbon::now())->first();
-
 
         $StatusMcu = StatusMcu::where("area_id", 4)
         ->whereDate("created_at", Carbon::now())->first();
 
         $task = Task::with("owner")->where("area_id", 4)->get();
+
+        // Ganti pluck untuk mengambil data nama dan ID dari User
         $list_user = User::where("area_id", 4)->pluck("name", "id");
 
         return view('inpututl')->with([

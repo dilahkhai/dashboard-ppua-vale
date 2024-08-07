@@ -8,7 +8,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Sub Training</h1>
+          <h1>Add Training</h1>
         </div>
 
       </div>
@@ -24,16 +24,16 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add New Sub Training</h3>
+              <h3 class="card-title">Add New Training</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" action="{{ route('sub-training.store', ['trainingStatus' => $trainingStatus->id]) }}" method="POST" enctype="multipart/form-data">
+            <form role="form" action="{{ route('sub-training.store') }}" method="POST" enctype="multipart/form-data">
               @csrf
               <div class="card-body">
                 <div class="form-group">
-                  <label for="name">Sub Training Name</label>
-                  <input type="text" name="name" id="name" class="form-control">
+                  <label for="name">Training Name</label>
+                  <input type="text" name="training" id="name" class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Area</label>

@@ -33,48 +33,26 @@
 </section>
 <!-- /.content -->
 </div>
+
 @push('scripts')
 <script type="text/javascript">
   gantt.config.readonly = true;
-  // gantt.config.date_format = "%Y-%m-%d";
-  gantt.config.grid_width = 500;
-  gantt.config.columns = [{
-      name: "name",
-      label: "Task name",
-      align: "center",
-      color: "red"
-    },
-    {name:"task_owner_area", label:"Area", align: "center" },
-    {
-      name: "task_owner",
-      label: "Owner",
-      align: "center"
-    },
-    {
-      name: "priority",
-      label: "Priority",
-      align: "center"
-    },
-    {
-      name: "start_date",
-      label: "Start time",
-      align: "center"
-    },
-    {
-      name: "duration",
-      label: "Duration",
-      align: "center"
-    },
-    {
-      name: "status",
-      label: "Status",
-      align: "center",
-      width: 200
-    }
+  gantt.config.grid_width = 600;
+  
+  // Add columns configuration including progress
+  gantt.config.columns = [
+    { name: "name", label: "Task name", align: "left" },
+    { name: "task_owner_area", label: "Area", align: "center" },
+    { name: "task_owner", label: "Owner", align: "center", width: 150},
+    { name: "priority", label: "Priority", align: "center" },
+    { name: "start_date", label: "Start time", align: "center" },
+    { name: "duration", label: "Duration", align: "center" },
+    { name: "status", label: "Status", align: "center", width: 150},
+    { name: "progress", label: "Progress", align: "center", width: 80 }
   ];
 
   gantt.templates.task_text = function(start, end, task) {
-    return `<span style="color: black; font-weight: bold">${task.name} - ${task.status}</span>`;
+    return `<span style="color: black; font-weight: bold">${task.name} - ${task.status} (${task.progress}%)</span>`;
   };
 
   gantt.templates.task_class = function(start, end, task) {
@@ -89,29 +67,20 @@
     }
   };
 
-
   var monthScaleTemplate = function(date) {
     var dateToStr = gantt.date.date_to_str("%M");
     var endDate = gantt.date.add(date, 2, "month");
     return dateToStr(date) + " - " + dateToStr(endDate);
   };
 
-  gantt.config.scales = [{
-      unit: "month",
-      step: 1,
-      format: "%F %Y"
-    },
-    {
-      unit: "day",
-      step: 1,
-      format: "%j %D"
-    }
+  gantt.config.scales = [
+    { unit: "month", step: 1, format: "%F %Y" },
+    { unit: "day", step: 1, format: "%j %D" }
   ];
 
   gantt.init("gantt_here");
   gantt.load("/api/data-main?user_id={{ auth()->user()->id }}");
 </script>
 @endpush
-
 
 @endsection

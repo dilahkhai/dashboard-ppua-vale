@@ -3,132 +3,144 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
-use App\Models\employee;
+use App\Models\User;
 use App\Models\Notification;
 use App\Models\TrainingStatus;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class TrainingStatusController extends Controller
-{
-    public function index()
-    {
-        $trainings = TrainingStatus::query()->get();
+// class TrainingStatusController extends Controller
+// {
+//     public function index()
+//     {
+//         $trainings = TrainingStatus::query()->get();
+//         return view('training-status.index', compact('trainings'));
+//     }
 
-        return view('training-status.index', compact('trainings'));
-    }
+//     public function create()
+//     {
+//         $areas = Area::query()->get(['area', 'id']);
+//         return view('training-status.create', compact('areas'));
+//     }
 
-    public function create()
-    {
-        $areas = Area::query()
-            ->get(['area', 'id']);
+//     public function edit(TrainingStatus $trainingStatus)
+//     {
+//         $employees = User::query()->where('role', 'user')->get();
+//         $areas = Area::query()->get();
+//         return view('training-status.edit', compact('trainingStatus', 'employees', 'areas'));
+//     }
 
-        return view('training-status.create', compact('areas'));
-    }
+//     public function store(Request $request)
+//     {
+//         $training = TrainingStatus::query()->create($request->only('name', 'user_id', 'certif_date', 'training_schedule'));
 
-    public function edit(TrainingStatus $trainingStatus)
-    {
-        $employees = User::query()
-            ->where('role', 'user')
-            ->get();
+//         $superadmins = User::query()->where('role', 'admin')->get();
 
-        $areas = Area::query()
-            ->get();
+//         $due = $training->certif_date;
+//         $certifAge = Carbon::parse($due)->addDays(299);
+//         $certifExpired = Carbon::parse($due)->addYear();
 
-        return view('training-status.edit', compact('trainingStatus', 'employees', 'areas'));
-    }
+//         if (now()->isAfter($certifAge)) {
+//             $training->update(['status' => 2]);
 
-    public function store(Request $request)
-    {
-        $training = TrainingStatus::query()
-            ->create($request->only('name'));
+//             Notification::query()->create([
+//                 'receiver_id' => $training->user_id,
+//                 'title' => 'Certif Date Warning',
+//                 'content' => 'Your certification is close to expiration!'
+//             ]);
 
-        $superadmin = User::query()
-            ->where('role', 'admin')
-            ->get();
+//             $user = User::find($training->user_id);
+//             foreach ($superadmins as $admin) {
+//                 Notification::query()->create([
+//                     'receiver_id' => $admin->id,
+//                     'title' => 'Certif Date Warning',
+//                     'content' => 'User ' . $user->name . ' has a Training Certification that needs an update, Please ensure the next Training Schedule is updated!'
+//                 ]);
+//             }
+//         }
 
-        $due = $training->certif_date;
+//         if (now()->isAfter($certifExpired)) {
+//             $training->update(['status' => 3]);
 
-        $certifAge = Carbon::parse($due)->addDays(299);
-        $certifExpired = Carbon::parse($due)->addYear();
+//             Notification::query()->create([
+//                 'receiver_id' => $training->user_id,
+//                 'title' => 'Certif Date Expired',
+//                 'content' => 'Your certification is expired!'
+//             ]);
 
-        if (now()->isAfter($certifAge)) {
-            $training->update(['status' => 2]);
+//             $user = User::find($training->user_id);
+//             foreach ($superadmins as $admin) {
+//                 Notification::query()->create([
+//                     'receiver_id' => $admin->id,
+//                     'title' => 'Certif Date Expired',
+//                     'content' => 'User ' . $user->name . ' certification\'s is expired, please update their training schedule!'
+//                 ]);
+//             }
+//         }
 
-            Notification::query()
-                ->create(['receiver_id' => $training->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
+//         return redirect()->route('training-status.index')->with('success', 'Success create training status!');
+//     }
 
-            foreach ($superadmin as $admin) {
-                Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
-            }
-        }
+//     public function update(Request $request, TrainingStatus $trainingStatus)
+//     {
+//         $trainingStatus->update($request->except('_token', 'area_id') + ['status' => 1]);
 
-        if (now()->isAfter($certifExpired)) {
-            $training->update(['status' => 3]);
+//         if (!is_null($trainingStatus->training_schedule)) {
+//             Notification::query()->create([
+//                 'receiver_id' => $trainingStatus->user_id,
+//                 'title' => 'Training Schedule Updated',
+//                 'content' => 'You have new Training Schedule!'
+//             ]);
+//         }
 
-            Notification::query()
-                ->create(['receiver_id' => $training->user_id, 'title' => 'Certif Date Expired', 'content' => 'Your certification is expired!']);
+//         $superadmins = User::query()->where('role', 'admin')->get();
 
-            foreach ($superadmin as $admin) {
-                Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Expired', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
-            }
-        }
+//         $due = $trainingStatus->certif_date;
+//         $certifAge = Carbon::parse($due)->addDays(299);
+//         $certifExpired = Carbon::parse($due)->addYear();
 
-        return redirect()->route('training-status.index')->with('success', 'Success create training status!');
-    }
+//         if (now()->isAfter($certifAge)) {
+//             $trainingStatus->update(['status' => 2]);
 
-    public function update(Request $request, TrainingStatus $trainingStatus)
-    {
-        $trainingStatus->update($request->except('_token', 'area_id') + ['status' => 1]);
+//             Notification::query()->create([
+//                 'receiver_id' => $trainingStatus->user_id,
+//                 'title' => 'Certif Date Warning',
+//                 'content' => 'Your certification is close to expiration!'
+//             ]);
 
-        if (!is_null($trainingStatus->training_schedule)) {
-            Notification::query()
-                    ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Training Schedule Updated', 'content' => 'You have new Training Schedule!']);
-        }
+//             foreach ($superadmins as $admin) {
+//                 Notification::query()->create([
+//                     'receiver_id' => $admin->id,
+//                     'title' => 'Certif Date Warning',
+//                     'content' => 'An User Certification\'s need an update, please update training schedule!'
+//                 ]);
+//             }
+//         }
 
-        $superadmin = User::query()
-            ->where('role', 'admin')
-            ->get();
+//         if (now()->isAfter($certifExpired)) {
+//             $trainingStatus->update(['status' => 3]);
 
-        $due = $trainingStatus->certif_date;
+//             Notification::query()->create([
+//                 'receiver_id' => $trainingStatus->user_id,
+//                 'title' => 'Certif Date Expired',
+//                 'content' => 'Your certification is expired!'
+//             ]);
 
-        $certifAge = Carbon::parse($due)->addDays(299);
-        $certifExpired = Carbon::parse($due)->addYear();
+//             foreach ($superadmins as $admin) {
+//                 Notification::query()->create([
+//                     'receiver_id' => $admin->id,
+//                     'title' => 'Certif Date Expired',
+//                     'content' => 'An User Certification\'s need an update, please update training schedule!'
+//                 ]);
+//             }
+//         }
 
-        if (now()->isAfter($certifAge)) {
-            $trainingStatus->update(['status' => 2]);
+//         return redirect()->route('training-status.index')->with('success', 'Success updating training status!');
+//     }
 
-            Notification::query()
-                ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Certif Date Warning', 'content' => 'Your certification is close to expiration!']);
-
-            foreach ($superadmin as $admin) {
-                Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Warning', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
-            }
-        }
-
-        if (now()->isAfter($certifExpired)) {
-            $trainingStatus->update(['status' => 3]);
-
-            Notification::query()
-                ->create(['receiver_id' => $trainingStatus->user_id, 'title' => 'Certif Date Expired', 'content' => 'Your certification is expired!']);
-
-            foreach ($superadmin as $admin) {
-                Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Certif Date Expired', 'content' => 'An User Certification\'s need an update, please update training schedule!']);
-            }
-        }
-
-        return redirect()->route('training-status.index')->with('success', 'Success updating training status!');
-    }
-
-    public function destroy(TrainingStatus $trainingStatus)
-    {
-        $trainingStatus->delete();
-
-        return back()->with('success', 'Success deleting training status!');
-    }
-}
+//     public function destroy(TrainingStatus $trainingStatus)
+//     {
+//         $trainingStatus->delete();
+//         return back()->with('success', 'Success deleting training status!');
+//     }
+// }

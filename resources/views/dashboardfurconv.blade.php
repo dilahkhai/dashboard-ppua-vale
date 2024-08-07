@@ -184,7 +184,8 @@
             {name:"priority", label:"Priority", align: "center" },
             {name:"start_date", label:"Start time", align: "center" },
             {name:"duration", label:"Duration", align: "center" },
-            {name:"status", label:"Status", align: "center" }
+            {name:"status", label:"Status", align: "center" },
+            { name: "progress", label: "Progress", align: "center"}
         ];
 
         gantt.templates.task_text = function(start, end, task) {

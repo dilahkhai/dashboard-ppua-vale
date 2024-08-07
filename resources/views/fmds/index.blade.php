@@ -2,43 +2,20 @@
 
 @section('css')
 <style>
-  .frame {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 0;
-    transform-origin: top;
-    transform: scaleY(0);
-    transition: all 500ms ease-in-out;
-  }
-
-  .frame.show-presentation {
-    bottom: 0;
-    height: 100%;
-    transform: scaleY(100%);
-    transition: all 500ms ease-in-out;
-  }
-
-  .hide {
-    transform-origin: top;
-    transform: scaleY(0);
-    transition: all 500ms ease-in-out;
-  }
+  /* Your existing CSS */
 </style>
 @endsection
 
 @section('content')
-
 <div class="content-wrapper position-relative">
-  <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1 class="m-0">FMDS</h1>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
+        </div>
+      </div>
+
       @if(session()->has('success'))
       <div class="alert alert-success" role="alert">
         {{ session('success') }}
@@ -50,161 +27,270 @@
         Failed!
       </div>
       @endif
-    </div><!-- /.container-fluid -->
+    </div>
   </div>
-  <!-- /.content-header -->
 
-  <!-- Main content -->
-  <section class="content">
-    <div class="container-fluid">
-      <!-- Small boxes (Stat box) -->
-      <div class="row">
-        <div class="col-lg-4 col-6">
-          <!-- small box -->
-          <div class="small-box bg-info">
-            <div class="inner">
-              <h4><b>Upload</b></h4>
-
-              <p>&nbsp;</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-ios-upload"></i>
-            </div>
-            <a role="button" class="small-box-footer" data-toggle="modal" data-target="#upload">More info <i class="fas fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-4 col-6">
-          <!-- small box -->
-          <div class="small-box bg-warning">
-            <div class="inner">
-              <h4><b>Download</b></h4>
-              <p>&nbsp;</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-ios-download"></i>
-            </div>
-            <a role="button" class="small-box-footer" data-toggle="modal" data-target="#download">More info <i class="fas fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-4 col-6">
-          <!-- small box -->
-          <div class="small-box {{ $latestDocument ? 'bg-danger' : 'bg-secondary' }}">
-            <div class="inner">
-              <h4><b>View</b></h4>
-
-              <p>&nbsp;</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-ios-eye"></i>
-            </div>
-            @if ($latestDocument)
-            <a role="button" class="small-box-footer" id="view">More info <i class="fas fa-arrow-circle-right"></i></a>
-            @else
-            <a role="button" class="small-box-footer">{{ $latestDocument ? 'More info' : 'No Document' }} <i class="fas fa-arrow-circle-right"></i></a>
+  <div class="container">
+    <div class="card">
+    <div class="card-header text-center"><b>Safety Report Schedule</b></div>
+    <div class="card-body">
+      <div class="card-body">
+        <div id="calendar"></div>
+        <div class="row mt-3">
+          <div class="col-md-3">
+            @if (auth()->user()->role == 'admin')
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSchedule">
+              Add Schedule
+            </button>
             @endif
           </div>
         </div>
-        <!-- ./col -->
+
+        <!-- Add Schedule Modal -->
+        <div class="modal fade" id="addSchedule" tabindex="-1" aria-labelledby="addScheduleLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <form action="{{ route('safety-share.store') }}" method="post">
+              @csrf
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addScheduleLabel">Add Safety Share Schedule</h5>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="name">Employee</label>
+                    <select class="form-control" name="name" id="name">
+                        <option>-- Select Employee --</option>
+                        <option value="Abd. Marlin">Abd. Marlin</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Process Plant">Process Plant</option>
+                        <option value="Infastructure">Infrastructure</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" class="form-control" name="safetydate" id="safetydate">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        @if (auth()->user()->role == 'admin')
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            @foreach($safetyShares as $safetyShare)
+              <form action="{{ route('safety-share.destroy', $safetyShare->id) }}" method="post" id="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Safety Share Schedule</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="employee_name">Employee</label>
+                    <input type="text" class="form-control" name="employee_name" id="employee_name" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="safety_date">Date</label>
+                    <input type="text" name="safety_date" class="form-control" id="safety_date" readonly>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-danger">Delete</button></div>
+            </form>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
+
       </div>
     </div>
-  </section>
-
-  <div class="frame">
-    <iframe src='https://view.officeapps.live.com/op/embed.aspx?src={{ asset($latestDocument?->file) }}' title="presentation" width='100%' height='100%' frameborder='0'></iframe>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="upload" tabindex="-1" aria-labelledby="uploadLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <form action="{{ route('fmds.upload') }}" method="post" enctype="multipart/form-data">
-        @csrf
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="uploadLabel">Upload FMDS Document</h5>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="date">Date</label>
-              <input type="date" class="form-control" name="upload_date" id="date">
-            </div>
-            <div class="form-group">
-              <label for="file">File</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile" name="file" accept=".ppt,.pptx">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+  <div class="row">
+    <div class="container">
+      <div class="card">
+        <div class="card-header text-center"><b>Man Power</b></div>
+        <div class="card-body">
+          <!-- Filter Form -->
+          <form action="{{ route('manpower.show') }}" method="GET" class="mb-4" id="filter-form">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="start_date">Start Date</label>
+                  <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate ?? '' }}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="end_date">End Date</label>
+                  <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate ?? '' }}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-primary">Filter</button>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+          </form>
+
+          <!-- Manpower Data Table -->
+          <div id="manpower-table">
+            @if(isset($startDate) && isset($endDate))
+              @if(!$manpowers->isEmpty())
+                @foreach($manpowers as $manPower)
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5>{{ $manPower->date }}</h5>
+                      <h5>Area: {{ $manPower->area ? $manPower->area->area : 'No Area' }}</h5>
+                      <h5>Leader: {{ $manPower->user ? $manPower->user->name : 'No Leader' }}</h5>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Crew</th>
+                            <th>Total</th>
+                            <th>Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Total Hadir</td>
+                            <td>{{ $manPower->crew_total }}</td>
+                            <td>{{ $manPower->crew_total_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Leave</td>
+                            <td>{{ $manPower->crew_leave }}</td>
+                            <td>{{ $manPower->crew_leave_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Sick Leave</td>
+                            <td>{{ $manPower->crew_sick_leave }}</td>
+                            <td>{{ $manPower->crew_sick_leave_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Medical Check Up</td>
+                            <td>{{ $manPower->crew_mcu }}</td>
+                            <td>{{ $manPower->crew_mcu_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Total Man Power</td>
+                            <td>{{ $manPower->crew_total_power }}</td>
+                            <td>{{ $manPower->crew_total_power_man }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Contractor</th>
+                            <th>Total</th>
+                            <th>Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Total Hadir</td>
+                            <td>{{ $manPower->contractor_total }}</td>
+                            <td>{{ $manPower->contractor_total_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Leave</td>
+                            <td>{{ $manPower->contractor_leave }}</td>
+                            <td>{{ $manPower->contractor_leave_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Sick Leave</td>
+                            <td>{{ $manPower->contractor_sick_leave }}</td>
+                            <td>{{ $manPower->contractor_sick_leave_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Medical Check Up</td>
+                            <td>{{ $manPower->contractor_mcu }}</td>
+                            <td>{{ $manPower->contractor_mcu_man }}</td>
+                          </tr>
+                          <tr>
+                            <td>Total Man Power</td>
+                            <td>{{ $manPower->contractor_total_power }}</td>
+                            <td>{{ $manPower->contractor_total_power_man }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                @endforeach
+              @else
+                <p>No data available for the selected date range.</p>
+              @endif
+            @else
+              <p>Please set the date filter to see the data.</p>
+            @endif
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="download" tabindex="-1" aria-labelledby="uploadLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <form action="{{ route('fmds.download') }}" method="post">
-        @csrf
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="uploadLabel">Download FMDS Document</h5>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="date">Date</label>
-              <input type="date" class="form-control" name="date" id="date">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Download</button>
-          </div>
+  <div class="row">
+    <div class="container">
+      <div class="card text-center">
+        <div class="card-header"><b>Safety Report</b></div>
+        <div class="card-body">
+          <br>
+          <h4 class="card-text">PTVI CRM (LIF & CCV)</h4>
+          <br>
+          <a href="#" class="btn btn-primary">Go to POWERBI</a>
+          <br><br><br>
         </div>
-      </form>
+      </div>
     </div>
   </div>
+  
 </div>
 
-@push('scripts')
+<!-- Load Calendar Script -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 <script>
-  window.onerror = e => console.log(e);
-
-  $(document).on('change', 'input[type="file"]', function(e) {
-    var fileName = e.target.files[0].name;
-    $('.custom-file-label').html(fileName);
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        events: '{{ route("safety-share.source") }}',
+        themeSystem: 'bootstrap',
+        initialView: 'dayGridMonth',
+        eventClick: function(info) {
+          $('#exampleModal').modal()
+          $.ajax({
+            url: `/sharing-schedule-source-detail?sharing_date=${new Date(info.event.start).toLocaleDateString()}`,
+            method: 'get',
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+              $('#employee_name').val(response.name);
+              $('#safety_date').val(response.date);
+            },
+            error: function(error) {
+              console.error(error);
+            }
+          });
+        }
+      });
+      calendar.render();
+    } else {
+      console.error('Calendar element not found.');
+    }
   });
-
-  $(document).on('click', '#view', function() {
-    $('body').toggleClass('sidebar-collapse')
-
-    $('.content').toggleClass('hide')
-    $('.content-header').toggleClass('hide')
-
-    $('.frame').addClass('show-presentation')
-
-    $('.navbar-nav').first().append(`<li class="nav-closePersentation nav-item d-none d-sm-inline-block">
-      <a role="button" class="nav-link" id="closePresentation">Close Presentation</a>
-    </li>`)
-
-    $('.navbar-nav').slideUp()
-  })
-
-  $(document).on('click', '#closePresentation', function () {
-    $('.frame').removeClass('show-presentation')
-
-    $(this).remove()
-
-    $('body').toggleClass('sidebar-collapse')
-
-    $('.content').toggleClass('hide')
-    $('.content-header').toggleClass('hide')
-  })
 </script>
-@endpush
 @endsection

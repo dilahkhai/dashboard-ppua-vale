@@ -27,8 +27,16 @@
 
   <!-- Main content -->
   <section class="content">
+    <a href="/man-power" class="btn btn-secondary mb-3">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="" style="width: 12px;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      Back
+    </a>
     <div class="card">
-      <div class="card-header">Input Leave</div>
+      <div class="card-header">
+        <span>Input Leave</span>
+      </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">

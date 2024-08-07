@@ -1,7 +1,6 @@
 @extends('master')
 @section('content')
 
-
 <fieldset {{Auth::user()->role != 'admin' ? 'disabled' : '' }}>
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -332,6 +331,75 @@
     {{-- End of Working TIme Allocation --}}
   </div>
 
+  <form action="{{url('inputfurconvWorkingWeek')}}" method="POST">
+    @csrf
+    {{-- Working time per week --}}
+
+    {{-- End Working time per week --}}
+  </form>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="TaskModal" tabindex="-1" role="dialog" aria-labelledby="TaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="TaskModalLabel">Add Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{url('inpututlfraTask')}}" method="POST">
+            @csrf
+            <div class="form-group">
+              <label for="name">Task Name</label>
+              <input type="text" required name="name" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="name">Owner</label>
+              <select name="owner" class="form-control">
+                @foreach ($list_user as $id => $name)
+                <option value="{{$id}}">{{$name}}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="name">Priority</label>
+              <select name="priority" class="form-control">
+                <option value="Low">Low</option>
+                <option value="Med">Med</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="name">Start Date</label>
+              <input type="date" required name="start_date" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="name">Duration</label>
+              <input type="number" required name="duration" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="name">Status</label>
+              <select name="status" class="form-control">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Complete">Complete</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   </div>
   </section>
   <!-- /.content -->
@@ -339,6 +407,5 @@
   <!-- /.content-wrapper -->
 
 </fieldset>
-
 
 @endsection

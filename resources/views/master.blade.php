@@ -166,11 +166,8 @@
           <i class="fas fa-user"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-          <span class="dropdown-item dropdown-header">Current User</span>
-          <div class="dropdown-divider"></div>
-
           <a href="#" class="dropdown-item">
-            <i class="fas fa-user"></i> {{Auth::user()->name}}
+            <i class="fas fa-user"> {{Auth::user()->name}}</i>
           </a>
           <div class="dropdown-divider"></div>
           <a href="{{url('logout-user')}}" class="dropdown-item dropdown-footer">Logout</a>
@@ -292,7 +289,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="/training-status" class="nav-link {{  Request::is('training-status') ? 'active' : '' }}">
+            <a href="/sub-training" class="nav-link {{  Request::is('sub-training') ? 'active' : '' }}">
               <i class="nav-icon fas fa-hospital-alt"></i>
               <p>
                 Training Status

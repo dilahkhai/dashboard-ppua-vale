@@ -22,7 +22,7 @@ class mcucontroller extends Controller
     {
         $data = mcu::with("employee")->latest()->get();
 
-        return view('mcu')->with('data', $data);
+        return view('mcus.mcu')->with('data', $data);
     }
 
     /**
@@ -38,7 +38,7 @@ class mcucontroller extends Controller
 
         $areas = Area::all();
 
-        return view('tambahmcu')->with(["areas" => $areas]);
+        return view('mcus.tambahmcu')->with(["areas" => $areas]);
     }
 
     /**
@@ -69,9 +69,10 @@ class mcucontroller extends Controller
             Notification::query()
                 ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
 
+                $user = User::find($mcu->employee_id);
             foreach($superadmin as $admin) {
                 Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Next MCU', 'content' => 'User ' . $user->name .  ' has an MCU that needs an update, Please ensure the next MCU is updated!']);
             }
         }
 
@@ -121,9 +122,10 @@ class mcucontroller extends Controller
             Notification::query()
                 ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Due Date User', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
 
+                $user = User::find($mcu->employee_id);
             foreach($superadmin as $admin) {
                 Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
+                    ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'User ' . $user->name .  ' has an MCU that needs an update, Please ensure the next MCU is updated!']);
             }
         }
 
@@ -143,7 +145,7 @@ class mcucontroller extends Controller
     public function edit($id)
     {
         $data = mcu::with("employee")->where("id_mcu", $id)->first();
-        return view('editmcu')->with('data', $data);
+        return view('mcus.editmcu')->with('data', $data);
     }
 
     /**

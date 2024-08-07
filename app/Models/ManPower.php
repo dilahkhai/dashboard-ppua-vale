@@ -15,12 +15,12 @@ class ManPower extends Model
 
     public function area(): BelongsTo
     {
-        return $this->belongsTo(Area::class, 'area_id');
+        return $this->belongsTo(Area::class);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,);
     }
 
     public function crew(): HasOne

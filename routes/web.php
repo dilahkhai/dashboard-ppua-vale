@@ -11,7 +11,6 @@ use App\Http\Controllers\SharingController;
 use App\Http\Controllers\SimperController;
 use App\Http\Controllers\StudyController;
 use App\Http\Controllers\SubTrainingController;
-use App\Http\Controllers\TrainingStatusController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\WFHRoosterInitialDetailController;
 use App\Models\Notification;
@@ -45,9 +44,14 @@ Route::middleware([
     Route::post('/import-excel', [App\Http\Controllers\ImportController::class, 'import']);
     Route::get('/export-excel', [ExportController::class, 'index']);
     Route::post('/export-excel', [ExportController::class, 'export']);
-    Route::get('/fmds', [FMDSController::class, 'index'])->name('fmds.index');
-    Route::post('/fmds-download', [FMDSController::class, 'download'])->name('fmds.download');
-    Route::post('/fmds-upload', [FMDSController::class, 'upload'])->name('fmds.upload');
+
+
+    Route::get('/fmds', [App\Http\Controllers\SafetyShareController::class, 'index'])->name('fmds.index');
+    Route::post('/safety-share', [App\Http\Controllers\SafetyShareController::class, 'store'])->name('safety-share.store');
+    Route::delete('/safety-share/{id}', [App\Http\Controllers\SafetyShareController::class, 'destroy'])->name('safety-share.destroy');
+    Route::get('/safety-share/source', [App\Http\Controllers\SafetyShareController::class, 'source'])->name('safety-share.source');
+    Route::get('/manpower/show', [App\Http\Controllers\SafetyShareController::class, 'showManPower'])->name('manpower.show');
+
 
     Route::get('/update-password', [UpdatePasswordController::class, 'index']);
     Route::post('/update-password', [UpdatePasswordController::class, 'update']);
@@ -135,7 +139,7 @@ Route::middleware([
     Route::post('/image-landing', [App\Http\Controllers\LandingPageImageController::class, 'upload']);
 
 
-    Route::get('/mcu', [App\Http\Controllers\mcucontroller::class, 'index']);
+    Route::get('/mcu', [App\Http\Controllers\mcucontroller::class, 'index'])->name('mcu.index');
     Route::get('/tambahmcu', [App\Http\Controllers\mcucontroller::class, 'create']);
     Route::post('/updatemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'update']);
     Route::get('/editmcu/{id}', [App\Http\Controllers\mcucontroller::class, 'edit']);
@@ -145,25 +149,19 @@ Route::middleware([
     Route::delete('/deletemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'destroy']);
 
 
-    Route::get("tasks", [App\Http\Controllers\TaskController::class, 'index']);
-    Route::get("manage-tasks", [App\Http\Controllers\TaskController::class, 'manageTask']);
-    Route::post('/inputMainTask', [App\Http\Controllers\TaskController::class, 'storeTask']);
-    Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask']);
+    Route::get("tasks", [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+    Route::get("manage-tasks", [App\Http\Controllers\TaskController::class, 'manageTask'])->name('tasks.manage');
+    Route::post('/inputMainTask', [App\Http\Controllers\TaskController::class, 'storeTask'])->name('tasks.store');
+    Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask'])->name('tasks.update');
+ 
 
-    Route::resource('training-status', TrainingStatusController::class);
-    Route::resource('sub-training', SubTrainingController::class);
+    Route::resource('sub-training', SubTrainingController::class)->except(['show']);
 
-    Route::patch('/training-status/sub-training/{subTraining}', [SubTrainingController::class, 'update'])->name('sub-training.update');
-    Route::delete('/training-status/sub-training/{subTraining}', [SubTrainingController::class, 'destroy'])->name('sub-training.destroy');
-    Route::get('/training-status/{trainingStatus}/sub-training', [SubTrainingController::class, 'index'])->name('sub-training.index');
-    Route::get('/training-status/{trainingStatus}/sub-training/create', [SubTrainingController::class, 'create'])->name('sub-training.create');
-    Route::post('/training-status/{trainingStatus}/sub-training', [SubTrainingController::class, 'store'])->name('sub-training.store');
-    Route::get('/training-status/{trainingStatus}/sub-training/{subTraining}/edit', [SubTrainingController::class, 'edit'])->name('sub-training.edit');
-
-    Route::resource('man-power', ManPowerController::class);
-    Route::get('/man-power-history', [ManPowerController::class, 'history'])->name('man-power.history');
-    Route::get('/employee-leave/{manPower}', [EmployeeLeaveController::class, 'index'])->name('employee-leave.index');
-    Route::post('/employee-leave/{manPower}', [EmployeeLeaveController::class, 'store'])->name('employee-leave.store');
+    Route::resource('man-power', App\Http\Controllers\ManPowerController::class);
+    Route::get('/man-power-history', [App\Http\Controllers\ManPowerController::class, 'history'])->name('man-power.history');
+    Route::get('/employee-leave/{manPower}', [App\Http\Controllers\EmployeeLeaveController::class, 'index'])->name('employee-leave.index');
+    Route::post('/employee-leave/{manPower}', [App\Http\Controllers\EmployeeLeaveController::class, 'store'])->name('employee-leave.store');
+    Route::delete('/man-power/{id}', [ManPowerController::class, 'destroy'])->name('man-power.destroy');
 
     Route::get('/key-performance-index', [KeyPerformanceIndexController::class, 'home'])->name('key-performance-index.home');
     Route::get('/key-performance-index/{area}', [KeyPerformanceIndexController::class, 'index'])->name('key-performance-index.index');

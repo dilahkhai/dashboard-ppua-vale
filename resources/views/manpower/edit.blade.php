@@ -79,24 +79,6 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>UTW - Medical Recomm</td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_utw" value="{{ $manPower->crew->utw }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_utw_man" value="{{ $manPower->crew->utw_man }}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Quarantine</td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_quarantine" value="{{ $manPower->crew->quarantine }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_quarantine_man" value="{{ $manPower->crew->quarantine_man }}">
-                    </td>
-                  </tr>
-                  <tr>
                     <td>Leave</td>
                     <td>
                       <input type="text" class="form-control" name="crew_leave" value="{{ $manPower->crew->leave }}">
@@ -115,30 +97,12 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Control MCU</td>
+                    <td>Medical Check Up</td>
                     <td>
                       <input type="text" class="form-control" name="crew_mcu" value="{{ $manPower->crew->mcu }}">
                     </td>
                     <td>
                       <input type="text" class="form-control" name="crew_mcu_man" value="{{ $manPower->crew->mcu_man }}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>OT Hours</td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_ot_hours" value="{{ $manPower->crew->ot_hours }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_ot_hours_man" value="{{ $manPower->crew->ot_hours_man }}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>OT</td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_ot" value="{{ $manPower->crew->ot }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="crew_ot_man" value="{{ $manPower->crew->ot_man }}">
                     </td>
                   </tr>
                   <tr>
@@ -172,24 +136,6 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>UTW - Medical Recomm</td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_utw" value="{{ $manPower->contractor->utw }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_utw_man" value="{{ $manPower->contractor->utw_man }}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Quarantine</td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_quarantine" value="{{ $manPower->contractor->quarantine }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_quarantine_man" value="{{ $manPower->contractor->quarantine_man }}">
-                    </td>
-                  </tr>
-                  <tr>
                     <td>Leave</td>
                     <td>
                       <input type="text" class="form-control" name="contractor_leave" value="{{ $manPower->contractor->leave }}">
@@ -208,30 +154,12 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Control MCU</td>
+                    <td>Medical Check Up</td>
                     <td>
                       <input type="text" class="form-control" name="contractor_mcu" value="{{ $manPower->contractor->mcu }}">
                     </td>
                     <td>
                       <input type="text" class="form-control" name="contractor_mcu_man" value="{{ $manPower->contractor->mcu_man }}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>OT Hours</td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_ot_hours" value="{{ $manPower->contractor->ot_hours }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_ot_hours_man" value="{{ $manPower->contractor->ot_hours_man }}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>OT</td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_ot" value="{{ $manPower->contractor->ot }}">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" name="contractor_ot_man" value="{{ $manPower->contractor->ot_man }}">
                     </td>
                   </tr>
                   <tr>

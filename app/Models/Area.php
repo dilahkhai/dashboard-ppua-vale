@@ -15,8 +15,9 @@ class Area extends Model
         return $this->hasMany(KeyPerformanceIndex::class, 'area_id');
     }
 
-    public function employees(){
-        return $this->hasMany(User::class, "area_id");
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'area_id');
     }
 
     public function mcus(): HasMany
@@ -24,12 +25,12 @@ class Area extends Model
         return $this->hasMany(mcu::class);
     }
 
-    public function OrganizationStructures(): HasMany
+    public function organizationStructures(): HasMany
     {
         return $this->hasMany(OrganizationStructure::class);
     }
 
-    public function man_powers(): HasMany
+    public function manpowers(): HasMany
     {
         return $this->hasMany(ManPower::class, 'area_id');
     }

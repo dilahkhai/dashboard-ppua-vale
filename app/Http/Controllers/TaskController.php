@@ -57,27 +57,33 @@ class TaskController extends Controller
         $task->duration = $request->get("duration");
         $task->start_date = $request->get("start_date");
         $task->status = $request->get("status");
+        $task->progress = $request->get("progress", 0);
         $task->created_at = Carbon::now();
         $task->save();
-        return redirect()->back()->with('success', 'success');
+        return redirect()->route('tasks.manage')->with('success', 'Task Added Successfully!');
     }
 
     public function updateTask(Request $request)
     {
-        // dd($request->all());
-
+    // Check if 'id' is an array and not null
+    if (is_array($request->get("id"))) {
         foreach ($request->get("id") as $index => $task_id) {
             Task::where("id", $task_id)->update([
-                "name"  => $request->get("name")[$index],
+                "name" => $request->get("name")[$index],
                 "area_id" => Auth::user()->role == 'admin' ? $request->get("area_id")[$index] : Auth::user()->area_id,
-                "user_id"  => Auth::user()->role == 'admin' ? $request->get("owner")[$index] : Auth::user()->id,
-                "priority"  => $request->get("priority")[$index],
-                "duration"  => $request->get("duration")[$index],
-                "start_date"  => $request->get("start_date")[$index],
-                "status"  => $request->get("status")[$index],
-                "updated_at"  => Carbon::now(),
+                "user_id" => Auth::user()->role == 'admin' ? $request->get("owner")[$index] : Auth::user()->id,
+                "priority" => $request->get("priority")[$index],
+                "duration" => $request->get("duration")[$index],
+                "start_date" => $request->get("start_date")[$index],
+                "status" => $request->get("status")[$index],
+                "progress" => $request->get("progress")[$index],
+                "updated_at" => Carbon::now(),
             ]);
         }
-        return redirect()->back()->with('success', 'success');
+        return redirect()->route('tasks.index')->with('success', 'Tasks Updated Successfully!');
+    } else {
+        return redirect()->route('tasks.index')->with('error', 'Invalid data provided.');
     }
+}
+
 }

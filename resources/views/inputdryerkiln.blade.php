@@ -86,30 +86,30 @@
                           <div class="col-4">
                             <p>{{$employee->name}}</p>
                           </div>
-                          <input type="hidden" name="employee[]" value="{{$employee->id}}">
+                          <input type="hidden" name="employee[]">
                           <div class="col-1">
-                            <input type="number" name="offices[]" class="form-control" value="{{$employee->todaystatusperday->office ?? ''}}">
+                            <input type="number" name="offices[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="hos[]" class="form-control" value="{{$employee->todaystatusperday->ho ?? ''}}">
+                            <input type="number" name="hos[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="trainings[]" class="form-control" value="{{$employee->todaystatusperday->training ?? ''}}">
+                            <input type="number" name="trainings[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="sick_leaves[]" class="form-control" value="{{$employee->todaystatusperday->sick_leave ?? ''}}">
+                            <input type="number" name="sick_leaves[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="annual_leaves[]" class="form-control" value="{{$employee->todaystatusperday->annual_leave ?? ''}}">
+                            <input type="number" name="annual_leaves[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="emergency_leaves[]" class="form-control" value="{{$employee->todaystatusperday->emergency_leave ?? ''}}">
+                            <input type="number" name="emergency_leaves[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="medical_leaves[]" class="form-control" value="{{$employee->todaystatusperday->medical_leave ?? ''}}">
+                            <input type="number" name="medical_leaves[]" class="form-control">
                           </div>
                           <div class="col-1">
-                            <input type="number" name="maternity_leaves[]" class="form-control" value="{{$employee->todaystatusperday->maternity_leave ?? ''}}">
+                            <input type="number" name="maternity_leaves[]" class="form-control">
                           </div>
                         </div>
                         @endforeach
@@ -165,7 +165,7 @@
                       </div>
                       <input type="hidden" value="{{$employee->id}}" name="employee[]">
                       <div class="col-8">
-                        <input type="number" class="form-control" name="count[]" value="{{$employee->today_safety_report->count ?? ''}}">
+                        <input type="number" class="form-control" name="count[]">
                       </div>
                     </div>
                     @endforeach
@@ -218,7 +218,7 @@
                       <p>Organization Structure</p>
                     </div>
                     <div class="col-8">
-                      <input required type="number" class="form-control" max="100" name="value" value="{{$organization->value ?? ''}}">
+                      <input required type="number" class="form-control" max="100" name="value">
                     </div>
                   </div>
                 </div>
@@ -268,7 +268,7 @@
                     <p>Kaizen</p>
                   </div>
                   <div class="col-8">
-                    <input required type="number" class="form-control" max="100" name="value" value="{{$kaizen->value ?? ''}}">
+                    <input required type="number" class="form-control" max="100" name="value">
                   </div>
                 </div>
               </div>
@@ -313,9 +313,9 @@
                 <div class="col-4">
                   <p>{{$department->name}}</p>
                 </div>
-                <input type="hidden" name="department[]" value="{{$department->id}}">
+                <input type="hidden" name="department[]">
                 <div class="col-8">
-                  <input type="number" name="departmentValue[]" class="form-control" max=100 value="{{$department->today_productivity->update ?? ''}}">
+                  <input type="number" name="departmentValue[]" class="form-control" max=100>
                 </div>
               </div>
               @endforeach

@@ -54,10 +54,6 @@
                   <label for="exampleInputEmail1">Certif Date</label>
                   <input type="date" class="form-control" name="certif_date" placeholder="Certif Date" value="{{ $simper->certif_date->format('Y-m-d') }}">
                 </div>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Training Schedule</label>
-                  <input type="date" class="form-control" name="training_schedule" placeholder="Certif Date" value="{{ $simper->training_schedule }}">
-                </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary"> Submit </button>
                 </div>
