@@ -45,13 +45,14 @@ Route::middleware([
     Route::get('/export-excel', [ExportController::class, 'index']);
     Route::post('/export-excel', [ExportController::class, 'export']);
 
-
     Route::get('/fmds', [App\Http\Controllers\SafetyShareController::class, 'index'])->name('fmds.index');
     Route::post('/safety-share', [App\Http\Controllers\SafetyShareController::class, 'store'])->name('safety-share.store');
     Route::delete('/safety-share/{id}', [App\Http\Controllers\SafetyShareController::class, 'destroy'])->name('safety-share.destroy');
     Route::get('/safety-share/source', [App\Http\Controllers\SafetyShareController::class, 'source'])->name('safety-share.source');
     Route::get('/manpower/show', [App\Http\Controllers\SafetyShareController::class, 'showManPower'])->name('manpower.show');
-
+    Route::post('fmds', [App\Http\Controllers\SafetyShareController::class, 'fmdsStore'])->name('fmds.store');
+    Route::get('/fmds-fmds-schedule/source', [App\Http\Controllers\SafetyShareController::class, 'fmdsSource'])->name('fmds.source');
+    Route::delete('/fmds/{id}', [App\Http\Controllers\SafetyShareController::class, 'fmdsDestroy'])->name('fmds.destroy');
 
     Route::get('/update-password', [UpdatePasswordController::class, 'index']);
     Route::post('/update-password', [UpdatePasswordController::class, 'update']);
