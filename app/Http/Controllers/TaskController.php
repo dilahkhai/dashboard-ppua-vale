@@ -17,18 +17,34 @@ class TaskController extends Controller
     }
 
     public function get()
-    {
-        $user = User::find(request('user_id'));
-        $tasks = Task::with("owner")
-            ->when($user->role != 'admin', function ($query) use ($user) {
-                $query->whereBelongsTo($user, 'owner');
-            })
-            ->get();
+{
+    $user = User::find(request('user_id'));
+    $tasks = Task::with("owner")
+        ->when($user->role != 'admin', function ($query) use ($user) {
+            $query->whereBelongsTo($user, 'owner');
+        })
+        ->get();
 
-        return response()->json([
-            "data" => $tasks->all()
-        ]);
-    }
+    // Mengonversi tanggal ke format yang diharapkan oleh Gantt Chart
+    $tasks = $tasks->map(function ($task) {
+        return [
+            'id' => $task->id,
+            'name' => $task->name,
+            'start_date' => $task->start_date->format('Y-m-d H:i'),
+            'end_date' => $task->end_date->format('Y-m-d H:i'),
+            'progress' => $task->progress,
+            'status' => $task->status,
+            'priority' => $task->priority,
+            'task_owner' => $task->task_owner,
+            'task_owner_area' => $task->task_owner_area,
+        ];
+    });
+
+    return response()->json([
+        "data" => $tasks
+    ]);
+}
+
 
     public function manageTask()
     {
@@ -47,6 +63,7 @@ class TaskController extends Controller
         ]);
     }
 
+
     public function storeTask(Request $request)
     {
         $task = new Task;
@@ -54,36 +71,37 @@ class TaskController extends Controller
         $task->area_id = Auth::user()->role == 'admin' ? $request->get('area_id') : Auth::user()->area_id;
         $task->user_id = Auth::user()->role == 'admin' ? $request->get("owner") : Auth::user()->id;
         $task->priority = $request->get("priority");
-        $task->duration = $request->get("duration");
-        $task->start_date = $request->get("start_date");
+        $task->end_date = Carbon::createFromFormat('Y-m-d', $request->get("end_date"));
+        $task->start_date = Carbon::createFromFormat('Y-m-d', $request->get("start_date"));
         $task->status = $request->get("status");
         $task->progress = $request->get("progress", 0);
         $task->created_at = Carbon::now();
         $task->save();
         return redirect()->route('tasks.manage')->with('success', 'Task Added Successfully!');
     }
-
+    
     public function updateTask(Request $request)
     {
-    // Check if 'id' is an array and not null
-    if (is_array($request->get("id"))) {
-        foreach ($request->get("id") as $index => $task_id) {
-            Task::where("id", $task_id)->update([
-                "name" => $request->get("name")[$index],
-                "area_id" => Auth::user()->role == 'admin' ? $request->get("area_id")[$index] : Auth::user()->area_id,
-                "user_id" => Auth::user()->role == 'admin' ? $request->get("owner")[$index] : Auth::user()->id,
-                "priority" => $request->get("priority")[$index],
-                "duration" => $request->get("duration")[$index],
-                "start_date" => $request->get("start_date")[$index],
-                "status" => $request->get("status")[$index],
-                "progress" => $request->get("progress")[$index],
-                "updated_at" => Carbon::now(),
-            ]);
+        if (is_array($request->get("id"))) {
+            foreach ($request->get("id") as $index => $task_id) {
+                Task::where("id", $task_id)->update([
+                    "name" => $request->get("name")[$index],
+                    "area_id" => Auth::user()->role == 'admin' ? $request->get("area_id")[$index] : Auth::user()->area_id,
+                    "user_id" => Auth::user()->role == 'admin' ? $request->get("owner")[$index] : Auth::user()->id,
+                    "priority" => $request->get("priority")[$index],
+                    "end_date" => Carbon::createFromFormat('Y-m-d', $request->get("end_date")[$index]),
+                    "start_date" => Carbon::createFromFormat('Y-m-d', $request->get("start_date")[$index]),
+                    "status" => $request->get("status")[$index],
+                    "progress" => $request->get("progress")[$index],
+                    "updated_at" => Carbon::now(),
+                ]);
+            }
+            return redirect()->route('tasks.index')->with('success', 'Tasks Updated Successfully!');
+        } else {
+            return redirect()->route('tasks.index')->with('error', 'Invalid data provided.');
         }
-        return redirect()->route('tasks.index')->with('success', 'Tasks Updated Successfully!');
-    } else {
-        return redirect()->route('tasks.index')->with('error', 'Invalid data provided.');
     }
-}
+    
+
 
 }

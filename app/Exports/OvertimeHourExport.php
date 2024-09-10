@@ -3,41 +3,45 @@
 namespace App\Exports;
 
 use App\Models\OvertimeHour;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class OvertimeHourExport implements FromQuery, WithMapping, ShouldAutoSize
+class OvertimeHourExport implements FromCollection, WithHeadings, WithStyles
 {
-    protected $from, $to;
-
-    public function __construct($from, $to)
+    public function collection()
     {
-        $this->from = $from;
-        $this->to = $to;
+        return OvertimeHour::with('user.area')->get()->map(function($overtimeHour) {
+            return [
+                'area' => $overtimeHour->user->area->area,  
+                'name' => $overtimeHour->user->name,         
+                'hours' => $overtimeHour->hour,
+                'date' => $overtimeHour->date, 
+            ];
+        });
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function query()
-    {
-        return OvertimeHour::query()
-            ->when($this->from, function ($query) {
-                $query->whereDate('date', '>=', $this->from);
-            })
-            ->when($this->to, function ($query) {
-                $query->whereDate('date', '<=', $this->to);
-            });
-    }
-
-    public function map($row): array
+    public function headings(): array
     {
         return [
-            $row->user->area->area,
-            $row->user->name,
-            $row->hour,
-            $row->date
+            'Area',
+            'Name',
+            'Hours',
+            'Date',
         ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+
+        $sheet->getStyle('A1:D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A1:D1')->getFill()->getStartColor()->setARGB('FFB0C4DE');
+
+        $sheet->getColumnDimension('A')->setWidth(20); 
+        $sheet->getColumnDimension('B')->setWidth(30); 
+        $sheet->getColumnDimension('C')->setWidth(10);  
+        $sheet->getColumnDimension('D')->setWidth(20); 
     }
 }

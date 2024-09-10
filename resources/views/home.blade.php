@@ -121,8 +121,6 @@
         <div class="d-flex justify-content-center">
 
 
-
-
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->

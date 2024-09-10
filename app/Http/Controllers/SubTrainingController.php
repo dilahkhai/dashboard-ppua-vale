@@ -45,11 +45,11 @@ class SubTrainingController extends Controller
         $subTraining->user_id = $request->user_id;
         $subTraining->certif_date = $request->certif_date;
 
-        $certifExpired = Carbon::parse($subTraining->certif_date);
+        $certifExpired = Carbon::parse($subTraining->certif_date)->addYear();
         $oneMonthBeforeExpiration = $certifExpired->subMonth();
-        $oneYearAfterCertification = $certifExpired->addYear();
+        $subTraining->training_schedule = Carbon::parse($subTraining->certif_date)->addMonths(11);
 
-        if (now()->greaterThanOrEqualTo($oneYearAfterCertification)) {
+        if (now()->greaterThanOrEqualTo($certifExpired)) {
             $subTraining->status = 3; // Expired
         } elseif (now()->greaterThanOrEqualTo($oneMonthBeforeExpiration)) {
             $subTraining->status = 2; // Warning
@@ -63,9 +63,7 @@ class SubTrainingController extends Controller
 
     public function update(Request $request, SubTraining $subTraining)
 {
-    // Debugging line to see what data is being received
 
-    // Validate data
     $request->validate([
         'training' => 'required|string',
         'area_id' => 'required|integer',
@@ -74,18 +72,17 @@ class SubTrainingController extends Controller
         'training_schedule' => 'required|date',
     ]);
 
-    // Update sub-training data
     $subTraining->training = $request->training;
     $subTraining->area_id = $request->area_id;
     $subTraining->user_id = $request->user_id;
     $subTraining->certif_date = $request->certif_date;
     $subTraining->training_schedule = $request->training_schedule;
 
-    $certifExpired = Carbon::parse($subTraining->certif_date);
+    $certifExpired = Carbon::parse($subTraining->certif_date)->addYear();
     $oneMonthBeforeExpiration = $certifExpired->subMonth();
-    $oneYearAfterCertification = $certifExpired->addYear();
+    $subTraining->training_schedule = Carbon::parse($subTraining->certif_date)->addMonths(11);
 
-    if (now()->greaterThanOrEqualTo($oneYearAfterCertification)) {
+    if (now()->greaterThanOrEqualTo($certifExpired)) {
         $subTraining->status = 3; // Expired
     } elseif (now()->greaterThanOrEqualTo($oneMonthBeforeExpiration)) {
         $subTraining->status = 2; // Warning

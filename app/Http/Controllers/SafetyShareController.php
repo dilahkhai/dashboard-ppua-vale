@@ -7,19 +7,16 @@ use App\Models\Area;
 use App\Models\User;
 use App\Models\SafetyShare;
 use App\Models\ManPower;
-use App\Models\FmdsSchedule; // Model yang diperlukan
+use App\Models\FmdsSchedule;
 use Carbon\Carbon;
 
 class SafetyShareController extends Controller
 {
-    // Metode-methode dari SafetyShareController
 
     public function index()
     {
         $safetyShares = SafetyShare::all();
-
         $areas = Area::all();
-
         $manpowers = ManPower::query()
             ->with(['user'])
             ->get()
@@ -28,7 +25,7 @@ class SafetyShareController extends Controller
                 return $manpower->last();
             });
 
-        $fmdsSchedules = FmdsSchedule::all(); // Nama variabel diperbaiki
+        $fmdsSchedules = FmdsSchedule::all(); 
 
         $users = User::query()
             ->with('area')
@@ -40,7 +37,11 @@ class SafetyShareController extends Controller
 
     public function show(SafetyShare $safetyShare)
     {
-        return view('fmds.index', compact('safetyShare'));
+        return response()->json([
+            'id' => $safetyShare->id,
+            'name' => $safetyShare->name,
+            'date' => $safetyShare->safetydate,
+        ]);   
     }
 
     public function store(Request $request)
@@ -77,11 +78,13 @@ class SafetyShareController extends Controller
         return view('safety-shares.edit', compact('safetyShare'));
     }
 
+
     public function destroy($id)
     {
-        $safetyShare = SafetyShare::find($id);
+        $safetyShare = SafetyShare::findOrFail($id);
         $safetyShare->delete();
-        return redirect()->route('fmds.index')->with('success', 'Safety Share schedule deleted successfully!');
+    
+        return redirect()->route('fmds.index')->with('success', 'Schedule deleted successfully.');
     }
 
     public function showManPower(Request $request)
@@ -95,8 +98,12 @@ class SafetyShareController extends Controller
             $manpowers = collect();
         }
 
-        $safetyShares = SafetyShare::all(); 
-        return view('fmds.index', compact('manpowers', 'startDate', 'endDate'));
+        $safetyShares = SafetyShare::all();
+        $fmdsSchedules = FmdsSchedule::all();
+        $areas = Area::all();
+        
+
+        return view('fmds.index', compact('manpowers', 'startDate', 'endDate', 'safetyShares', 'areas', 'fmdsSchedules'));
     }
 
     public function fmdsSource()
@@ -125,8 +132,7 @@ class SafetyShareController extends Controller
             'area_id' => 'required|exists:areas,id',
         ]);
 
-        \Log::info('FmdsStore Data:', $validatedData); // Pastikan data ter-validate
-
+        \Log::info('FmdsStore Data:', $validatedData); 
         FmdsSchedule::create($validatedData);
 
         return redirect()->route('fmds.index')->with('success', 'Schedule created successfully.');
@@ -134,7 +140,11 @@ class SafetyShareController extends Controller
 
     public function fmdsShow(FmdsSchedule $fmdsSchedule)
     {
-        return view('fmds.show', compact('fmdsSchedule'));
+        return response()->json([
+            'id' => $fmdsSchedule->id,
+            'name' => $fmdsSchedule->area->area,
+            'date' => $fmdsSchedule->fmds_date,
+        ]);   
     }
 
     public function fmdsEdit(FmdsSchedule $fmdsSchedule)
@@ -154,12 +164,13 @@ class SafetyShareController extends Controller
 
         return redirect()->route('fmds.index')->with('success', 'Schedule updated successfully.');
     }
+    
 
     public function fmdsDestroy($id)
     {
-        $fmdsSchedule = FmdsSchedule::find($id);
+        $fmdsSchedule = FmdsSchedule::findOrFail($id);
         $fmdsSchedule->delete();
-
-        return redirect()->route('fmds.index')->with('fail', 'Schedule deleted succesfully.');
+        
+        return redirect()->route('fmds.index')->with('success', 'Schedule deleted successfully.');
     }
 }

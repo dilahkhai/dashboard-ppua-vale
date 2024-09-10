@@ -4,12 +4,13 @@ namespace App\Exports\Sheets;
 
 use App\Models\statusperday;
 use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class EmployeeStatusExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSize, WithTitle
+class EmployeeStatusExport implements FromQuery, WithMapping, WithHeadings, WithTitle, WithStyles
 {
     protected $from, $to;
 
@@ -59,5 +60,24 @@ class EmployeeStatusExport implements FromQuery, WithMapping, WithHeadings, Shou
     public function title(): string
     {
         return 'Employee Status';
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
+
+        $sheet->getStyle('A1:J1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A1:J1')->getFill()->getStartColor()->setARGB('FFB0C4DE');
+
+        $sheet->getColumnDimension('A')->setWidth(20); 
+        $sheet->getColumnDimension('B')->setWidth(30); 
+        $sheet->getColumnDimension('C')->setWidth(15); 
+        $sheet->getColumnDimension('D')->setWidth(15); 
+        $sheet->getColumnDimension('E')->setWidth(20); 
+        $sheet->getColumnDimension('F')->setWidth(20); 
+        $sheet->getColumnDimension('G')->setWidth(20); 
+        $sheet->getColumnDimension('H')->setWidth(20); 
+        $sheet->getColumnDimension('I')->setWidth(20); 
+        $sheet->getColumnDimension('J')->setWidth(20); 
     }
 }

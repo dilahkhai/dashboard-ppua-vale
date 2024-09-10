@@ -44,7 +44,7 @@
                 <b>Task Name</b>
               </div>
               @if (auth()->user()->role == 'admin')
-              <div class="col-2">
+              <div class="col-1">
                 <b>Area</b>
               </div>
               <div class="col-1">
@@ -54,11 +54,11 @@
               <div class="col-1">
                 <b>Priority</b>
               </div>
-              <div class="col-1">
-                <b>Duration (Days)</b>
-              </div>
               <div class="col-2">
                 <b>Start</b>
+              </div>
+              <div class="col-2">
+                <b>End</b>
               </div>
               <div class="col-{{ auth()->user()->role == 'admin' ? '1' : '2' }}">
                 <b>Status</b>
@@ -83,7 +83,7 @@
                   <input type="text" class="form-control" name="name[]" value="{{$task->name}}">
                 </div>
                 @if (auth()->user()->role == 'admin')
-                <div class="col-2">
+                <div class="col-1">
                   <select class="form-control" name="area_id[]" onchange="fetchDataAndPopulate(this.value, 'owner-{{ $task->id }}')">
                     @foreach ($areas as $data)
                     <option value="{{$data->id}}" {{ ($task->area_id == $data->id) ? 'selected' : '' }}>{{$data->area}}</option>
@@ -93,7 +93,7 @@
                 <div class="col-1">
                   <select name="owner[]" class="form-control" data-name="owner-{{ $task->id }}">
                     @foreach ($list_user as $id => $name)
-                    <option value="{{$id}}" {{ ($id == $task->user_id) ? 'selected' : '' }}>{{$name}}</option>
+                    <option value="{{$id}}" {{ ($id = $task->user_id) ? 'selected' : '' }}>{{$name}}</option>
                     @endforeach
                   </select>
                 </div>
@@ -105,11 +105,11 @@
                     <option value="High" {{ ("High" == $task->priority) ? 'selected' : '' }}>High</option>
                   </select>
                 </div>
-                <div class="col-1">
-                  <input type="number" class="form-control" name="duration[]" value="{{$task->duration}}">
+                <div class="col-2">
+                  <input type="date" class="form-control" name="start_date[]" value="{{ $task->start_date ? $task->start_date->format('Y-m-d') : '' }}">
                 </div>
                 <div class="col-2">
-                  <input type="date" class="form-control" name="start_date[]" value="{{ date_format($task->start_date,"Y-m-d") }}">
+                  <input type="date" class="form-control" name="end_date[]" value="{{ $task->end_date ? $task->end_date->format('Y-m-d') : '' }}">
                 </div>
                 <div class="col-{{ auth()->user()->role == 'admin' ? '1' : '2' }}">
                   <select name="status[]" class="form-control">
@@ -183,8 +183,8 @@
                   <input type="date" required name="start_date" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="duration">Duration</label>
-                  <input type="number" required name="duration" class="form-control">
+                  <label for="end_date">End Date</label>
+                  <input type="date" required name="end_date" class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="status">Status</label>

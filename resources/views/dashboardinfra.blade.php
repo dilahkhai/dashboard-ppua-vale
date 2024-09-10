@@ -19,7 +19,6 @@
       </div><!-- /.container-fluid -->
     </section>
 
-
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -54,18 +53,13 @@
         </div>
         {{-- End Employee Status --}}
 
-
         <div class="row">
           {{-- Productivity --}}
           <div class="row col-6">
-
             <div class="col-4">
               <div class="small-box bg-info">
                 <div class="inner">
-                    <p style="font-size:15px;">Updated Organization
-                      Structure
-                    </p>
-
+                    <p style="font-size:15px;">Updated Organization Structure</p>
                     <h3>{{$organization->value ?? '0'}}%</h3>
                 </div>
               </div>
@@ -73,9 +67,7 @@
             <div class="col-4">
               <div class="small-box bg-warning">
                 <div class="inner">
-                    <p>Kaizen
-                    </p>
-
+                    <p>Kaizen</p>
                     <h3>{{$kaizen->value ?? '0'}}%</h3>
                 </div>
               </div>
@@ -84,7 +76,6 @@
               <div class="small-box bg-primary">
                 <div class="inner">
                     <p>MCU Status</p>
-
                     <h3>{{$statusMcu}}%</h3>
                 </div>
               </div>
@@ -103,8 +94,6 @@
             </div>
           </div>
           {{-- End Productivity --}}
-
-
 
           {{-- ManHours --}}
           <div class="col-6">
@@ -145,11 +134,26 @@
           </div>
           <div class="card-body">
             <div id="gantt_here" style='width:100%; height:500px;'></div>
+            <br>
+            <h5>Completed Tasks</h5>
+            <table id="completed_tasks_table" class="table table-bordered">
+              <thead>
+                <tr style="background-color: rgb(40, 167, 69); color: white;">
+                  <th>Task Name</th>
+                  <th>Area</th>
+                  <th>Owner</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
           </div>
         </div>
-
-        <br>
-
+          
         <div class="row col-12">
           @foreach ($employees as $employee)
           {{-- Hours Chart --}}
@@ -166,231 +170,189 @@
           {{-- End Hours Chart --}}
           @endforeach
         </div>
+
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
   <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
 
-    <script type="text/javascript">
-        gantt.config.readonly = true;
-        // gantt.config.date_format = "%Y-%m-%d";
-        gantt.config.grid_width = 700;
-        gantt.config.columns = [
-            {name:"name", label:"Task name",  align: "center", color:"red" },
-            {name:"task_owner_area", label:"Area", align: "center" },
-            {name:"task_owner", label:"Owner", align: "center" },
-            {name:"priority", label:"Priority", align: "center" },
-            {name:"start_date", label:"Start time", align: "center" },
-            {name:"duration", label:"Duration", align: "center" },
-            {name:"status", label:"Status", align: "center" },
-            { name: "progress", label: "Progress", align: "center"}
-        ];
+    <!-- Include your scripts here -->
+    <script type="text/javascript"> 
+      gantt.config.readonly = true;
+      gantt.config.grid_width = 600;
+      gantt.config.date_format = "%Y-%m-%d %H:%i"; 
 
-        gantt.templates.task_text = function(start, end, task) {
-          return `<span style="color: black; font-weight: bold">${task.name} - ${task.status}</span>`;
-        };
+      gantt.config.columns = [
+        { name: "task_owner", label: "Owner", align: "center"},
+        { name: "priority", label: "Priority", align: "center" },
+        { name: "start_date", label: "Start time", align: "center" },
+        { name: "end_date", label: "End time", align: "center" },
+        { name: "status", label: "Status", align: "center"},
+        { name: "progress", label: "Progress", align: "center"}
+      ];
+  
+      gantt.templates.task_text = function(start, end, task) {
+        return `<span style="color: rgb(136, 136, 136); font-weight: bold">${task.name} - ${task.status} (${task.progress}%)</span>`;
+      };
 
-        gantt.templates.task_class = function(start, end, task){
-            if(task.status == "Not Started"){
-                return "gantt-orange";
-            }else if(task.status == "In Progress"){
-                return "gantt-amber";
-            }else if(task.status == "Complete"){
-                return "gantt-green";
-            }else if(task.status == "Overdue"){
-                return "gantt-blue";
-            }
-        };
+      gantt.templates.task_class = function(start, end, task) {
+        if (task.status == "Not Started") {
+          return "gantt-orange";
+        } else if (task.status == "In Progress") {
+          return "gantt-amber";
+        } else if (task.status == "Complete") {
+          return "gantt-green";
+        } else if (task.status == "Overdue") {
+          return "gantt-blue";
+        }
+      };
 
+      gantt.config.scales = [
+        { unit: "month", step: 1, format: "%F %Y" },
+        { unit: "day", step: 1, format: "%j %D" }
+      ];
 
-        var monthScaleTemplate = function (date) {
-            var dateToStr = gantt.date.date_to_str("%M");
-            var endDate = gantt.date.add(date, 2, "month");
-            return dateToStr(date) + " - " + dateToStr(endDate);
-        };
+      gantt.init("gantt_here");
 
-        gantt.config.scales = [
-            {unit: "month", step: 1, format: "%F %Y"},
-            {unit: "day", step: 1, format: "%j %D"}
-        ];
+      fetch("/api/data-infra?user_id={{ auth()->user()->id }}")
+      .then(response => response.json())
+      .then(data => {
+        const tasks = data.data;
 
-        gantt.init("gantt_here");
-        gantt.load("/api/data-infra");
+        const ongoingTasks = tasks.filter(task => task.status !== "Complete");
+        const completedTasks = tasks.filter(task => task.status === "Complete");
+
+        gantt.parse({ data: ongoingTasks });
+
+        const tableBody = document.querySelector("#completed_tasks_table tbody");
+        tableBody.innerHTML = "";
+        completedTasks.forEach(task => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.name}</td>
+            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.task_owner_area}</td>
+            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.task_owner}</td>
+            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.start_date}</td>
+            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.end_date}</td>
+            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.status}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      });
     </script>
 
-<script src="{{asset('SelainLogin/chart.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0-rc"></script>
+    <script src="{{asset('SelainLogin/chart.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0-rc"></script>
 
-<script>
-  // Employee Status
-  // -----------------------
-  const data = {
-    labels: {!! json_encode($safety_employees) !!},
-    datasets: [
-      {
-        label: 'HO',
-        data:  {!! json_encode($ho) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(127, 127, 127)'
-      },
-      {
-        label: 'Training',
-        data: {!! json_encode($trainings) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(165, 165, 165)'
-      },
-      {
-        label: 'Sick Leave',
-        data: {!! json_encode($sick_leaves) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(255, 192, 0)'
-      },
-      {
-        label: 'Annual Leave',
-        data: {!! json_encode($annual_leaves) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(91, 155, 213)'
-      },
-      {
-        label: 'Emergency Leave',
-        data: {!! json_encode($emergency_leaves) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(112, 173, 71)'
-      },
-      {
-        label: 'Medical Check up',
-        data: {!! json_encode($medical_leaves) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(38, 68, 120)'
-      },
-      {
-        label: 'Maternity Leave',
-        data: {!! json_encode($maternity_leaves) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(158, 72, 14)'
-      },
-      {
-        label: 'Office',
-        data: {!! json_encode($offices) !!},
-        borderWidth: 1,
-        backgroundColor: 'rgb(0, 102, 102)'
-      },
-    ]
-  };
-  const config = {
-    type: 'bar',
-    data: data,
-    options: {
-      color: "#000",
-      borderColor: '#fff',
-      responsive:true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-            suggestedMin: 0,
-            suggestedMax: 100,
-            ticks: {
-              color: '#000'
-            }
-        },
-        x: {
-          ticks: {
-            color: '#000'
-          }
-        }
-      }
-    }
-  };
-</script>
-
-<script>
-    const myChart = new Chart(
-      document.getElementById('myChart'),
-      config
-    );
-
-</script>
-{{-- End Employee Status --}}
-
-
-
-{{-- Productivity --}}
-<script>
-  const dataProductivity = {
-    labels: {!! json_encode($departments) !!},
-    datasets: [{
-      label: 'Productivity',
-      data: {!! json_encode($department_values) !!},
-      backgroundColor: 'rgb(186, 155, 145)',
-      borderWidth: 1
-    }]
-  };
-
-  const configProductivity = {
-    type: 'bar',
-    data: dataProductivity,
-    options: {
-      color: "#000",
-      borderColor: '#fff',
-      responsive:true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-            suggestedMin: 0,
-            suggestedMax: 30,
-            ticks: {
-              color: '#000'
-            }
-        },
-        x: {
-          ticks: {
-            color: '#000'
-          }
-        }
-      },
-      elements: {
-        bar: {
-          color: '#fff'
-        }
-      }
-    }
-  };
-</script>
-
-<script>
-    const myChartProductivity = new Chart(
-      document.getElementById('ChartProductivity'),
-      configProductivity
-    );
-
-</script>
-{{-- End Productivity --}}
-
-
-{{-- Man Hours --}}
-
-<script>
-    const dataManhours = {
-      labels: {!! json_encode($safety_employees) !!},
-      datasets: [{
-        label: 'Manhours',
-        data: {!! json_encode($manhours) !!},
-        backgroundColor: 'rgb(180, 200, 145)',
-        borderWidth: 1
-      }]
-    };
-
-    const configManhours = {
-      type: 'bar',
-      data: dataManhours,
-      options: {
+    <script>
+      const data = {
+        labels: {!! json_encode($safety_employees) !!},
+        datasets: [
+          {
+            label: 'HO',
+            data:  {!! json_encode($ho) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(127, 127, 127)'
+          },
+          {
+            label: 'Training',
+            data: {!! json_encode($trainings) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(165, 165, 165)'
+          },
+          {
+            label: 'Sick Leave',
+            data: {!! json_encode($sick_leaves) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(255, 192, 0)'
+          },
+          {
+            label: 'Annual Leave',
+            data: {!! json_encode($annual_leaves) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(91, 155, 213)'
+          },
+          {
+            label: 'Emergency Leave',
+            data: {!! json_encode($emergency_leaves) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(112, 173, 71)'
+          },
+          {
+            label: 'Medical Check up',
+            data: {!! json_encode($medical_leaves) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(38, 68, 120)'
+          },
+          {
+            label: 'Maternity Leave',
+            data: {!! json_encode($maternity_leaves) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(158, 72, 14)'
+          },
+          {
+            label: 'Office',
+            data: {!! json_encode($offices) !!},
+            borderWidth: 1,
+            backgroundColor: 'rgb(0, 102, 102)'
+          },
+        ]
+      };
+      const config = {
+        type: 'bar',
+        data: data,
+        options: {
           color: "#000",
           borderColor: '#fff',
-          responsive:true,
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+                suggestedMin: 0,
+                suggestedMax: 100,
+                ticks: {
+                  color: '#000'
+                }
+            },
+            x: {
+              ticks: {
+                color: '#000'
+              }
+            }
+          }
+        }
+      };
+
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+    </script>
+
+    {{-- Productivity --}}
+    <script>
+      const dataProductivity = {
+        labels: {!! json_encode($departments) !!},
+        datasets: [{
+          label: 'Productivity',
+          data: {!! json_encode($department_values) !!},
+          backgroundColor: 'rgb(186, 155, 145)',
+          borderWidth: 1
+        }]
+      };
+
+      const configProductivity = {
+        type: 'bar',
+        data: dataProductivity,
+        options: {
+          color: "#000",
+          borderColor: '#fff',
+          responsive: true,
           maintainAspectRatio: false,
           scales: {
             y: {
@@ -405,115 +367,156 @@
                 color: '#000'
               }
             }
+          },
+          elements: {
+            bar: {
+              color: '#fff'
+            }
           }
         }
-    };
-  </script>
+      };
 
-  <script>
+      const myChartProductivity = new Chart(
+        document.getElementById('ChartProductivity'),
+        configProductivity
+      );
+    </script>
+    {{-- End Productivity --}}
+
+    {{-- Man Hours --}}
+    <script>
+      const dataManhours = {
+        labels: {!! json_encode($safety_employees) !!},
+        datasets: [{
+          label: 'Manhours',
+          data: {!! json_encode($manhours) !!},
+          backgroundColor: 'rgb(180, 200, 145)',
+          borderWidth: 1
+        }]
+      };
+
+      const configManhours = {
+        type: 'bar',
+        data: dataManhours,
+        options: {
+            color: "#000",
+            borderColor: '#fff',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                  suggestedMin: 0,
+                  suggestedMax: 30,
+                  ticks: {
+                    color: '#000'
+                  }
+              },
+              x: {
+                ticks: {
+                  color: '#000'
+                }
+              }
+            }
+          }
+      };
+
       const myChartManhours = new Chart(
         document.getElementById('CharManHours'),
         configManhours
       );
+    </script>
+    {{-- End Man Hours --}}
 
-  </script>
+    {{-- Automation Safety --}}
+    <script>
+      const dataAutomation = {
+        labels: {!! json_encode($safety_employees) !!},
+        datasets: [{
+          label: 'Automation Safety Report',
+          data: {!! json_encode($safety_values) !!},
+          backgroundColor: 'rgb(125, 104, 120)',
+          borderWidth: 1
+        }]
+      };
 
-{{-- End Man Hours --}}
-
-{{-- Automation Safety --}}
-<script>
-  const dataAutomation = {
-    labels: {!! json_encode($safety_employees) !!},
-    datasets: [{
-      label: 'Automation Safety Report',
-      data: {!! json_encode($safety_values) !!},
-      backgroundColor: 'rgb(125, 104, 120)',
-      borderWidth: 1
-    }]
-  };
-
-  const configAutomation = {
-    type: 'bar',
-    data: dataAutomation,
-    options: {
-          color: "#000",
-          borderColor: '#fff',
-          responsive:true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-                suggestedMin: 0,
-                suggestedMax: 30,
-                ticks: {
-                  color: '#000'
+      const configAutomation = {
+        type: 'bar',
+        data: dataAutomation,
+        options: {
+              color: "#000",
+              borderColor: '#fff',
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                    suggestedMin: 0,
+                    suggestedMax: 30,
+                    ticks: {
+                      color: '#000'
+                    }
+                },
+                x: {
+                  ticks: {
+                    color: '#000'
+                  }
                 }
-            },
-            x: {
-              ticks: {
-                color: '#000'
               }
             }
-          }
-        }
-  };
-</script>
+      };
 
-<script>
-    const myChartAutomation = new Chart(
-      document.getElementById('ChartAutomationSafety'),
-      configAutomation
-    );
-
-</script>
-{{-- End Automation Safety --}}
-
-{{-- Hours Chart --}}
-<script>
-  let listEmployee = {!! json_encode($employees) !!};
-  let working_time_per_week = {!! json_encode($working_time_per_week) !!};
-  console.log(listEmployee[0]);
-  for (let index = 0; index < listEmployee.length; index++) {
-    const dataHours = {
-      labels: [
-        'Finish',
-        'Not Finish',
-      ],
-      datasets: [{
-        data: working_time_per_week[index],
-        backgroundColor: [
-          'rgb(51, 102, 153)',
-          'red',
-        ],
-        borderColor: 'rgba(0, 0, 0, 0.2)',
-        borderWidth: 0.5,
-        hoverOffset: 4
-      }]
-    };
-    const configHours = {
-      type: 'pie',
-      data: dataHours,
-      options: {
-        color: '#000',
-        plugins: {
-          datalabels: {
-            color: "white",
-            font: {
-              size: 32,
-              weight: 'bold'
-            }
-          }
-        }
-      },
-      plugins: [ChartDataLabels]
-    };
-
-
-    const myChartHours = new Chart(
-        document.getElementById('ChartHours'+listEmployee[index].id),
-        configHours
+      const myChartAutomation = new Chart(
+        document.getElementById('ChartAutomationSafety'),
+        configAutomation
       );
-  }
-</script>
-{{-- End Hours Chart --}}
+    </script>
+    {{-- End Automation Safety --}}
+
+    {{-- Hours Chart --}}
+    <script>
+      let listEmployee = {!! json_encode($employees) !!};
+      let working_time_per_week = {!! json_encode($working_time_per_week) !!};
+      console.log(listEmployee[0]);
+      for (let index = 0; index < listEmployee.length; index++) {
+        const dataHours = {
+          labels: [
+            'Finish',
+            'Not Finish',
+          ],
+          datasets: [{
+            data: working_time_per_week[index],
+            backgroundColor: [
+              'rgb(51, 102, 153)',
+              'red',
+            ],
+            borderColor: 'rgba(0, 0, 0, 0.2)',
+            borderWidth: 0.5,
+            hoverOffset: 4
+          }]
+        };
+        const configHours = {
+          type: 'pie',
+          data: dataHours,
+          options: {
+            color: '#000',
+            plugins: {
+              datalabels: {
+                color: "rgb(136, 136, 136)",
+                font: {
+                  size: 32,
+                  weight: 'bold'
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        };
+
+        const myChartHours = new Chart(
+            document.getElementById('ChartHours'+listEmployee[index].id),
+            configHours
+          );
+      }
+    </script>
+    {{-- End Hours Chart --}}
 
 @endsection

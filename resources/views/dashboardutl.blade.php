@@ -145,6 +145,23 @@
           </div>
           <div class="card-body">
             <div id="gantt_here" style='width:100%; height:500px;'></div>
+            <br>
+            <h5>Completed Tasks</h5>
+            <table id="completed_tasks_table" class="table table-bordered">
+              <thead>
+                <tr style="background-color: rgb(40, 167, 69); color: white;">
+                  <th>Task Name</th>
+                  <th>Area</th>
+                  <th>Owner</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -175,51 +192,71 @@
       <b>Version</b> 3.2.0
     </div>
 
-    <script type="text/javascript">
-        gantt.config.readonly = true;
-        // gantt.config.date_format = "%Y-%m-%d";
-        gantt.config.grid_width = 700;
-        gantt.config.columns = [
-            {name:"name", label:"Task name",  align: "center", color:"red" },
-            {name:"task_owner_area", label:"Area", align: "center" },
-            {name:"task_owner", label:"Owner", align: "center" },
-            {name:"priority", label:"Priority", align: "center" },
-            {name:"start_date", label:"Start time", align: "center" },
-            {name:"duration", label:"Duration", align: "center" },
-            {name:"status", label:"Status", align: "center" },
-            { name: "progress", label: "Progress", align: "center"}
-        ];
+    <script type="text/javascript"> 
+      gantt.config.readonly = true;
+      gantt.config.grid_width = 600;
+      gantt.config.date_format = "%Y-%m-%d %H:%i"; // Sesuaikan format tanggal
 
-        gantt.templates.task_text = function(start, end, task) {
-          return `<span style="color: black; font-weight: bold">${task.name} - ${task.status}</span>`;
-        };
+      gantt.config.columns = [
+        { name: "task_owner", label: "Owner", align: "center"},
+        { name: "priority", label: "Priority", align: "center" },
+        { name: "start_date", label: "Start time", align: "center" },
+        { name: "end_date", label: "End time", align: "center" },
+        { name: "status", label: "Status", align: "center"},
+        { name: "progress", label: "Progress", align: "center"}
+      ];
+  
+      gantt.templates.task_text = function(start, end, task) {
+        return `<span style="color: black; font-weight: bold">${task.name} - ${task.status} (${task.progress}%)</span>`;
+      };
 
-        gantt.templates.task_class = function(start, end, task){
-            if(task.status == "Not Started"){
-                return "gantt-orange";
-            }else if(task.status == "In Progress"){
-                return "gantt-amber";
-            }else if(task.status == "Complete"){
-                return "gantt-green";
-            }else if(task.status == "Overdue"){
-                return "gantt-blue";
-            }
-        };
+      gantt.templates.task_class = function(start, end, task) {
+        if (task.status == "Not Started") {
+          return "gantt-orange";
+        } else if (task.status == "In Progress") {
+          return "gantt-amber";
+        } else if (task.status == "Complete") {
+          return "gantt-green";
+        } else if (task.status == "Overdue") {
+          return "gantt-blue";
+        }
+      };
 
+      gantt.config.scales = [
+        { unit: "month", step: 1, format: "%F %Y" },
+        { unit: "day", step: 1, format: "%j %D" }
+      ];
 
-        var monthScaleTemplate = function (date) {
-            var dateToStr = gantt.date.date_to_str("%M");
-            var endDate = gantt.date.add(date, 2, "month");
-            return dateToStr(date) + " - " + dateToStr(endDate);
-        };
+      gantt.init("gantt_here");
 
-        gantt.config.scales = [
-            {unit: "month", step: 1, format: "%F %Y"},
-            {unit: "day", step: 1, format: "%j %D"}
-        ];
+      fetch("/api/data-util?user_id={{ auth()->user()->id }}")
+      .then(response => response.json())
+      .then(data => {
+        const tasks = data.data;
 
-        gantt.init("gantt_here");
-        gantt.load("/api/data-util");
+        // Filter tasks
+        const ongoingTasks = tasks.filter(task => task.status !== "Complete");
+        const completedTasks = tasks.filter(task => task.status === "Complete");
+
+        // Load ongoing tasks into Gantt Chart
+        gantt.parse({ data: ongoingTasks });
+
+        // Display completed tasks in the table
+        const tableBody = document.querySelector("#completed_tasks_table tbody");
+        tableBody.innerHTML = ""; // Clear any existing rows
+        completedTasks.forEach(task => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td style="background-color: white; color: black;">${task.name}</td>
+            <td style="background-color: rgb(255, 255, 255); color: black;">${task.task_owner_area}</td>
+            <td style="background-color: rgb(255, 255, 255); color: black;">${task.task_owner}</td>
+            <td style="background-color: rgb(255, 255, 255); color: black;">${task.start_date}</td>
+            <td style="background-color: rgb(255, 255, 255); color: black;">${task.end_date}</td>
+            <td style="background-color: rgb(255, 255, 255); color: black;">${task.status}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      });
     </script>
 
 <script src="{{asset('SelainLogin/chart.js')}}"></script>

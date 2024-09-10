@@ -37,4 +37,5 @@ class ExportController extends Controller
 
         return Excel::download(new MasterExport($from, $to, $area), "master_data_{$area}_{$date}.xlsx");
     }
+    
 }

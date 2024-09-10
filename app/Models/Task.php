@@ -9,22 +9,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Task extends Model
 {
     use HasFactory;
+
     protected $appends = [
-        "open",
-        "task_owner",
-        "task_owner_area"
+        'task_owner',
+        'task_owner_area'
     ];
 
     protected $casts = [
-        "start_date"    => "datetime:d/m/Y"
+        'start_date' => 'datetime:Y-m-d',
+        'end_date' => 'datetime:Y-m-d',
     ];
 
-    public function getOpenAttribute(){
-        return true;
-    }
-
-    public function owner(){
-        return $this->belongsTo(User::class, "user_id");
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function area(): BelongsTo
@@ -32,7 +30,8 @@ class Task extends Model
         return $this->belongsTo(Area::class);
     }
 
-    public function getTaskOwnerAttribute(){
+    public function getTaskOwnerAttribute()
+    {
         return $this->owner->name;
     }
 

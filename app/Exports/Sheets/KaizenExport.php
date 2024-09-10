@@ -45,4 +45,15 @@ class KaizenExport implements FromQuery, WithMapping, WithHeadings, ShouldAutoSi
     {
         return 'Kaizen';
     }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle('A1:B1')->getFont()->setBold(true);
+
+        $sheet->getStyle('A1:B1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A1:B1')->getFill()->getStartColor()->setARGB('FFB0C4DE');
+
+        $sheet->getColumnDimension('A')->setWidth(20); 
+        $sheet->getColumnDimension('B')->setWidth(30); 
+    }
 }

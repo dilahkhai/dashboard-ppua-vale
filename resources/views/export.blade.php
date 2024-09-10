@@ -32,9 +32,6 @@
               <label for="dateInput">From</label>
             </div>
             <div class="col-md-3">
-              <label for="dateInput">To</label>
-            </div>
-            <div class="col-md-3">
               <label for="dateInput">Area</label>
             </div>
           </div>
@@ -42,11 +39,6 @@
             <div class="col-md-3">
               <div class="form-group">
                 <input type="date" name="from" class="form-control" id="dateInput">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <input type="date" name="to" class="form-control" id="dateInput">
               </div>
             </div>
             <div class="col-md-3">

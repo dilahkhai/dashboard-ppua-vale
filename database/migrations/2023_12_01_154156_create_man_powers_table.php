@@ -20,28 +20,28 @@ class CreateManPowersTable extends Migration
             $table->date('date');
             
             // Crew data
-            $table->unsignedInteger('crew_total')->nullable();
-            $table->unsignedInteger('crew_total_man')->nullable();
-            $table->unsignedInteger('crew_leave')->nullable();
-            $table->unsignedInteger('crew_leave_man')->nullable();
-            $table->unsignedInteger('crew_sick_leave')->nullable();
-            $table->unsignedInteger('crew_sick_leave_man')->nullable();
-            $table->unsignedInteger('crew_mcu')->nullable();
-            $table->unsignedInteger('crew_mcu_man')->nullable();
-            $table->unsignedInteger('crew_total_power')->nullable();
-            $table->unsignedInteger('crew_total_power_man')->nullable();
+            $table->integer('crew_total')->nullable();
+            $table->string('crew_total_man')->nullable();
+            $table->integer('crew_leave')->nullable();
+            $table->string('crew_leave_man')->nullable();
+            $table->integer('crew_sick_leave')->nullable();
+            $table->string('crew_sick_leave_man')->nullable();
+            $table->integer('crew_mcu')->nullable();
+            $table->string('crew_mcu_man')->nullable();
+            $table->integer('crew_total_power')->nullable();
+            $table->string('crew_total_power_man')->nullable();
             
             // Contractor data
-            $table->unsignedInteger('contractor_total')->nullable();
-            $table->unsignedInteger('contractor_total_man')->nullable();
-            $table->unsignedInteger('contractor_leave')->nullable();
-            $table->unsignedInteger('contractor_leave_man')->nullable();
-            $table->unsignedInteger('contractor_sick_leave')->nullable();
-            $table->unsignedInteger('contractor_sick_leave_man')->nullable();
-            $table->unsignedInteger('contractor_mcu')->nullable();
-            $table->unsignedInteger('contractor_mcu_man')->nullable();
-            $table->unsignedInteger('contractor_total_power')->nullable();
-            $table->unsignedInteger('contractor_total_power_man')->nullable();
+            $table->integer('contractor_total')->nullable();
+            $table->string('contractor_total_man')->nullable();
+            $table->string('contractor_leave')->nullable();
+            $table->string('contractor_leave_man')->nullable();
+            $table->integer('contractor_sick_leave')->nullable();
+            $table->string('contractor_sick_leave_man')->nullable();
+            $table->integer('contractor_mcu')->nullable();
+            $table->Istring('contractor_mcu_man')->nullable();
+            $table->integer('contractor_total_power')->nullable();
+            $table->string('contractor_total_power_man')->nullable();
 
             $table->timestamps();
 

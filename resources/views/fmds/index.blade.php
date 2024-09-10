@@ -2,7 +2,9 @@
 
 @section('css')
 <style>
-  /* Your existing CSS */
+  .calendar-card {
+    margin-right: 20px; /* Menambahkan jarak di sebelah kanan kartu kalender pertama */
+  }
 </style>
 @endsection
 
@@ -31,9 +33,10 @@
   </div>
 
   <div class="row">
-    <div class="container">
+    <div class="container mt-4">
       <div class="row">
-        <div class="card" style="width: 35rem;">
+        <!-- Safety Share Schedule Card -->
+        <div class="card calendar-card" style="width: 35rem;">
           <div class="card-header text-center"><b>Safety Share Schedule</b></div>
           <div class="card-body">
             <div id="calendar"></div>
@@ -81,11 +84,11 @@
               </div>
             </div>
 
-            @if (auth()->user()->role == 'admin')
-            <!-- Delete Schedule Modal -->
+            <!-- Delete Schedule Modal for Safety Share -->
             <div class="modal fade" id="deleteScheduleModal" tabindex="-1" aria-labelledby="deleteScheduleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
-                <form action="#" method="post" id="deleteScheduleForm">
+                @foreach($safetyShares as $safetyShare)
+                <form action="{{ route('safety-share.destroy', $safetyShare->id) }}" method="post" id="deleteScheduleForm">
                   @csrf
                   @method('DELETE')
                   <div class="modal-content">
@@ -97,26 +100,30 @@
                     </div>
                     <div class="modal-body">
                       <div class="form-group">
-                        <label for="employee_name">Employee</label>
-                        <input type="text" class="form-control" name="employee_name" id="employee_name" readonly>
+                        <label for="employee_name">Employee Name</label>
+                        <input type="text" class="form-control" name="employee_name" id="employee_name" value="{{$safetyShare->name}}" readonly>
                       </div>
                       <div class="form-group">
                         <label for="safety_date">Date</label>
-                        <input type="text" name="safety_date" class="form-control" id="safety_date" readonly>
+                        <input type="text" name="safety_date" class="form-control" id="safety_date" value="{{$safetyShare->safetydate}}" readonly>
                       </div>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      @if (auth()->user()->role == 'admin')
                       <button type="submit" class="btn btn-danger">Delete</button>
+                      @endif
                     </div>
                   </div>
                 </form>
+                @endforeach
               </div>
             </div>
-            @endif
+
           </div>
         </div>
 
+        <!-- FMDS 9.0 Schedule Card -->
         <div class="card" style="width: 35rem;">
           <div class="card-header text-center"><b>FMDS 9.0 Schedule</b></div>
           <div class="card-body">
@@ -164,47 +171,50 @@
               </div>
             </div>
 
-            @if (auth()->user()->role == 'admin')
             <!-- Delete FMDS Schedule Modal -->
-             <div class="modal fade" id="deleteFmdsModal" tabindex="-1" role="dialog" aria-labelledby="deleteFmdsModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <form action="#" method="post" id="deleteFmdsForm">
-                    @csrf
-                   @method('DELETE')
-                   <div class="modal-header">
-                    <h5 class="modal-title" id="deleteFmdsModalLabel">Delete FMDS 9.0 Schedule</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group">
+            <div class="modal fade" id="deleteFmdsModal" tabindex="-1" aria-labelledby="deleteFmdsModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                @foreach($fmdsSchedules as $fmdsSchedule)
+                <form action="{{ route('fmds.destroy', $fmdsSchedule->id) }}" method="post" id="deleteFmdsForm">
+                  @csrf
+                  @method('DELETE')
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteFmdsModalLabel">Delete FMDS 9.0 Schedule</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
                         <label for="fmds_area">Area</label>
-                        <input type="text" class="form-control" name="fmds_area" id="fmds_area" readonly>
-                    </div>
-                    <div class="form-group">
+                        <input type="text" class="form-control" name="fmds_area" id="fmds_area" value="{{$fmdsSchedule->area->area}}">
+                      </div>
+                      <div class="form-group">
                         <label for="fmds_date">Date</label>
-                        <input type="text" name="fmds_date" class="form-control" id="fmds_date" readonly>
+                        <input type="text" name="fmds_date" class="form-control" id="fmds_date" value="{{$fmdsSchedule->fmds_date}}">
+                      </div>
                     </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      @if (auth()->user()->role == 'admin')
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                      @endif
+                    </div>
                   </div>
                 </form>
+                @endforeach
               </div>
             </div>
-          </div>
 
-            @endif
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
-   <div class="row">
+  <div class="row">
     <div class="container">
       <div class="card">
         <div class="card-header text-center"><b>Man Power</b></div>
@@ -215,16 +225,16 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="start_date">Start Date</label>
-                  <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate ?? '' }}">
+                  <input type="date" class="form-control" name="start_date" id="start_date" value="{{ $startDate ?? '' }}">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="end_date">End Date</label>
-                  <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate ?? '' }}">
+                  <input type="date" class="form-control" name="end_date" id="end_date" value="{{ $endDate ?? '' }}">
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <button type="submit" class="btn btn-primary">Filter</button>
               </div>
             </div>
@@ -243,9 +253,9 @@
                       <table class="table">
                         <thead>
                           <tr>
-                            <th>Crew</th>
-                            <th>Total</th>
-                            <th>Name</th>
+                            <th width="150px">Vale</th>
+                            <th width="100px">Total</th>
+                            <th width="400px">Name</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -280,9 +290,9 @@
                       <table class="table">
                         <thead>
                           <tr>
-                            <th>Contractor</th>
-                            <th>Total</th>
-                            <th>Name</th>
+                            <th width="150px">Contractor</th>
+                            <th width="100px">Total</th>
+                            <th width="400px">Name</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -343,7 +353,6 @@
     </div>
   </div>
 
-
 </div>
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
@@ -355,7 +364,8 @@
         themeSystem: 'bootstrap',
         initialView: 'dayGridMonth',
         eventClick: function(info) {
-            $('#deleteScheduleModal').modal();
+            console.log("Event clicked:", info.event);  
+            $('#deleteScheduleModal').modal();  
             $.ajax({
                 url: `/safety-share/${info.event.id}`,
                 method: 'get',
@@ -363,6 +373,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
+                    console.log("AJAX response:", response); 
                     $('#employee_name').val(response.name);
                     $('#safety_date').val(response.date);
                     $('#deleteScheduleForm').attr('action', `/safety-share/${response.id}`);
@@ -375,16 +386,16 @@
     });
     calendar.render();
 
-    // Kalender FMDS
     var calendarEl2 = document.getElementById('calendar2');
     var calendar2 = new FullCalendar.Calendar(calendarEl2, {
         events: '{{ route("fmds.source") }}',
         themeSystem: 'bootstrap',
         initialView: 'dayGridMonth',
         eventClick: function(info) {
+          console.log("Event clicked:", info.event);  
             $('#deleteFmdsModal').modal();
             $.ajax({
-                url: `/fmds/${info.event.id}`,
+                url: `fmds/${info.event.id}`,
                 method: 'get',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -401,31 +412,6 @@
         }
     });
     calendar2.render();
-
-    // Mengisi data modal saat tombol delete diklik
-    $('#deleteScheduleModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var employeeName = button.data('employee');
-        var safetyDate = button.data('date');
-
-        var modal = $(this);
-        modal.find('.modal-body #employee_name').val(employeeName);
-        modal.find('.modal-body #safety_date').val(safetyDate);
-        modal.find('#deleteScheduleForm').attr('action', '/safety-share/' + id);
-    });
-
-    $('#deleteFmdsModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var fmdsArea = button.data('area');
-        var fmdsDate = button.data('date');
-
-        var modal = $(this);
-        modal.find('.modal-body #fmds_area').val(fmdsArea);
-        modal.find('.modal-body #fmds_date').val(fmdsDate);
-        modal.find('#deleteFmdsForm').attr('action', '/fmds/' + id);
-    });
   });
 </script>
 @endsection

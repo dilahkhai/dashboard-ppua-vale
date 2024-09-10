@@ -49,8 +49,10 @@ Route::middleware([
     Route::post('/safety-share', [App\Http\Controllers\SafetyShareController::class, 'store'])->name('safety-share.store');
     Route::delete('/safety-share/{id}', [App\Http\Controllers\SafetyShareController::class, 'destroy'])->name('safety-share.destroy');
     Route::get('/safety-share/source', [App\Http\Controllers\SafetyShareController::class, 'source'])->name('safety-share.source');
+    Route::get('/safety-share/{id}', [App\Http\Controllers\SafetyShareController::class, 'show'])->name('safety-share.show');
     Route::get('/manpower/show', [App\Http\Controllers\SafetyShareController::class, 'showManPower'])->name('manpower.show');
-    Route::post('fmds', [App\Http\Controllers\SafetyShareController::class, 'fmdsStore'])->name('fmds.store');
+    Route::post('/fmds', [App\Http\Controllers\SafetyShareController::class, 'fmdsStore'])->name('fmds.store');
+    Route::get('/fmds/{id}', [App\Http\Controllers\SafetyShareController::class, 'fmdsShow'])->name('fmds.show');
     Route::get('/fmds-fmds-schedule/source', [App\Http\Controllers\SafetyShareController::class, 'fmdsSource'])->name('fmds.source');
     Route::delete('/fmds/{id}', [App\Http\Controllers\SafetyShareController::class, 'fmdsDestroy'])->name('fmds.destroy');
 
@@ -157,6 +159,8 @@ Route::middleware([
  
 
     Route::resource('sub-training', SubTrainingController::class)->except(['show']);
+    Route::get('sub-training/{id}', [App\Http\Controllers\SubTrainingController::class, 'done'])->name('sub-training.done');
+
 
     Route::resource('man-power', App\Http\Controllers\ManPowerController::class);
     Route::get('/man-power-history', [App\Http\Controllers\ManPowerController::class, 'history'])->name('man-power.history');

@@ -33,23 +33,21 @@
   @yield('css')
 
   <style>
-    .banner {
-      width: 100%;
-      height: 600px;
-      contain: content;
-    }
-
-    #background-video {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      z-index: -1;
-    }
+    .fullscreen-background {
+    position: relative;
+    width: 100vw; 
+    height: 100vh; 
+    background-image: url('https://akcdn.detik.net.id/community/media/visual/2023/07/29/pt-vale-garap-3-proyek-smelter-senilai-1343-triliun_169.jpeg?w=700&q=90');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    color: white; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
+    padding: 20px;
+  }
 
     p {
       font-family: 'Roboto', sans-serif;
@@ -76,58 +74,108 @@
   </nav>
 
   {{-- Banner --}}
-  <div class="banner d-flex justify-content-center align-items-center">
-    <div class="overflow-hidden">
-      <video id="background-video" autoplay loop muted>
-        <source src="{{asset('video/landing2.mkv')}}" type="video/mp4">
-      </video>
-    </div>
-
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="fullscreen-background">
     <div class="text-middle text-center" style="width:40%;">
-      {{-- <p style="color: white">DON'T LOOK ANY FURTHER, HERE IS THE KEY</p> --}}
+      <p style="color: white">DON'T LOOK ANY FURTHER, HERE IS THE KEY</p>
       <h1 style="color: rgb(255, 210, 9)">Process Plant & Utilities </h1>
       <h1 style="color: rgb(255, 210, 9)">AUTOMATION</h1>
-      {{-- <p style="color: white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim. sed do eiusmod tempor incididunt.</p> --}}
+      <p style="color: white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                    dolore magna aliqua. Ut enim ad minim. sed do eiusmod tempor incididunt.</p>
       <a href="{{url('signin')}}" class="btn btn-custom-color"><span style="color: white">LOGIN</span></a>
     </div>
+    </div>
   </div>
-
+  <br><br>
+  
   {{-- Area Description --}}
-  <h2 class="text-center mb-4">Area Information</h2>
+  <h1 class="text-center mb-4" style="color: rgb(0, 126, 122"><b>Area Information</b></h1>
+  <br><br>
   <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <h4>Process Plant Automation</h4>
-        <p>Update OT Standards of Process Plant Automation area. Perform automation technical supports for Process Plant Automation operation and maintenance groups, Conduct automation studies and automation projects across Process Plant Automation Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
-      </div>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-4">
+            <img src="https://asset-2.tstatic.net/makassar/foto/bank/images/Pabrik-pengolahan-nikel-PT-Vale-Indonesia-Tbk-1-892022.jpg" class="img-fluid" alt="Process Plant Automation">
+        </div>
+        <div class="col-md-8">
+            <h3 style="color: rgb(0, 126, 122)">Process Plant Automation</h3>
+            <p>Update OT Standards of Process Plant Automation area. Perform automation technical supports for Process Plant Automation operation and maintenance groups, Conduct automation studies and automation projects across Process Plant Automation Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
+        </div>
     </div>
-
-    <div class="row mt-4">
-      <div class="col-md-8">
-        <h4>Furnace-Converter</h4>
-        <p>Update OT Standards of Furnace-Converter area. Perform automation technical supports for Furnace-Converter operation and maintenance groups, Conduct automation studies and automation projects across Furnace-Converter Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
-      </div>
+    <br><br>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8 text-right">
+            <h3 style="color: rgb(0, 126, 122)">Furnace-Converter</h3>
+            <p>Update OT Standards of Furnace-Converter area. Perform automation technical supports for Furnace-Converter operation and maintenance groups, Conduct automation studies and automation projects across Furnace-Converter Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://asset-2.tstatic.net/makassar/foto/bank/images/Pabrik-pengolahan-nikel-PT-Vale-Indonesia-Tbk-1-892022.jpg" class="img-fluid" alt="Furnace-Converter">
+        </div>
     </div>
-
-    <div class="row mt-4">
-      <div class="col-md-8">
-        <h4>Infrastructure</h4>
-        <p>Update the IT/OT network standards of the PTVI process plant,  provide technical support for process plant operation, process plant maintenance, process plant technology, process plant engineering & planning related to automation network in all area of process plant.</p>
-      </div>
+    <br><br>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-4">
+            <img src="https://asset-2.tstatic.net/makassar/foto/bank/images/Pabrik-pengolahan-nikel-PT-Vale-Indonesia-Tbk-1-892022.jpg" class="img-fluid" alt="Infrastructure">
+        </div>
+        <div class="col-md-8">
+            <h3 style="color: rgb(0, 126, 122)">Infrastructure</h3>
+            <p>Update the IT/OT network standards of the PTVI process plant, provide technical support for process plant operation, process plant maintenance, process plant technology, process plant engineering & planning related to automation network in all area of process plant.</p>
+        </div>
     </div>
+    <br><br>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8 text-right">
+            <h3 style="color: rgb(0, 126, 122)">Utilities</h3>
+            <p>Update OT Standards of Utilities area. Perform automation technical supports for Utilities operation and maintenance groups, Conduct automation studies and automation projects across Utilities Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://asset-2.tstatic.net/makassar/foto/bank/images/Pabrik-pengolahan-nikel-PT-Vale-Indonesia-Tbk-1-892022.jpg" class="img-fluid" alt="Utilities">
+        </div>
+    </div>
+</div>
 
-    <div class="row mt-4">
-      <div class="col-md-8">
-        <h4>Utilities</h4>
-        <p>Update OT Standards of Utilities area. Perform automation technical supports for Utilities operation and maintenance groups, Conduct automation studies and automation projects across Utilities Area to solve problems, to sustain performance, time-efficient, cost-efficient, workforce-effective, target-oriented, and quality oriented manners.</p>
+
+<footer style="background-color: rgb(0, 126, 122); color: white;" class="mt-5">
+  <div class="container py-4">
+    <div class="row text-center">
+      <!-- Kolom 1: Informasi Perusahaan -->
+      <div class="col-md-4">
+        <h5 style="color: rgb(255, 210, 9);">About Us</h5>
+        <p style="color: rgb(255, 210, 9);">Process Plant & Utilities Automation provides advanced solutions for process plant and utilities operations, focusing on efficiency, quality, and workforce effectiveness.</p>
+      </div>
+
+      <!-- Kolom 3: Follow Us -->
+      <div class="col-md-4 mt-4">
+        <h5 style="color: rgb(255, 210, 9);">Follow Us</h5>
+        <ul class="list-inline">
+          <li class="list-inline-item"><a href="https://www.youtube.com/valeglobal" style="color: rgb(255, 210, 9);"><i class="fab fa-youtube"></i></a></li>
+          <li class="list-inline-item"><a href="https://twitter.com/valeglobal" style="color: rgb(255, 210, 9);"><i class="fab fa-twitter"></i></a></li>
+          <li class="list-inline-item"><a href="https://www.facebook.com/valenobrasil/" style="color: rgb(255, 210, 9);"><i class="fab fa-facebook"></i></a></li>
+          <li class="list-inline-item"><a href="https://www.instagram.com/valeglobal/" style="color: rgb(255, 210, 9);"><i class="fab fa-instagram"></i></a></li>
+          <li class="list-inline-item"><a href="https://www.linkedin.com/company/vale/" style="color: rgb(255, 210, 9);"><i class="fab fa-linkedin-in"></i></a></li>
+        </ul>
+      </div>
+
+      <!-- Kolom 2: Contact Information -->
+      <div class="col-md-4">
+        <h5 style="color: rgb(255, 210, 9);">Contact Us</h5>
+        <ul class="list-unstyled">
+          <li style="color: rgb(255, 210, 9);"><i class="fas fa-map-marker-alt"></i> Main Office Plant Site, Sorowako, Kec. Nuha, Kabupaten Luwu Timur, Sulawesi Selatan 92983</li>
+          <li style="color: rgb(255, 210, 9);"><i class="fas fa-phone"></i> (021) 5249000</li>
+          <li style="color: rgb(255, 210, 9);"><i class="fas fa-envelope"></i> info@automation.com</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <img src="{{ $furconv?->file }}" class="w-100" alt="" style="aspect-ratio: 2/1;">
+  <!-- Copyright -->
+  <div style="background-color: rgb(238, 240, 238);" class="text-center py-3">
+    <p class="mb-0" style="color: rgb(0, 126, 122);">© 2024 Process Plant & Utilities Automation. All Rights Reserved.</p>
+  </div>
+</footer>
 
-  <footer class="mt-5"></footer>
+
+
+
   <!-- jQuery -->
   <script src="{{asset('SelainLogin/plugins/jquery/jquery.min.js')}}"></script>
   <!-- jQuery UI 1.11.4 -->

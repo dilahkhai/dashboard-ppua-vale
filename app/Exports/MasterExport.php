@@ -27,7 +27,8 @@ class MasterExport implements WithMultipleSheets
             new KaizenExport($this->from, $this->to, $this->area),
             new OrganizationExport($this->from, $this->to, $this->area),
             new ProductivityExport($this->from, $this->to, $this->area),
-            new SafetyReportExport($this->from, $this->to)
+            new SafetyReportExport($this->from, $this->to),
+            new ManPowerExport($this->from, $this->to, $this->area)
         ];
     }
 }

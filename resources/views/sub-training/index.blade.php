@@ -77,7 +77,6 @@
                         <form action="{{ route('sub-training.destroy', $row->id) }}" method="post">
                           @csrf
                           @method('delete')
-
                           <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this training status?')">Delete</button>
                         </form>
                       </td>
