@@ -98,9 +98,14 @@ class mcucontroller extends Controller
         $mcu = mcu::find($id);
         $mcu->status = "DONE";
         $mcu->is_due = 0;
-        $mcu->lastmcu = is_null($mcu->nextmcu) ? null : $mcu->nextmcu;
+        $mcu->lastmcu = $request->input('lastmcu');
         $mcu->duedate = is_null($mcu->nextmcu) ? null : Carbon::parse($mcu->nextmcu)->addYear()->toDateString();
-        $mcu->nextmcu = null;
+        $mcu->nextmcu = $request->input('nextmcu');
+        
+        if (!is_null($mcu->nextmcu)) {
+            $mcu->status = "Active";
+         }
+
         $mcu->save();
 
         return redirect('/mcu')->with('done', 'done');
@@ -156,41 +161,43 @@ class mcucontroller extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $superadmin = User::query()
-            ->where('role', 'admin')
-            ->get();
+{
+    $superadmin = User::query()
+        ->where('role', 'admin')
+        ->get();
 
-        $mcu = mcu::find($id);
-        $mcu->lastmcu = $request->input('lastmcu');
-        $mcu->duedate = $request->input('duedate');
-        $mcu->nextmcu = $request->input('nextmcu');
+    $mcu = mcu::find($id);
+    $mcu->lastmcu = $request->input('lastmcu');
+    $mcu->duedate = $request->input('duedate');
+    $mcu->nextmcu = $request->input('nextmcu');
 
-        $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
+    $monthBeforeDueDate = Carbon::parse($mcu->duedate)->subMonth();
 
-        if (now()->isAfter($monthBeforeDueDate)) {
-            $mcu->is_due = 1;
+    if (now()->isAfter($monthBeforeDueDate)) {
+        $mcu->is_due = 1;
 
+        Notification::query()
+            ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Due Date User', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
+
+        foreach($superadmin as $admin) {
             Notification::query()
-                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Due Date User', 'content' => 'Your MCU is on Due Date! Please update next MCU!']);
-
-            foreach($superadmin as $admin) {
-                Notification::query()
-                    ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
-            }
+                ->create(['receiver_id' => $admin->id, 'title' => 'Due Date Superadmin', 'content' => 'An User MCU\'s need an update, please update next MCU!']);
         }
-
-        if ($mcu->nextmcu != null || $mcu->nextmcu != '') {
-            $mcu->is_due = 0;
-
-            Notification::query()
-                ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU User', 'content' => 'You have next MCU updated! Please check!']);
-        }
-
-        $mcu->save();
-
-        return redirect('/mcu')->with('success', 'success');
     }
+
+    if (!is_null($mcu->nextmcu) && $mcu->nextmcu != '') {
+        $mcu->is_due = 0;
+        $mcu->status = 'Active';  
+
+        Notification::query()
+            ->create(['receiver_id' => $mcu->employee_id, 'title' => 'Next MCU User', 'content' => 'You have next MCU updated! Please check!']);
+    }
+
+    $mcu->save();
+
+    return redirect('/mcu')->with('success', 'success');
+}
+
 
     /**
      * Remove the specified resource from storage.

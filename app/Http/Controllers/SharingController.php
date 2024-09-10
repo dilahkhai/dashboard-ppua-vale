@@ -18,7 +18,9 @@ class SharingController extends Controller
         $areas = Area::query()
             ->get();
 
-        return view('sharing.index', compact('areas'));
+        $sharings = Sharing::with('employee')->get();
+
+        return view('sharing.index', compact('areas', 'sharings'));
     }
 
     public function store(Request $request)
@@ -31,21 +33,22 @@ class SharingController extends Controller
 
     public function storeFile(Request $request)
     {
-        $sharing = Sharing::query()
-            ->where('sharing_date', Carbon::parse($request->sharing_date)->toDateString())
-            ->firstOrFail();
+        $sharing = Sharing::where('sharing_date', $request->sharing_date)->firstOrFail();
+        
+        if ($request->hasFile('file')) {
+            if ($sharing->file && Storage::exists($sharing->file)) {
+                Storage::delete($sharing->file);
+            }
 
-        if ($sharing?->file && File::exists($sharing?->file)) {
-            File::delete($sharing->file);
+            $filename = Str::snake($sharing->employee->name . Carbon::parse($request->sharing_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
+            $path = $request->file('file')->storePubliclyAs('public/sharing_file', $filename);
+            
+            $sharing->update([
+                'file' => Storage::url($path),
+            ]);
         }
 
-        $filename = Str::snake($sharing->employee->name . Carbon::parse($request->sharing_date)->toDateString()) . '.' . $request->file('file')->getClientOriginalExtension();
-
-        $request->file('file')->storePubliclyAs('public/sharing_file', $filename);
-
-        $sharing->update(['file' => 'storage/sharing_file/' . $filename]);
-
-        return back()->with('success', 'File saved!');
+        return redirect()->route('sharing-schedule.index')->with('success', 'File uploaded successfully.');
     }
 
     public function destroy(Sharing $sharing)
@@ -76,15 +79,15 @@ class SharingController extends Controller
         return response()->json($oncall);
     }
 
-    public function sourceDetail()
+    public function sourceDetail(Request $request)
     {
-        $sharing = Sharing::query()
-            ->with('employee')
-            ->where('sharing_date', Carbon::parse(request('sharing_date'))->format('Y-m-d'))
-            ->first();
-
-        $isOwner = Auth::user()->id === $sharing?->user_id;
-
-        return response()->json(['sharing' => $sharing, 'isOwner' => $isOwner]);
+        $sharingDate = $request->query('sharing_date');
+        $sharing = Sharing::with('employee')->where('sharing_date', $sharingDate)->first();
+        $isOwner = auth()->user()->role == 'admin';
+         
+        return response()->json([
+            'isOwner' => $isOwner,
+            'employee' => $sharing ? $sharing->employee : null,
+        ]);
     }
 }

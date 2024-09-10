@@ -104,6 +104,26 @@
     .added-right {
       text-align: center;
     }
+
+    .notification-content {
+    max-height: 500px; 
+    overflow-y: auto; 
+    overflow-x: hidden; 
+  }
+  
+  .notification-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .notification-content::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 10px; 
+  }
+
+  .notification-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1; 
+  }
+
   </style>
   @yield('css')
 
@@ -145,20 +165,26 @@
       <li class="nav-item dropdown show">
         <a class="nav-link" data-toggle="dropdown" href="#" id="notification-button" aria-expanded="true">
           <i class="fas fa-bell"></i>
-          <span class="badge badge-danger" id="unread-count">{{ $notifications->filter(fn ($notification) => !$notification->is_read)->count() }}</span>
+          @php
+            $unreadCount = $notifications->filter(fn ($notification) => !$notification->is_read)->count();
+          @endphp
+          @if($unreadCount > 0)
+            <span class="badge badge-danger" id="unread-count">{{ $unreadCount }}</span>
+          @endif
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
           <span class="dropdown-item dropdown-header">Notifications</span>
           <div class="dropdown-divider"></div>
-
-          @foreach ($notifications as $notification)
-          <div class="dropdown-item">
-            <span>{{ $notification->created_at->format('d/m/Y H:i') }}</span>
-            <h5>{{ $notification->title }}</h5>
-            <p>{{ $notification->content }}</p>
+          <div class="notification-content">
+            @foreach ($notifications as $notification)
+            <div class="dropdown-item">
+              <span>{{ $notification->created_at->format('d/m/Y H:i') }}</span>
+              <h5>{{ $notification->title }}</h5>
+              <p>{{ $notification->content }}</p>
+            </div>
+            <div class="dropdown-divider"></div>
+            @endforeach
           </div>
-          <div class="dropdown-divider"></div>
-          @endforeach
         </div>
       </li>
       <li class="nav-item dropdown show">
@@ -243,7 +269,12 @@
               <p>Main Project</p>
             </a>
           </li>
-
+          <li class="nav-item">
+            <a href="{{url('issue')}}" class="nav-link {{  Request::is('issue') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-tasks"></i>
+              <p>Issue</p>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="{{url('key-performance-index')}}" class="nav-link {{  Request::is('key-performance-index') ? 'active' : '' }}">
               <i class="nav-icon fas fa-tasks"></i>
@@ -338,7 +369,7 @@
             </a>
           </li>
           @endif
-          @if(Auth::user()->role == 'admin')
+          @if(Auth::user()->isAdmin || Auth::user()->isLeader)
           <li class="nav-item {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{  Request::is('inputfurconv') || Request::is('inputdryerkiln') || Request::is('inputinfra') || Request::is('inpututl') || Request::is('import-excel')  ? 'active' : '' }}">
               <i class="nav-icon fas fa-copy"></i>
@@ -386,7 +417,7 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  @if(Auth::user()->role=='admin')
+                 @if(Auth::user()->isAdmin || Auth::user()->isLeader)
                   <li class="nav-item">
                     <a href="/import-excel" class="nav-link {{  Request::is('import-excel') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
@@ -394,7 +425,7 @@
                     </a>
                   </li>
                   @endif
-                  @if(Auth::user()->role=='admin')
+                  @if(Auth::user()->isAdmin || Auth::user()->isLeader)
                   <li class="nav-item">
                     <a href="/export-excel" class="nav-link {{  Request::is('export-excel') ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>

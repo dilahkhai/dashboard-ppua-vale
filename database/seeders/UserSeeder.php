@@ -38,7 +38,16 @@ class UserSeeder extends Seeder
                 'area_id' => 2,
                 'confirmpassword' => '12341234',
 
-            ]
+            ],
+
+            [
+                'username' => 'leader',
+                'name' => 'leader',
+                'password' => Hash::make('leader123'),
+                'role' => 'leader',
+                'area_id' => 1,
+                'confirmpassword' => 'leader123',
+            ],
 
         ]);
     }

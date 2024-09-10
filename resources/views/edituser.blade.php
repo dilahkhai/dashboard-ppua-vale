@@ -58,8 +58,9 @@
                 <div class="form-group">
                   <label for="exampleInputPassword1">Role</label>
                   <select class="form-control" required name="role" id="">
-                    <option value="admin" {{ $data->role == 'admin' ? 'selected' : '' }}>Super Admin</option>
+                    <option value="admin" {{ $data->role == 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="user" {{ $data->role == 'user' ? 'selected' : '' }}>User</option>
+                    <option value="leader" {{ $data->role == 'leader' ? 'selected' : '' }}>Leader</option>
                   </select>
                 </div>
                 <div class="form-group">

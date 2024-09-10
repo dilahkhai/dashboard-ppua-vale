@@ -16,7 +16,6 @@ class ManPowerController extends Controller
         $today = today()->toDateString();
 
         foreach ($areas as $area) {
-            // Periksa apakah ada entri dengan area_id dan date yang sama
             $existingManPower = ManPower::query()
                 ->where('area_id', $area->id)
                 ->whereDate('date', $today)

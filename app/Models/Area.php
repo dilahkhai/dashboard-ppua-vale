@@ -35,8 +35,18 @@ class Area extends Model
         return $this->hasMany(ManPower::class, 'area_id');
     }
 
+    public function task(): HasMany
+    {
+        return $this->hasMany(Task::class, 'area_id');
+    }
+
+    public function issue(): HasMany
+    {
+        return $this->hasMany(Issue::class, 'area_id');
+    }
+
     public function fmdsschedules(): HasMany
     {
-        return $this->hasMany(ManPower::class, 'area_id');
+        return $this->hasMany(FmdsSchedule::class, 'area_id');
     }
 }

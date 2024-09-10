@@ -7,7 +7,7 @@
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
+      <div class="simper mb-2">
         <div class="col-sm-6">
           <h1>SIM Status</h1>
         </div>
@@ -28,7 +28,7 @@
 
   <section class="content">
     <div class="container-fluid">
-      <div class="row">
+      <div class="simper">
         <div class="col-12">
           <div class="card">
             @if (auth()->user()->role == 'admin')
@@ -53,17 +53,22 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @forelse ($trainings as $training)
+                    @forelse ($simpers as $simper)
                     <tr>
-                      <td>{{ $training->employee->area->area }}</td>
-                      <td>{{ $training->employee->name }}</td>
-                      <td>{{ $training->certif_date->format('d/m/Y') }}</td>
-                      <td>{{ $training->status_text }}</td>
-                      <td>{{ $training->sim_update }}</td>
+                      <td>{{ $simper->employee->area->area }}</td>
+                      <td>{{ $simper->employee->name }}</td>
+                      <td>{{ $simper->certif_date->format('d/m/Y') }}</td>
+                      <td class="
+                        @if ($simper->status == 1) text-success
+                        @elseif ($simper->status == 2) text-warning
+                        @elseif ($simper->status == 3) text-danger
+                        @endif
+                      ">{{ $simper->statusText }}</td>
+                      <td>{{ $simper->sim_update->format('d/m/Y') }}</td>
                       @if (auth()->user()->role == 'admin')
                       <td class="d-flex">
-                        <a href="{{ route('simper.edit', $training->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
-                        <form action="{{ route('simper.destroy', $training->id) }}" method="post">
+                        <a href="{{ route('simper.edit', $simper->id) }}" class="btn btn-sm btn-success mr-3">Edit</a>
+                        <form action="{{ route('simper.destroy', $simper->id) }}" method="post">
                           @csrf
                           @method('delete')
                           <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this sim status?')">Delete</button>

@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group">
                   <label for="training_schedule">Training Schedule</label>
-                  <input type="date" class="form-control" name="training_schedule" id="training_schedule" value="{{ $subTraining->training_schedule }}">
+                  <input type="date" class="form-control" name="training_schedule" id="training_schedule" value="{{ $subTraining->training_schedule->format('Y-m-d') }}">
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Submit</button>

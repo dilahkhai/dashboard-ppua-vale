@@ -44,7 +44,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Main Project</h1>
+                    <h1 class="m-0">Project Issues</h1>
                 </div>
             </div>
         </div>
@@ -59,7 +59,6 @@
 <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
 
 <script type="text/javascript">
-        // Menyiapkan mapping ID ke nama
         const userMap = {
             @foreach ($users as $userGroup)
                 @foreach ($userGroup as $user)
@@ -91,8 +90,7 @@
             {unit: "day", step: 1, format: "%D, %d"}
         ];
 
-
-        gantt.templates.task_class = function (start, end, task) {
+        gantt.templates.task_class = function (start, end, issue) {
             var totalDays = Math.ceil(end - start); 
             var currentDate = new Date(); 
             var daysPassed = Math.ceil(currentDate - start); 
@@ -102,7 +100,7 @@
             }
 
             var expectedProgress = (daysPassed / totalDays) * 100; 
-            var actualProgress = task.progress * 100; 
+            var actualProgress = issue.progress * 100; 
             if (actualProgress >= 100) {
                 return "gantt_progress_green"; 
                 } else if (actualProgress >= expectedProgress) {
@@ -110,14 +108,13 @@
                 } else {
                         return "gantt_progress_red"; 
                 }
-            };
+        };
 
-
-        gantt.templates.task_text = function(start, end, task) {
+        gantt.templates.task_text = function(start, end, issue) {
             let statusText;
-            const progressPercentage = Math.round(task.progress * 100);
+            const progressPercentage = Math.round(issue.progress * 100);
             const today = new Date();
-            const endDate = new Date(task.end_date);
+            const endDate = new Date(issue.end_date);
 
             if (progressPercentage === 100) {
                 statusText = "Completed";
@@ -133,61 +130,41 @@
         };
 
         gantt.config.columns = [
-            { name: "name", label: "Task Name", align: "left", width: 300, tree: true },
-            { name: "user_id", label: "Owner", align: "center", width: 150, template: function(task) {
-                return userMap[task.user_id] || "Unknown";
+            { name: "issue", label: "Issue Name", align: "center", width: 150 },
+            { name: "action", label: "Action", align: "center", width: 300 },
+            { name: "area_id", label: "Area", align: "center", width: 100, template: function(issue) {
+                return areaMap[issue.area_id] || "Unknown Area";  
+                }},
+            { name: "user_id", label: "Owner", align: "center", width: 150, template: function(issue) {
+                return userMap[issue.user_id] || "Unknown";
             }},
             { name: "start_date", label: "Start Date", align: "center", width: 100 },
-            { name: "end_date", label: "End Date", align: "center", width: 100 },
             { name: "add", label: "", width: 44 }
         ];
 
         gantt.locale.labels.section_owner = "Owner";
-        gantt.locale.labels.section_name = "Task Name";
-        gantt.locale.labels.section_progress = "Progress";
+        gantt.locale.labels.section_issue = "Issue Name";
+        gantt.locale.labels.section_action = "Action for Issue";
         gantt.locale.labels.section_area_id = "Area";
         
         gantt.config.lightbox.sections = [
-            { name: "name", label: 'Task Name', height: 30, map_to: "name", type: "textarea", id: "task_name", focus: true },
+            { name: "issue", label: 'Issue Name', map_to: "issue", type: "textarea", height: 30, id: "issue_name", focus: true },
+            { name: "action", label: 'Action', map_to: "action", type: "textarea", height: 50, id: "issue_action",},
             { name: "time", type: "duration", map_to: "auto", id: "time_duration" },
-            { name: "area_id", label: 'Area', type: "select", map_to: "area_id", id: "area_id", options: [
-                @foreach ($areas as $area)
-                { key: '{{ $area->id }}', label: '{{ $area->area }}' },
-                @endforeach
-            ]},
-            { name: "owner", label: 'Owner', type: "select", map_to: "user_id", id: "user_id", options: [
-                @foreach ($users as $userGroup)
-                @foreach ($userGroup as $user)
-                { key: '{{ $user->id }}', label: '{{ $user->name }}' },
-                @endforeach
-                @endforeach
-            ]}
+            { name: "area_id", label: 'Area', map_to: "area_id", type: "select", options: Object.keys(areaMap).map(id => ({ key: id, label: areaMap[id] })) },
+            { name: "user_id", label: 'Owner', map_to: "user_id", type: "select", options: Object.keys(userMap).map(id => ({ key: id, label: userMap[id] })) },
         ];
 
-        gantt.attachEvent("onBeforeRowDragMove", function (id, parentId, tindex) {
-            if (parentId) {
-                const parent = gantt.getTask(parentId);
-                if (parent.type != "project") {
-                    return false;
-                }
-            }
-            return true
-        });
-
-        gantt.config.open_tree_initially = true;
-        gantt.config.order_branch = "marker";
-        gantt.config.order_branch_free = true;;
-        gantt.config.auto_types = true;
 
         gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
         gantt.config.order_branch = true;
         gantt.config.order_branch_free = true;
         gantt.init("gantt_here");
         
-        gantt.load("/api/data-project");
-        
+        gantt.load("/api/data-issues");
+
         const dp = gantt.createDataProcessor({
-            url: "/api/",
+            url: "/",
             mode: "REST",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -201,4 +178,3 @@
 
 @endpush
 @endsection
-

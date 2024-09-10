@@ -73,7 +73,6 @@
 @push('scripts')
 <script>
   function fetchDataAndPopulate(selectedId) {
-    // Assuming you have an API endpoint that returns data based on the selected ID
     const apiUrl = `/tambahmcu?id=${selectedId}`;
 
     // Perform a fetch request to the API

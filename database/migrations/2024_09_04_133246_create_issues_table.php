@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("area_id")->nullable();
-            $table->string('name');
             $table->unsignedBigInteger('user_id');
-            $table->enum('priority', ["Low","Med","High"]);
+            $table->string('issue');
+            $table->string('action');
             $table->dateTime('end_date');
             $table->dateTime('start_date');
-            $table->unsignedInteger('progress');
-            $table->enum('status', ["Not Started","In Progress", "Complete", "Overdue"]);
             $table->timestamps();
 
 
@@ -47,6 +45,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('issues');
     }
 };

@@ -183,66 +183,93 @@
 
     <!-- Include your scripts here -->
     <script type="text/javascript"> 
-      gantt.config.readonly = true;
-      gantt.config.grid_width = 600;
-      gantt.config.date_format = "%Y-%m-%d %H:%i"; 
+     const userMap = {
+            @foreach ($users as $userGroup)
+                @foreach ($userGroup as $user)
+                    '{{ $user->id }}': '{{ $user->name }}',
+                @endforeach
+            @endforeach
+        };
+        
+        gantt.config.scale_unit = "week"; 
+        gantt.config.step = 1; 
+        gantt.config.subscales = [
+            { unit: "day", step: 1, date: "%d" } 
+        ];
 
-      gantt.config.columns = [
-        { name: "task_owner", label: "Owner", align: "center"},
-        { name: "priority", label: "Priority", align: "center" },
-        { name: "start_date", label: "Start time", align: "center" },
-        { name: "end_date", label: "End time", align: "center" },
-        { name: "status", label: "Status", align: "center"},
-        { name: "progress", label: "Progress", align: "center"}
-      ];
-  
-      gantt.templates.task_text = function(start, end, task) {
-        return `<span style="color: rgb(136, 136, 136); font-weight: bold">${task.name} - ${task.status} (${task.progress}%)</span>`;
-      };
+        gantt.templates.task_class = function (start, end, task) {
+            var progressPercentage = task.progress * 100;
+        
+            if (progressPercentage < 70) {
+                return "gantt_progress_red";
+            } else if (progressPercentage < 100) {
+                return "gantt_progress_yellow";
+            } else {
+                return "gantt_progress_green";
+            }
+        };
 
-      gantt.templates.task_class = function(start, end, task) {
-        if (task.status == "Not Started") {
-          return "gantt-orange";
-        } else if (task.status == "In Progress") {
-          return "gantt-amber";
-        } else if (task.status == "Complete") {
-          return "gantt-green";
-        } else if (task.status == "Overdue") {
-          return "gantt-blue";
-        }
-      };
+        gantt.templates.task_text = function(start, end, task) {
+            let statusText;
+            const progressPercentage = Math.round(task.progress * 100);
+            const today = new Date();
+            const endDate = new Date(task.end_date);
 
-      gantt.config.scales = [
-        { unit: "month", step: 1, format: "%F %Y" },
-        { unit: "day", step: 1, format: "%j %D" }
-      ];
+            if (progressPercentage === 100) {
+                statusText = "Completed";
+            } else if (progressPercentage === 0) {
+                statusText = "Not Started";
+            } else if (today > endDate) {
+                statusText = "Overdue";
+            } else {
+                statusText = "On Progress";
+            }
+            
+            return "<strong style='color: black;'>" + progressPercentage + "% - " + statusText + "</strong>";
+        };
 
-      gantt.init("gantt_here");
+        gantt.config.columns = [
+            { name: "name", label: "Task Name", align: "left", width: 300, tree: true },
+            { name: "user_id", label: "Owner", align: "center", width: 150, template: function(task) {
+                return userMap[task.user_id] || "Unknown";
+            }},
+            { name: "start_date", label: "Start Date", align: "center", width: 100 },
+            { name: "end_date", label: "End Date", align: "center", width: 100 },
+        ];
 
-      fetch("/api/data-infra?user_id={{ auth()->user()->id }}")
+        gantt.locale.labels.section_owner = "Owner";
+        gantt.locale.labels.section_name = "Task Name";
+        gantt.locale.labels.section_progress = "Progress";
+
+        gantt.attachEvent("onBeforeRowDragMove", function (id, parentId, tindex) {
+            if (parentId) {
+                const parent = gantt.getTask(parentId);
+                if (parent.type != "project") {
+                    return false;
+                }
+            }
+            return true
+        });
+
+        gantt.config.open_tree_initially = true;
+        gantt.config.order_branch = "marker";
+        gantt.config.order_branch_free = true;;
+        gantt.config.auto_types = true;
+
+
+        gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
+        gantt.config.order_branch = true;
+        gantt.config.order_branch_free = true;
+        gantt.init("gantt_here");
+
+      fetch("/api/data-infra?user_id={{ auth()->id() }}")
       .then(response => response.json())
       .then(data => {
         const tasks = data.data;
 
-        const ongoingTasks = tasks.filter(task => task.status !== "Complete");
-        const completedTasks = tasks.filter(task => task.status === "Complete");
+        const ongoingTasks = tasks;
 
         gantt.parse({ data: ongoingTasks });
-
-        const tableBody = document.querySelector("#completed_tasks_table tbody");
-        tableBody.innerHTML = "";
-        completedTasks.forEach(task => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.name}</td>
-            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.task_owner_area}</td>
-            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.task_owner}</td>
-            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.start_date}</td>
-            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.end_date}</td>
-            <td style="background-color: rgb(236, 236, 236); color: rgb(136, 135, 135);">${task.status}</td>
-          `;
-          tableBody.appendChild(row);
-        });
       });
     </script>
 

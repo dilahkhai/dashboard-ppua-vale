@@ -15,16 +15,21 @@ class DashboardUtLController extends Controller
 {
     public function index(Request $request)
     {
+        $users = User::query()
+            ->with('area')
+            ->get()
+            ->groupBy('area_id');
+
         // Ambil data employee berdasarkan area_id
         $employees = User::with(['safety_reports', 'working_time_per_week', 'statusperday', 'manhours'])
             ->whereHas('area', function ($query) {
                 $query->where('id', 4); // Pastikan menggunakan kolom ID jika area_id adalah ID
             })
             ->withCount(['tasks as finished_tasks' => function ($query) {
-                $query->where('status', 'Complete');
+                $query->where('progress', 1);
             }])
             ->withCount(['tasks as unfinished_tasks' => function ($query) {
-                $query->whereNot('status', 'Complete');
+                $query->whereNot('progress', 1);
             }])
             ->get();
 
@@ -147,6 +152,7 @@ class DashboardUtLController extends Controller
         $statusMcu = ($mcuDone / $mcuCount) * 100;
 
         return view('dashboardutl')->with([
+            'users' => $users,
             'kaizen' => $Kaizen,
             'statusMcu' => $statusMcu,
             'employees' => $employees,

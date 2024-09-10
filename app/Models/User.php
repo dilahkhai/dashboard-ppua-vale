@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->hasMany(Task::class);
     }
 
+    public function issue(): HasMany
+    {
+        return $this->hasMany(issue::class);
+    }
+
     public function safety_reports()
     {
         return $this->hasMany(SafetyReport::class, 'employee_id');
@@ -97,6 +102,11 @@ class User extends Authenticatable
         return $this->hasMany(OnCallAutomation::class, 'user_id');
     }
 
+    public function wfh(): HasMany
+    {
+        return $this->hasMany(WorkFromHomeRooster::class, 'initial');
+    }
+
     public function leaves(): HasMany
     {
         return $this->hasMany(EmployeeLeave::class, 'user_id');
@@ -120,6 +130,13 @@ class User extends Authenticatable
     {
         return Attribute::get(function () {
             return $this->role == 'admin';
+        });
+    }
+
+    public function isLeader(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->role == 'leader';
         });
     }
 }

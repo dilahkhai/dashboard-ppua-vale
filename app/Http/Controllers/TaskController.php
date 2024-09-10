@@ -2,106 +2,106 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
-use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Area;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        return view("MainProject");
-    }
-
-    public function get()
-{
-    $user = User::find(request('user_id'));
-    $tasks = Task::with("owner")
-        ->when($user->role != 'admin', function ($query) use ($user) {
-            $query->whereBelongsTo($user, 'owner');
-        })
-        ->get();
-
-    // Mengonversi tanggal ke format yang diharapkan oleh Gantt Chart
-    $tasks = $tasks->map(function ($task) {
-        return [
-            'id' => $task->id,
-            'name' => $task->name,
-            'start_date' => $task->start_date->format('Y-m-d H:i'),
-            'end_date' => $task->end_date->format('Y-m-d H:i'),
-            'progress' => $task->progress,
-            'status' => $task->status,
-            'priority' => $task->priority,
-            'task_owner' => $task->task_owner,
-            'task_owner_area' => $task->task_owner_area,
-        ];
-    });
-
-    return response()->json([
-        "data" => $tasks
-    ]);
-}
-
-
-    public function manageTask()
-    {
-        $task = Task::with("owner")
-            ->when(Auth::user()->role != 'admin', function ($query) {
-                $query->whereBelongsTo(Auth::user(), 'owner');
-            })->get();
-
-        $list_user = User::pluck("name", "id");
         $areas = Area::all();
 
-        return view("ManageMainProject")->with([
-            "tasks" => $task,
-            "list_user" => $list_user,
-            'areas' => $areas
+        $users = User::query()
+            ->with('area')
+            ->get()
+            ->groupBy('area_id');
+
+        return view('MainProject', compact('users', 'areas'));
+    }
+    
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'user_id' => 'required|integer',
+            'area_id' => 'required|integer',
+            'progress' => 'required|numeric',
+            'parent' => 'nullable|integer', 
+        ]);
+    
+        $task = new Task($validated);
+        $task->sortorder = Task::max("sortorder") + 1;
+        $task->save();
+    
+        return response()->json([
+            "action"=> "inserted",
+            "tid" => $task->id
         ]);
     }
-
-
-    public function storeTask(Request $request)
-    {
-        $task = new Task;
-        $task->name = $request->get("name");
-        $task->area_id = Auth::user()->role == 'admin' ? $request->get('area_id') : Auth::user()->area_id;
-        $task->user_id = Auth::user()->role == 'admin' ? $request->get("owner") : Auth::user()->id;
-        $task->priority = $request->get("priority");
-        $task->end_date = Carbon::createFromFormat('Y-m-d', $request->get("end_date"));
-        $task->start_date = Carbon::createFromFormat('Y-m-d', $request->get("start_date"));
-        $task->status = $request->get("status");
-        $task->progress = $request->get("progress", 0);
-        $task->created_at = Carbon::now();
-        $task->save();
-        return redirect()->route('tasks.manage')->with('success', 'Task Added Successfully!');
-    }
     
-    public function updateTask(Request $request)
+
+    public function update(Request $request, $id)
     {
-        if (is_array($request->get("id"))) {
-            foreach ($request->get("id") as $index => $task_id) {
-                Task::where("id", $task_id)->update([
-                    "name" => $request->get("name")[$index],
-                    "area_id" => Auth::user()->role == 'admin' ? $request->get("area_id")[$index] : Auth::user()->area_id,
-                    "user_id" => Auth::user()->role == 'admin' ? $request->get("owner")[$index] : Auth::user()->id,
-                    "priority" => $request->get("priority")[$index],
-                    "end_date" => Carbon::createFromFormat('Y-m-d', $request->get("end_date")[$index]),
-                    "start_date" => Carbon::createFromFormat('Y-m-d', $request->get("start_date")[$index]),
-                    "status" => $request->get("status")[$index],
-                    "progress" => $request->get("progress")[$index],
-                    "updated_at" => Carbon::now(),
-                ]);
-            }
-            return redirect()->route('tasks.index')->with('success', 'Tasks Updated Successfully!');
-        } else {
-            return redirect()->route('tasks.index')->with('error', 'Invalid data provided.');
+        $task = Task::find($id);
+    
+        if (!$task) {
+            return response()->json(['error' => 'Task not found'], 404);
         }
-    }
     
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'user_id' => 'required|integer',
+            'progress' => 'required|numeric',
+            'parent' => 'nullable|integer', 
+        ]);
+    
+        $task->name = $validated['name'];
+        $task->start_date = $validated['start_date'];
+        $task->end_date = $validated['end_date'];
+        $task->user_id = $validated['user_id'];
+        $task->progress = $validated['progress'];
+        if($request->has("target")){
+            $this->updateOrder($id, $request->target);
+        }
+        $task->save();
+    
+        return response()->json(['action' => 'updated']);
+    }
 
+    private function updateOrder($taskId, $target){
+        $nextTask = false;
+        $targetId = $target;
+     
+        if(strpos($target, "next:") === 0){
+            $targetId = substr($target, strlen("next:"));
+            $nextTask = true;
+        }
+     
+        if($targetId == "null")
+            return;
+     
+        $targetOrder = Task::find($targetId)->sortorder;
+        if($nextTask)
+            $targetOrder++;
+     
+        Task::where("sortorder", ">=", $targetOrder)->increment("sortorder");
+     
+        $updatedTask = Task::find($taskId);
+        $updatedTask->sortorder = $targetOrder;
+        $updatedTask->save();
+    }
 
+    public function destroy($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->delete();
+
+        return response()->json(['message' => 'Task deleted successfully.']);
+    }
 }

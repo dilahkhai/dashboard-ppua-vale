@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-class Task extends Model
+class Issue extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'issue',
         'start_date',
         'end_date',
         'user_id',
         'progress',
-        'status',
-        'parent',
+        'action',
         'area_id', 
     ];
 
     // Relasi ke model User
-    public function owner()
+    public function pic()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -32,11 +30,5 @@ class Task extends Model
     {
         return $this->belongsTo(Area::class, 'area_id');
     }
-
-    // Relasi ke parent task
-    public function parentTask()
-    {
-        return $this->belongsTo(Task::class, 'parent');
-    }
-
 }
+

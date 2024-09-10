@@ -80,7 +80,7 @@ class SubTrainingController extends Controller
 
     $certifExpired = Carbon::parse($subTraining->certif_date)->addYear();
     $oneMonthBeforeExpiration = $certifExpired->subMonth();
-    $subTraining->training_schedule = Carbon::parse($subTraining->certif_date)->addMonths(11);
+    $subTraining->training_schedule = Carbon::parse($subTraining->certif_date)->addMonths(12);
 
     if (now()->greaterThanOrEqualTo($certifExpired)) {
         $subTraining->status = 3; // Expired

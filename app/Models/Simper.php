@@ -15,7 +15,8 @@ class Simper extends Model
 
     protected $casts = [
         'certif_date' => 'datetime',
-        'training_schedule' => 'datetime'
+        'training_schedule' => 'datetime',
+        'sim_update' => 'datetime',
     ];
 
     public function employee(): BelongsTo

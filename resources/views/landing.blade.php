@@ -89,7 +89,7 @@
   <br><br>
   
   {{-- Area Description --}}
-  <h1 class="text-center mb-4" style="color: rgb(0, 126, 122"><b>Area Information</b></h1>
+  <h1 class="text-center mb-4" style="color: rgb(0, 126, 122)"><b>Area Information</b></h1>
   <br><br>
   <div class="container">
     <div class="row align-items-center mb-4">

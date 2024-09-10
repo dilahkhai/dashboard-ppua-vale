@@ -17,6 +17,11 @@ class dashboardinfracontroller extends Controller
 {
     public function index(Request $request)
     {
+        $users = User::query()
+            ->with('area')
+            ->get()
+            ->groupBy('area_id');
+
         $employee = User::query()
             ->with(["safety_reports" => function ($query) {
                 $query
@@ -68,10 +73,10 @@ class dashboardinfracontroller extends Controller
                     });
             }])
             ->withCount(['tasks as finished_tasks' => function ($query) {
-                $query->where('status', 'Complete');
+                $query->where('progress', 1);
             }])
             ->withCount(['tasks as unfinished_tasks' => function ($query) {
-                $query->whereNot('status', 'Complete');
+                $query->whereNot('progress', 1);
             }])
             ->whereHas("area", function ($query) {
                 $query->where("area", "Infrastructure");
@@ -197,6 +202,7 @@ class dashboardinfracontroller extends Controller
         $StatusMcu = ($mcuDone / $mcuCount) * 100;
 
         return view('dashboardinfra')->with([
+            "users" => $users,
             "kaizen"    => $Kaizen,
             "statusMcu" => $StatusMcu,
             "employees" => $employee,

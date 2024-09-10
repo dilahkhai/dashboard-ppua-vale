@@ -144,110 +144,106 @@
 @push('scripts')
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      events: '{{ route("sharing-schedule.source") }}',
-      themeSystem: 'bootstrap',
-      initialView: 'dayGridMonth',
-      eventClick: function(info) {
-        $('#exampleModal').modal()
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    events: '{{ route("sharing-schedule.source") }}',
+    themeSystem: 'bootstrap',
+    initialView: 'dayGridMonth',
+    eventClick: function(info) {
+      $('#exampleModal').modal('show'); 
 
-        $.ajax({
-          'url': `/sharing-schedule-source-detail?sharing_date=${new Date(info.event.start).toLocaleDateString()}`,
-          'method': 'get',
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          'success': function(response) {
-            if (response?.isOwner) {
-              $('#modalContent').empty()
+      $.ajax({
+        url: `/sharing-schedule-source-detail?sharing_date=${encodeURIComponent(new Date(info.event.start).toISOString().split('T')[0])}`,
+        method: 'get',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+          console.log(response); 
 
-              $('#modalContent').append(`<form action="{{ route('sharing-schedule.store-file') }}" method="post" enctype="multipart/form-data">
-                  @csrf
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Set Sharing File</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <input type="hidden" name="sharing_date" id="sharing_date">
+          $('#modalContent').empty();
 
-                    <div class="form-group">
-                      <label for="file">File</label>
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" name="file">
-                        <label class="custom-file-label" for="customFile">Choose file</label>
-                      </div>
+          if (response?.isOwner) {
+            $('#modalContent').html(`
+              <form action="{{ route('sharing-schedule.store-file') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                  <h5 class="modal-title">Set Sharing File</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" name="sharing_date" id="sharing_date">
+                  <div class="form-group">
+                    <label for="file">File</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="customFile" name="file">
+                      <label class="custom-file-label" for="customFile">Choose file</label>
                     </div>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <a href="" target="_blank" id="ownerDownloadFile" type="button" class="btn btn-success">Download</a>
-                    <button type="submit" class="btn btn-primary" id="saveChanges">Save changes</button>
-                  </div>
-                </form>
-                `)
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <a href="" target="_blank" id="ownerDownloadFile" class="btn btn-success">Download</a>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            `);
 
-              if (response?.sharing?.file) {
-                $(document).find('#ownerDownloadFile').attr('href', response?.sharing?.file).removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success');
-              } else {
-                $(document).find('#ownerDownloadFile').removeAttr('href').removeClass('btn-success').addClass('btn-secondary');
-              }
-            } else {
-              $('#modalContent').empty()
+            $('#sharing_date').val(response?.sharing?.sharing_date || '');
+            $('#employee_detail').val(response?.sharing?.employee?.name || '');
 
-              $('#modalContent').append(`
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Download Sharing File</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    ${response?.sharing?.file ? `<a href="${response?.sharing?.file}" class="btn btn-primary" target="_blank">Dowload File</a>` : `<a href="#" class="btn btn-primary" target="_blank">No File</a>`}
-                  </div>
-                `)
-            }
-
-            $('#sharing_date').val(new Date(info.event.start).toLocaleDateString())
-            $('#employee_detail').val(response?.sharing?.employee?.name)
-            $('#deleteForm').attr('action', `/destroy-sharing-schedule/${response?.sharing?.id}`)
             if (response?.sharing?.file) {
-              $('#downloadFile').attr('href', response?.sharing?.file).removeAttr('disabled').removeClass('btn-secondary').addClass('btn-success');
+              $('#ownerDownloadFile').attr('href', response?.sharing?.file).removeClass('btn-secondary').addClass('btn-success');
             } else {
-              $('#downloadFile').removeAttr('href').removeClass('btn-success').addClass('btn-secondary');
+              $('#ownerDownloadFile').removeAttr('href').addClass('btn-secondary').removeClass('btn-success');
             }
-
-            $(document).on('click', '#deleteSchedule', function(e) {
-              if (confirm('Do you want to delete this schedule?')) {
-                $('#deleteForm').submit()
-              }
-            })
-          },
-          error: function(error) {
-            console.error(error);
+          } else {
+            $('#modalContent').html(`
+              <div class="modal-header">
+                <h5 class="modal-title">Download Sharing File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ${response?.sharing?.file ? `<a href="${response?.sharing?.file}" class="btn btn-primary" target="_blank">Download File</a>` : `<a href="#" class="btn btn-primary" target="_blank">No File</a>`}
+              </div>
+            `);
           }
-        })
-      },
-      height: 'auto',
-      firstDay: 5
-    });
-    calendar.render();
 
-    $(document).on('change', 'input[type="file"]', function(e) {
-      var fileName = e.target.files[0].name;
-      $('.custom-file-label').html(fileName);
-    });
+          $('#deleteForm').attr('action', `/destroy-sharing-schedule/${response?.sharing?.id}`);
+
+          $(document).on('click', '#deleteSchedule', function(e) {
+            if (confirm('Do you want to delete this schedule?')) {
+              $('#deleteForm').submit();
+            }
+          });
+        },
+        error: function(error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    },
+    height: 'auto',
+    firstDay: 5
   });
+
+  calendar.render();
+
+  $(document).on('change', 'input[type="file"]', function(e) {
+    var fileName = e.target.files[0].name;
+    $('.custom-file-label').html(fileName);
+  });
+});
+
 </script>
 <script>
   function fetchDataAndPopulate(selectedId) {
-    // Assuming you have an API endpoint that returns data based on the selected ID
     const apiUrl = `/tambahmcu?id=${selectedId}`;
 
-    // Perform a fetch request to the API
     fetch(apiUrl, {
         headers: {
           'Accept': 'application/json'
@@ -255,19 +251,12 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-
-        // Get the second select element
         const select2 = document.getElementById('employee');
-
-        // Clear existing options
         select2.innerHTML = '';
-
-        // Populate options based on API data
         data.forEach(item => {
           const option = document.createElement('option');
           option.value = item.id;
-          option.text = item.name; // Assuming your API returns 'name' property
+          option.text = item.name;
           select2.appendChild(option);
         });
       })
@@ -275,5 +264,6 @@
   }
 </script>
 @endpush
+
 
 @endsection

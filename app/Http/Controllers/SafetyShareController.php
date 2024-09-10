@@ -139,13 +139,14 @@ class SafetyShareController extends Controller
     }
 
     public function fmdsShow(FmdsSchedule $fmdsSchedule)
-    {
-        return response()->json([
-            'id' => $fmdsSchedule->id,
-            'name' => $fmdsSchedule->area->area,
-            'date' => $fmdsSchedule->fmds_date,
-        ]);   
-    }
+{
+    return response()->json([
+        'id' => $fmdsSchedule->id,
+        'area_id' => $fmdsSchedule->area->area,
+        'fmds_date' => $fmdsSchedule->fmds_date,
+    ]);   
+}
+
 
     public function fmdsEdit(FmdsSchedule $fmdsSchedule)
     {

@@ -30,7 +30,8 @@
     <div class="container-fluid">
       <a href="{{ route('man-power.history') }}" class="btn btn-primary mb-3">View History</a>
       <div class="row">
-        @forelse ($areas as $area)
+        @foreach ($areas as $area)
+        @if(auth()->user()->is_admin || auth()->user()->area_id == $area->id)
         <div class="col-md-6">
           <form action="{{ route('man-power.store') }}" method="post">
             <input type="hidden" name="area_id" value="{{ $area->id }}">
@@ -186,14 +187,15 @@
                 </table>
               </div>
               <div class="card-footer">
+              @if(auth()->user()->isAdmin || auth()->user()->isLeader)
                 <button type="submit" class="btn btn-sm btn-primary">Save</button>
+              @endif
               </div>
             </div>
           </form>
         </div>
-        @empty
-          <p>No areas found.</p>
-        @endforelse
+        @endif
+        @endforeach
       </div>
     </div>
   </section>

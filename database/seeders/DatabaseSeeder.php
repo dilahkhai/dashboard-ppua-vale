@@ -15,47 +15,41 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
+        // DB::table("areas")->insert([
+        //     ["area"  => "Furnace-Converter"],
+        //     ["area"  => "Process Plant Automation"],
+        //     ["area"  => "Infrastructure"],
+        //     ["area"  => "Utulities"],
+        // ]);
+        
+        // dd(DB::table('areas')->get()); // Tambahkan ini untuk debug
+        
+        // $this->call(UserSeeder::class);
+        
+
+        // DB::table("departments")->insert([
+        //     [
+        //         "name"  => "RND"
+        //     ],
+        //     [
+        //         "name"  => "Automation project"
+        //     ],
+        //     [
+        //         "name"  => "Tech. Support"
+        //     ],
+        //     [
+        //         "name"  => "Management"
+        //     ],
+        //     [
+        //         "name"  => "Maintenance"
+        //     ],
         // ]);
 
-        DB::table("areas")->insert([
-            [
-                "area"  => "Furnace-Converter"
-            ],
-            [
-                "area"  => "Process Plant Automation"
-            ],
-            [
-                "area"  => "Infrastructure"
-            ],
-            [
-                "area"  => "Utulities"
-            ],
-        ]);
+        $this->call(TasksTableSeeder::class);
+        $this->call(LinksTableSeeder::class);
 
-        DB::table("departments")->insert([
-            [
-                "name"  => "RND"
-            ],
-            [
-                "name"  => "Automation project"
-            ],
-            [
-                "name"  => "Tech. Support"
-            ],
-            [
-                "name"  => "Management"
-            ],
-            [
-                "name"  => "Maintenance"
-            ],
-        ]);
-
-        $this->call(UserSeeder::class);
+        
 
     }
 }

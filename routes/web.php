@@ -131,16 +131,11 @@ Route::middleware([
     Route::resource('overtime-hour', OvertimeHourController::class);
     Route::post('overtime-hour-export', [OvertimeHourController::class, 'export']);
 
-    Route::post('/wfh-initial-detail', [WFHRoosterInitialDetailController::class, 'store']);
-    Route::delete('/wfh-initial-detail/{initialDetail}', [WFHRoosterInitialDetailController::class, 'destroy']);
-
     Route::get('/mod', [App\Http\Controllers\ModController::class, 'index']);
     Route::post('/mod', [App\Http\Controllers\ModController::class, 'upload']);
 
-
     Route::get('/image-landing', [App\Http\Controllers\LandingPageImageController::class, 'index']);
     Route::post('/image-landing', [App\Http\Controllers\LandingPageImageController::class, 'upload']);
-
 
     Route::get('/mcu', [App\Http\Controllers\mcucontroller::class, 'index'])->name('mcu.index');
     Route::get('/tambahmcu', [App\Http\Controllers\mcucontroller::class, 'create']);
@@ -151,16 +146,13 @@ Route::middleware([
     Route::post('/simpanmcu', [App\Http\Controllers\mcucontroller::class, 'store']);
     Route::delete('/deletemcu/{id}', [App\Http\Controllers\mcucontroller::class, 'destroy']);
 
-
-    Route::get("tasks", [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
-    Route::get("manage-tasks", [App\Http\Controllers\TaskController::class, 'manageTask'])->name('tasks.manage');
-    Route::post('/inputMainTask', [App\Http\Controllers\TaskController::class, 'storeTask'])->name('tasks.store');
-    Route::post('/updateMainTask', [App\Http\Controllers\TaskController::class, 'updateTask'])->name('tasks.update');
- 
+    Route::get('/issue', [App\Http\Controllers\IssueController::class, 'index'])->name('issues.index');
+    Route::resource('task', App\Http\Controllers\IssueController::class);
+    
+    Route::get('/tasks', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');   
 
     Route::resource('sub-training', SubTrainingController::class)->except(['show']);
     Route::get('sub-training/{id}', [App\Http\Controllers\SubTrainingController::class, 'done'])->name('sub-training.done');
-
 
     Route::resource('man-power', App\Http\Controllers\ManPowerController::class);
     Route::get('/man-power-history', [App\Http\Controllers\ManPowerController::class, 'history'])->name('man-power.history');
