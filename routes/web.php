@@ -187,6 +187,8 @@ Route::middleware([
 
     Route::get('/menuarea', [App\Http\Controllers\menuareacontroller::class, 'index']);
 
+    Route::resource('libraries', App\Http\Controllers\LibraryController::class);
+
     Route::get('/read-notif', function () {
         Notification::query()
             ->where('receiver_id', auth()->user()?->id)

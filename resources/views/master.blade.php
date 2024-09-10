@@ -301,6 +301,16 @@
           </li>
 
           <li class="nav-item">
+            <a href="/libraries" class="nav-link {{  Request::is('libraries') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-book-open"></i>
+              <p>
+                Library
+              </p>
+            </a>
+          </li>
+          </li>
+
+          <li class="nav-item">
             <a href="/study-schedule" class="nav-link {{  Request::is('study-schedule') ? 'active' : '' }}">
               <i class="nav-icon fas fa-book-open"></i>
               <p>

@@ -188,12 +188,15 @@
   @endif
 </div>
 
+
 @push('scripts')
-<script>
+
+<!-- <script>
   $(document).on('change', 'input[type="file"]', function(e) {
     var fileName = e.target.files[0].name;
     $('.custom-file-label').html(fileName);
   });
-</script>
+</script> -->
+
 @endpush
 @endsection

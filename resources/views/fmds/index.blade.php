@@ -453,7 +453,7 @@
             {unit: "day", step: 1, format: "%D, %d"}
         ];
 
-        gantt.templates.issue_class = function (start, end, issue) {
+        gantt.templates.task_class = function (start, end, issue) {
             var progressPercentage = issue.progress * 100;
         
             if (progressPercentage < 70) {
@@ -465,7 +465,7 @@
             }
         };
 
-        gantt.templates.issue_text = function(start, end, issue) {
+        gantt.templates.task_text = function(start, end, issue) {
             let statusText;
             const progressPercentage = Math.round(issue.progress * 100);
             const today = new Date();
@@ -494,22 +494,7 @@
                 return userMap[issue.user_id] || "Unknown";
             }},
             { name: "start_date", label: "Start Date", align: "center", width: 100 },
-            { name: "add", label: "", width: 44 }
         ];
-
-        gantt.locale.labels.section_owner = "Owner";
-        gantt.locale.labels.section_issue = "Issue Name";
-        gantt.locale.labels.section_action = "Action for Issue";
-        gantt.locale.labels.section_area_id = "Area";
-        
-        gantt.config.lightbox.sections = [
-            { name: "issue", label: 'Issue Name', map_to: "issue", type: "textarea", height: 30, id: "issue_name", focus: true },
-            { name: "action", label: 'Action', map_to: "action", type: "textarea", height: 50, id: "issue_action",},
-            { name: "time", type: "duration", map_to: "auto", id: "time_duration" },
-            { name: "area_id", label: 'Area', map_to: "area_id", type: "select", options: Object.keys(areaMap).map(id => ({ key: id, label: areaMap[id] })) },
-            { name: "user_id", label: 'Owner', map_to: "user_id", type: "select", options: Object.keys(userMap).map(id => ({ key: id, label: userMap[id] })) },
-        ];
-
 
         gantt.config.open_tree_initially = true;
         gantt.config.order_branch = "marker";
@@ -524,15 +509,5 @@
         
         gantt.load("/api/data-issues");
 
-        const dp = gantt.createDataProcessor({
-            url: "/",
-            mode: "REST",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            on_after_update: function (id, action, data) {
-                console.log("Data to be sent:", data);
-            }
-        });
 </script>
 @endsection

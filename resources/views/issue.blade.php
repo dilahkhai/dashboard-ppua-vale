@@ -11,27 +11,27 @@
     }
 
     .gantt_progress_yellow .gantt_task_progress {
-        background-color: #ffeb3b !important; /* Kuning */
+        background-color: #ffeb3b !important; 
     }
     
     .gantt_progress_green .gantt_task_progress {
-        background-color: #4caf50 !important; /* Hijau */
+        background-color: #4caf50 !important; 
     }
 
     .gantt_status_not_started {
-        color: #f44336; /* Red */
+        color: #f44336; 
     }
 
     .gantt_status_on_progress {
-        color: #ffeb3b; /* Yellow */
+        color: #ffeb3b; 
     }
 
     .gantt_status_completed {
-        color: #4caf50; /* Green */
+        color: #4caf50; 
     }
 
     .gantt_status_overdue {
-        color: #f44336; /* Red */
+        color: #f44336; 
         font-weight: bold;
     }
 </style>
